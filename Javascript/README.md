@@ -12,4 +12,4 @@ Include this line in your HTML file
 ### Online
 
 Include this line in your HTML file
-´<script src="https://raw.githubusercontent.com/driconmax/dengine/master/Javascript/loader.min.js">´
+`<script src="https://raw.githubusercontent.com/driconmax/dengine/master/Javascript/loader.min.js">`
