@@ -19,3 +19,8 @@ Remember to keep the proyect updated for bug fixes and new things!
 ### Online
 
 If you are going to work online read the documentation for the implementation of each programming lang.
+
+### implementation
+
+ - [Javascript](https://github.com/driconmax/dengine/tree/master/Javascript)
+ - C# _(Soon...)_
