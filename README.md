@@ -1,37 +1,21 @@
-## Welcome to GitHub Pages
+# DEngine
 
-You can use the [editor on GitHub](https://github.com/driconmax/dengine/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+DEngine is an OpenSource graphics and physics engine for Javascript and C#.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Instalation
 
-### Markdown
+### Offline
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+If you are going to work offline, or you want to modify the files you should do this:
 
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+git clone https://github.com/driconmax/dengine
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Then step into the folder of the programming language that you are going to use and read the implementation documentation.
 
-### Jekyll Themes
+Remember to keep the proyect updated for bug fixes and new things!
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/driconmax/dengine/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Online
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+If you are going to work online read the documentation for the implementation of each programming lang.
