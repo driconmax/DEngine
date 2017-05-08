@@ -12,7 +12,7 @@ var $D = {
         if(typeof text === 'object'){
             this.LogObject(text);
         } else {
-            console.log("["+this.Date().TimeStamp()+"] DEngine says: " + text);
+            console.log("["+this.Date().TimeStamp()+"] DEngine: " + text);
         }
     },
     LogObject: function(object){

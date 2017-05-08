@@ -4,8 +4,8 @@
         this.url = url;
     }
     var scripts = [
-        new script("Common", "https://rawgit.com/driconmax/dengine/master/Javascript/common.js"),
-        new script("Core", "https://rawgit.com/driconmax/dengine/master/Javascript/core.js")
+        new script("Common", "https://rawgit.com/driconmax/dengine/master/Javascript/src/common.js"),
+        new script("Core", "https://rawgit.com/driconmax/dengine/master/Javascript/src/core.js")
     ];
     for (var i = 0; i < scripts.length; i++) {
         try{
