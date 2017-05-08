@@ -1,9 +1,11 @@
 (function(){
+    var script = function (name, url){
+        this.name = name;
+        this.url = url;
+    }
     var scripts = [
-        {
-            name: "MainScript",
-            url: "https://raw.githubusercontent.com/driconmax/dengine/master/Javascript/main.js"
-        }
+        new script("Common", "https://rawgit.com/driconmax/dengine/master/Javascript/common.js"),
+        new script("Core", "https://rawgit.com/driconmax/dengine/master/Javascript/core.js")
     ];
     for (var i = 0; i < scripts.length; i++) {
         try{
@@ -14,7 +16,7 @@
             if(head == null){
                 throw "The HTML tag HEAD is not defined";
             } else {
-                appendChild(x);
+                head.appendChild(x);
             }
         } catch(e){
             console.error("DEngine error: " + e);
