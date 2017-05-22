@@ -62,22 +62,23 @@
         }
 
         function Start(){
+            var that = this;
             time.interval = setInterval(function(){
-                if(controlVars.update.finish){
-                    controlVars.update.finish = false;
-                    controlVars.update.alerted = false;
-                    controlvars.update.exceeded = 0;
+                if(that.controlVars.update.finish){
+                    that.controlVars.update.finish = false;
+                    that.controlVars.update.alerted = false;
+                    that.controlvars.update.exceeded = 0;
                     
                     var d = new Date().getTime();
-                    time.deltaTime = (d - time.miliseconds)/1000;
-                    time.miliseconds = d;
-                    time.FPS = 1/time.deltaTime;
+                    that.time.deltaTime = (d - that.time.miliseconds)/1000;
+                    that.time.miliseconds = d;
+                    that.time.FPS = 1/that.time.deltaTime;
                     Update();
                 } else {
-                    controlvars.update.exceeded++;
-                    if(controlvars.update.exceeded >= controlVars.update.alert){
+                    that.controlvars.update.exceeded++;
+                    if(that.controlvars.update.exceeded >= that.controlVars.update.alert){
                         $d.LogWarning("Loosing frames, consider using a lower maxFPS value or reivew your code.");
-                        controlVars.update.alerted = true;
+                        that.controlVars.update.alerted = true;
                     }
                 }
             }, 1000/time.maxFPS);
