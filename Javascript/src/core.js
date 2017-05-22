@@ -64,7 +64,7 @@
         function Start(){
             var that = this;
             time.interval = setInterval(function(){
-                if(that.controlVars.update.finish){
+                if(this.controlVars.update.finish){
                     that.controlVars.update.finish = false;
                     that.controlVars.update.alerted = false;
                     that.controlvars.update.exceeded = 0;
