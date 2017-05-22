@@ -5,10 +5,11 @@
     var $e = new function(){
         
         var internal = {
-            debug: false,
+            debug: true,
             started: false,
             canvas: "",
             ctx: "",
+            size: 0,
             time: {
                 FPS: 1,
                 lossedFrames: 0,
@@ -32,6 +33,12 @@
                 gravity: 10,
                 drag: 1
             },
+            globals: {
+                maxForce: 150,
+                opacity: 0.8,
+                background: "#FFF"
+            },
+            layers: [],
             phycs: [],
             user: {}
         }
@@ -43,6 +50,9 @@
                 if(typeof start == "function" && typeof update == "function"){
                     try {
                         internal.ctx = canvas.getContext("2d");
+                        internal.size = new this.Vector2(0,0);
+                        internal.size.x = canvas.width;
+                        internal.size.y = canvas.height;
                         internal.user.start = start;
                         internal.user.udpate = update;
                         Start();
@@ -91,6 +101,11 @@
             $d.Stats();
         }
         
+        this.add2DObject = function(obj, layer){
+            var ind = internal.phycs.push(obj);
+            internal.layers[layer+50] = internal.phycs[ind-1];
+        }
+        
         //close
         
         //Private functions start
@@ -131,18 +146,72 @@
                 $d.LogError("Error in User Update function", e);
             }
             UpdatePhysics();
+            DrawObjects();
             internal.controlVars.update.finish = true;
         }
         
         function UpdatePhysics(){
-            
+            var tempObj;
+            var tempForce;
+            for(var i = 0; i < internal.phycs.length; i++){
+                tempObj = internal.phycs[i];
+                tempForce = tempObj.force.x;
+                tempObj.pos.x += tempForce/tempObj.mass * internal.time.deltaTime;
+                
+                tempForce = tempObj.force.y;
+                tempObj.pos.y += tempForce/tempObj.mass * internal.time.deltaTime;
+                if(tempObj.forceType == 0){
+                    if(tempObj.force.x > 0){
+                        tempObj.force.x -= tempObj.drag * internal.time.deltaTime;
+                    } else {
+                        tempObj.force.x = 0;
+                    }
+                    if(Math.abs(tempObj.force.y) < internal.globals.maxForce){
+                        tempObj.force.y -= internal.world.gravity * internal.time.deltaTime;
+                        //tempObj.force.y = tempObj.force.y/drag;
+                    } else {
+                        tempObj.force.y = internal.globals.maxForce * ((tempObj.force.y < 0)? -1 : 1);
+                    }
+                }
+            }
+        }
+        
+        function DrawObjects(){
+            for(var i = 0; i < internal.layers.length; i++){
+                Draw(internal.layers[i]);
+            }
+        }
+        
+        function Draw(obj){
+            internal.ctx.globalAlpha = internal.globals.opacity;
+            internal.ctx.fillStyle = internal.globals.background;
+            internal.ctx.fillRect(0,0,internal.size.x, internal.size.y);
+            internal.ctx.globalAlpha = 1;
+            if(internal.debug){
+                internal.ctx.fillStyle = obj.color;
+                internal.ctx.fillRect(obj.pos.x, internal.size.y - obj.pos.y, 10, 10);
+                $d.Log("X: " + obj.pos.x + "\tY: " + obj.pos.y);
+            }
         }
 
         //close
         
         //DEngine Objects start
         
+        this.Vector2 = function(x, y){
+            this.x = x;
+            this.y = y;
+        }
         
+        this.Object2D = function(name, x, y, mass, drag){
+            this.name = name;
+            this.pos = new $e.Vector2(x,y);
+            this.mass = mass;
+            this.drag = drag;
+            this.force = new $e.Vector2(0,0);
+            this.forceType = 0;
+            this.color = "#000";
+        }
         
         //close
 
