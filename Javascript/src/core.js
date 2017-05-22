@@ -66,15 +66,15 @@
         function Start(){
             var that = this;
             internal.time.interval = setInterval(function(){
-                if(this.controlVars.update.finish){
-                    that.controlVars.update.finish = false;
-                    that.controlVars.update.alerted = false;
-                    that.controlvars.update.exceeded = 0;
+                if(internal.controlVars.update.finish){
+                    internal.controlVars.update.finish = false;
+                    internal.controlVars.update.alerted = false;
+                    internal.controlvars.update.exceeded = 0;
                     
                     var d = new Date().getTime();
-                    that.time.deltaTime = (d - that.time.miliseconds)/1000;
-                    that.time.miliseconds = d;
-                    that.time.FPS = 1/that.time.deltaTime;
+                    internal.time.deltaTime = (d - that.time.miliseconds)/1000;
+                    internal.time.miliseconds = d;
+                    internal.time.FPS = 1/that.time.deltaTime;
                     Update();
                 } else {
                     that.controlvars.update.exceeded++;
