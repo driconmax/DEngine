@@ -1,15 +1,16 @@
-var $d;
-(function($d){
+(function(window){
 
     'use strict';
 
-    $d = {
-        
+    var $e = {
+
         init: function(){
             console.log(this);
         }
 
     }
 
+    window.$e = $e;
 
-})($d)
+
+})(window)
