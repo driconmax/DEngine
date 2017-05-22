@@ -1,14 +1,15 @@
-(function(){
+var $d;
+(function($d){
 
     'use strict';
 
-    var dengine = {
-
+    $d = {
+        
         init: function(){
-            
+            console.log(this);
         }
 
     }
 
 
-})()
+})($d)
