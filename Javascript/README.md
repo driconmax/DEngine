@@ -15,5 +15,5 @@ Include this line in your HTML file
 
 Include this line in your HTML file
 ```markdown
-<script src="https://raw.githubusercontent.com/driconmax/dengine/master/Javascript/loader.min.js">
+<script src="http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/loader.min.js">
 ```
