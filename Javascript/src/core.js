@@ -3,7 +3,7 @@
     'use strict';
 
     var $e = new function(){
-        
+
         var internal = {
             debug: true,
             started: false,
@@ -35,39 +35,43 @@
             },
             globals: {
                 maxForce: 150,
-                opacity: 0.8,
+                opacity: 0.1,
                 background: "#FFF"
             },
             layers: [],
             phycs: [],
             user: {}
         }
-        
+
         //Public Functions start
 
         this.init = function(canvas, start, update){
-            if(canvas != undefined && typeof canvas == "object"){
-                if(typeof start == "function" && typeof update == "function"){
-                    try {
-                        internal.ctx = canvas.getContext("2d");
-                        internal.size = new this.Vector2(0,0);
-                        internal.size.x = canvas.width;
-                        internal.size.y = canvas.height;
-                        internal.user.start = start;
-                        internal.user.udpate = update;
-                        Start();
-                        internal.started = true;
-                    } catch (e) {
-                        $d.LogError("The element is not a canvas");
+            if(!internal.started){
+                if(canvas != undefined && typeof canvas == "object"){
+                    if(typeof start == "function" && typeof update == "function"){
+                        try {
+                            internal.ctx = canvas.getContext("2d");
+                            internal.size = new this.Vector2(0,0);
+                            internal.size.x = canvas.width;
+                            internal.size.y = canvas.height;
+                            internal.user.start = start;
+                            internal.user.udpate = update;
+                            Start();
+                            internal.started = true;
+                        } catch (e) {
+                            $d.LogError("The element is not a canvas");
+                        }
+                    } else {
+                        $d.LogError("Missing Start/Update functions");
                     }
                 } else {
-                    $d.LogError("Missing Start/Update functions");
+                    $d.LogError("Invalid element");
                 }
             } else {
-                $d.LogError("Invalid element");
+                $d.LogWarning("The engine is already running!");
             }
         }
-        
+
         this.setMaxFPS = function(value){
             if(typeof value == "number"){
                 internal.time.maxFPS = value;
@@ -83,7 +87,7 @@
                 $d.LogError("Invalid value");
             }
         }
-        
+
         this.setSpeed = function(value){
             if(typeof value == "number"){
                 internal.time.speed = value;
@@ -91,7 +95,7 @@
                 $d.LogError("Invalid value");
             }
         }
-        
+
         this.stats = function(){
             $d.Log("STATS");
             $d.Log("FPS: " + internal.time.FPS);
@@ -100,27 +104,30 @@
             $d.Log("Elapsed Time: " + $d.FormatMiliseconds(internal.time.elapsedTime));
             $d.Stats();
         }
-        
+
         this.add2DObject = function(obj, layer){
             var ind = internal.phycs.push(obj);
-            internal.layers[layer+50] = internal.phycs[ind-1];
+            if(internal.layers[layer+50] == undefined){
+                internal.layers[layer+50] = [];
+            }
+            internal.layers[layer+50].push(internal.phycs[ind-1]);
         }
-        
+
         //close
-        
+
         //Private functions start
 
         function Start(){
             internal.controlVars.update.finish = true;
             var sd = new Date().getTime();
             internal.time.miliseconds = sd;
-            
+
             internal.time.interval = setInterval(function(){
                 if(internal.controlVars.update.finish){
                     internal.controlVars.update.finish = false;
                     internal.controlVars.update.alerted = false;
                     internal.controlVars.update.exceeded = 0;
-                    
+
                     var d = new Date().getTime();
                     var t = d - internal.time.miliseconds;
                     internal.time.elapsedTime += t;
@@ -149,7 +156,7 @@
             DrawObjects();
             internal.controlVars.update.finish = true;
         }
-        
+
         function UpdatePhysics(){
             var tempObj;
             var tempForce;
@@ -157,7 +164,7 @@
                 tempObj = internal.phycs[i];
                 tempForce = tempObj.force.x;
                 tempObj.pos.x += tempForce/tempObj.mass * internal.time.deltaTime;
-                
+
                 tempForce = tempObj.force.y;
                 tempObj.pos.y += tempForce/tempObj.mass * internal.time.deltaTime;
                 if(tempObj.forceType == 0){
@@ -173,46 +180,63 @@
                         tempObj.force.y = internal.globals.maxForce * ((tempObj.force.y < 0)? -1 : 1);
                     }
                 }
+                if(tempObj.pos.y < 0){
+                    tempObj.pos.y = 0;
+                    tempObj.force.y = -tempObj.force.y * tempObj.bounce;
+                }
             }
         }
-        
+
         function DrawObjects(){
-            for(var i = 0; i < internal.layers.length; i++){
-                Draw(internal.layers[i]);
-            }
-        }
-        
-        function Draw(obj){
             internal.ctx.globalAlpha = internal.globals.opacity;
             internal.ctx.fillStyle = internal.globals.background;
             internal.ctx.fillRect(0,0,internal.size.x, internal.size.y);
             internal.ctx.globalAlpha = 1;
+            for(var i = 0; i < internal.layers.length; i++){
+                for(var f = 0; f < internal.layers[i].length; f++){
+                    Draw(internal.layers[i][f]);
+                }
+            }
+        }
+
+        function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
                 internal.ctx.fillRect(obj.pos.x, internal.size.y - obj.pos.y, 10, 10);
-                $d.Log("X: " + obj.pos.x + "\tY: " + obj.pos.y);
+                //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
             }
         }
 
         //close
-        
+
         //DEngine Objects start
-        
+
         this.Vector2 = function(x, y){
             this.x = x;
             this.y = y;
         }
-        
-        this.Object2D = function(name, x, y, mass, drag){
+
+        this.Object2D = function(name, x, y, mass, drag, bounce){
             this.name = name;
             this.pos = new $e.Vector2(x,y);
+            this.kinematic = (mass == 0);
             this.mass = mass;
             this.drag = drag;
+            this.bounce = bounce;
             this.force = new $e.Vector2(0,0);
             this.forceType = 0;
             this.color = "#000";
+            this.addForce = function(x, y, forceType){
+                this.force.x += x;
+                this.force.y += y;
+                if(forceType == undefined){
+                    this.forceType = 0;
+                } else {
+                    this.forceType = forceType;
+                }
+            }
         }
-        
+
         //close
 
     }
