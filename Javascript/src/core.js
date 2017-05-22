@@ -26,7 +26,7 @@
         var user = {};
 
         this.init = function(canvas, start, update){
-            if(canvas != undefined && typeof canvas == "string" && canvas.length > 0){
+            if(canvas != undefined && typeof canvas == "object"){
                 if(typeof start == "function" && typeof update == "function"){
                     try {
                         ctx = canvas.getContext("2d");
