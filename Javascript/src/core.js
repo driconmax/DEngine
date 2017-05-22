@@ -6,8 +6,8 @@
         var internal = {
             debug: false,
             started: false,
-            canvas,
-            ctx,
+            canvas: "",
+            ctx: "",
             time: {
                 FPS: 1,
                 maxFPS: 60,
