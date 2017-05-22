@@ -49,7 +49,7 @@
             if(typeof value == "number"){
                 time.maxFPS = value;
             } else {
-                $d.LogError(Invalid value);
+                $d.LogError("Invalid value");
             }
         }
 
