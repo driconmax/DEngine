@@ -1,3 +1,10 @@
+/*
+
+    
+
+*/
+
+
 (function(window){
 
     'use strict';
@@ -37,7 +44,7 @@
             },
             globals: {
                 maxForce: 150,
-                opacity: 0.7,
+                opacity: 0.9,
                 background: "#FFF"
             },
             layers: [],
@@ -184,8 +191,8 @@
                 tempObj.pos.x += tempObj.velocity.x * internal.time.deltaTime;
                 tempObj.pos.y += tempObj.velocity.y * internal.time.deltaTime;
 
-                if(tempObj.pos.y < 0){
-                    tempObj.pos.y = 0;
+                if(tempObj.pos.y < 5){
+                    tempObj.pos.y = 5;
                     tempObj.velocity.y = -tempObj.velocity.y * tempObj.bounce;
                 }
             }
@@ -196,20 +203,35 @@
             for(var i = 0; i < internal.phycs.length; i++){
                 tempObj = internal.phycs[i];
                 if(tempObj != obj){
-                    $d.Log(FindAxisLeastPenetration(obj.collider, tempObj.collider));
-                    $d.Log(FindAxisLeastPenetration(tempObj.collider, obj.collider));
+                    var a = FindAxisLeastPenetration(obj, tempObj);
+                    if(a.bestDistance < 0){
+                        //$d.Log(a);
+                        obj.collider.contactPoint = a.faceIndex;
+                    } else {
+                        obj.collider.contactPoint = undefined;
+                    }
+                    
+                    a = FindAxisLeastPenetration(tempObj, obj);
+                    if(a.bestDistance < 0){
+                        //$d.Log(a);
+                        tempObj.collider.contactPoint = a.faceIndex;
+                    } else {
+                        tempObj.collider.contactPoint = undefined;
+                    }
+                    //$d.Log(FindAxisLeastPenetration(tempObj, obj));
                 }
             }
-            $d.Log("End");
         }
 
         function GetSupport(obj, dir){
             var bestProjection = -1000000;
             var bestVertex = new $e.Vector2(0,0);
 
-            for(var i = 0; i < obj.vertexs.length; i++)
+            for(var i = 0; i < obj.collider.vertexs.length; i++)
             {
-                var v = obj.vertexs[i];
+                var vr = new $e.Vector2(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                vr.rotate(obj.rotation);
+                var v = new $e.Vector2(vr.x + obj.pos.x, vr.y + obj.pos.y);
                 var projection = dir.dot(v);
 
                 if(projection > bestProjection)
@@ -223,21 +245,24 @@
         }
 
         //function FindAxisLeastPenetration(faceIndex, A, B ){
-        function FindAxisLeastPenetration(A, B ){
+        function FindAxisLeastPenetration(A, B){
             var bestDistance = -1000000;
             var bestIndex;
 
-            for(var i = 0; i < A.vertexs.length; i++)
+            for(var i = 0; i < A.collider.vertexs.length; i++)
             {
                 // Retrieve a face normal from A
-                var n = A.normals[i];
+                var n = new $e.Vector2(A.collider.normals[i].x, A.collider.normals[i].y);
+                n.rotate(A.rotation);
 
                 // Retrieve support point from B along -n
                 var s = GetSupport(B, new $e.Vector2(-n.x, -n.y));
 
                 // Retrieve vertex on face from A, transform into
                 // B's model space
-                var v = A.vertexs[i];
+                var vr = new $e.Vector2(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
+                vr.rotate(A.rotation);
+                var v = new $e.Vector2(vr.x + A.pos.x, vr.y + A.pos.y);
 
                 // Compute penetration distance (in B's model space)
                 var sv = new $e.Vector2(s.x-v.x, s.y - v.y);
@@ -252,7 +277,10 @@
             }
 
             //faceIndex = bestIndex;
-            return bestDistance;
+            return {
+                bestDistance: bestDistance,
+                faceIndex: bestIndex
+            };
         }
 
         function DrawObjects(){
@@ -278,13 +306,17 @@
                     if(obj.collider.type == 1){
                         internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
                     } else {
-                        internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, obj.collider.vertexs[obj.collider.vertexs.length-1].y);
+                        internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, -obj.collider.vertexs[obj.collider.vertexs.length-1].y);
                         for(var i = 0; i < obj.collider.vertexs.length; i++){
-                            internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                            internal.ctx.lineTo(obj.collider.vertexs[i].x, -obj.collider.vertexs[i].y);
                         }
                     }
                     internal.ctx.strokeStyle = '#0F4';
-                    internal.ctx.stroke();
+                    internal.ctx.stroke();                    
+                    internal.ctx.fillStyle = "#F77";
+                    if(obj.collider.contactPoint != undefined){
+                        internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, -(obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
+                    }
                 }
                 internal.ctx.rotate(-obj.rotation * Math.PI / 180);
                 internal.ctx.translate(-obj.pos.x, -(internal.size.y - obj.pos.y));
@@ -372,6 +404,7 @@
         
         this.BaseCollider = function(type){
             this.type = type;
+            this.contactPoint;
             this.vertexs = [];
             this.normals = [];
         }
@@ -413,6 +446,14 @@
 
         this.Vector2.prototype.normal = function(v2){
             return new $e.Vector2(-(v2.y - this.y), v2.x - this.x);
+        }
+        
+        this.Vector2.prototype.rotate = function(angle){
+            angle = angle * (Math.PI/180);
+            var cosa = Math.cos(angle);
+            var sina = Math.sin(angle);
+            this.x = this.x*cosa - this.y*sina;
+            this.y = this.x*sina + this.y*cosa;
         }
 
         this.Vector2.prototype.toString = function(){
