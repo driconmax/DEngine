@@ -12,6 +12,8 @@
             size: 0,
             time: {
                 FPS: 1,
+                FPScount: 0,
+                FPSsum: 0,
                 lossedFrames: 0,
                 maxFPS: 60,
                 deltaTime: 1,
@@ -35,7 +37,7 @@
             },
             globals: {
                 maxForce: 150,
-                opacity: 0.1,
+                opacity: 0.7,
                 background: "#FFF"
             },
             layers: [],
@@ -134,6 +136,8 @@
                     internal.time.deltaTime = (t/1000) * internal.time.speed;
                     internal.time.miliseconds = d;
                     internal.time.FPS = 1/internal.time.deltaTime;
+                    internal.time.FPSsum += internal.time.FPS;
+                    internal.time.FPScount++;
                     Update();
                 } else {
                     internal.controlVars.update.exceeded++;
@@ -154,7 +158,14 @@
             }
             UpdatePhysics();
             DrawObjects();
+            DrawFPS();
             internal.controlVars.update.finish = true;
+        }
+
+        function DrawFPS(){
+            internal.ctx.font = "12px Arial";
+            internal.ctx.fillStyle = "#000";
+            internal.ctx.fillText("FPS: " + Math.ceil(internal.time.FPSsum / internal.time.FPScount),10,10);
         }
 
         function UpdatePhysics(){
