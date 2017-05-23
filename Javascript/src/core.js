@@ -78,7 +78,7 @@
             if(typeof value == "number"){
                 internal.time.maxFPS = value;
             } else {
-                $d.LogError("Invalid value");
+                $d.LogError("Invalid value, expected number");
             }
         }
 
@@ -86,7 +86,7 @@
             if(typeof value == "boolean"){
                 internal.debug = value;
             } else {
-                $d.LogError("Invalid value");
+                $d.LogError("Invalid value, expected boolean");
             }
         }
 
@@ -94,7 +94,7 @@
             if(typeof value == "number"){
                 internal.time.speed = value;
             } else {
-                $d.LogError("Invalid value");
+                $d.LogError("Invalid value, expected number");
             }
         }
 
@@ -170,32 +170,89 @@
 
         function UpdatePhysics(){
             var tempObj;
-            var tempForce;
             for(var i = 0; i < internal.phycs.length; i++){
+                
                 tempObj = internal.phycs[i];
-                tempForce = tempObj.force.x;
-                tempObj.pos.x += tempForce/tempObj.mass * internal.time.deltaTime;
+                
+                CheckCollision(tempObj);
+                
+                tempObj.velocity.x += tempObj.force.x;
 
-                tempForce = tempObj.force.y;
-                tempObj.pos.y += tempForce/tempObj.mass * internal.time.deltaTime;
-                if(tempObj.forceType == 0){
-                    if(tempObj.force.x > 0){
-                        tempObj.force.x -= tempObj.drag * internal.time.deltaTime;
-                    } else {
-                        tempObj.force.x = 0;
-                    }
-                    if(Math.abs(tempObj.force.y) < internal.globals.maxForce){
-                        tempObj.force.y -= internal.world.gravity * internal.time.deltaTime;
-                        //tempObj.force.y = tempObj.force.y/drag;
-                    } else {
-                        tempObj.force.y = internal.globals.maxForce * ((tempObj.force.y < 0)? -1 : 1);
-                    }
-                }
+                tempObj.velocity.y -= internal.world.gravity;
+                tempObj.velocity.y += tempObj.force.y;
+
+                tempObj.pos.x += tempObj.velocity.x * internal.time.deltaTime;
+                tempObj.pos.y += tempObj.velocity.y * internal.time.deltaTime;
+
                 if(tempObj.pos.y < 0){
                     tempObj.pos.y = 0;
-                    tempObj.force.y = -tempObj.force.y * tempObj.bounce;
+                    tempObj.velocity.y = -tempObj.velocity.y * tempObj.bounce;
                 }
             }
+        }
+
+        function CheckCollision(obj){
+            var tempObj;
+            for(var i = 0; i < internal.phycs.length; i++){
+                tempObj = internal.phycs[i];
+                if(tempObj != obj){
+                    $d.Log(FindAxisLeastPenetration(obj.collider, tempObj.collider));
+                    $d.Log(FindAxisLeastPenetration(tempObj.collider, obj.collider));
+                }
+            }
+            $d.Log("End");
+        }
+
+        function GetSupport(obj, dir){
+            var bestProjection = -1000000;
+            var bestVertex = new $e.Vector2(0,0);
+
+            for(var i = 0; i < obj.vertexs.length; i++)
+            {
+                var v = obj.vertexs[i];
+                var projection = dir.dot(v);
+
+                if(projection > bestProjection)
+                {
+                    bestVertex = v;
+                    bestProjection = projection;
+                }
+            }
+
+            return bestVertex;
+        }
+
+        //function FindAxisLeastPenetration(faceIndex, A, B ){
+        function FindAxisLeastPenetration(A, B ){
+            var bestDistance = -1000000;
+            var bestIndex;
+
+            for(var i = 0; i < A.vertexs.length; i++)
+            {
+                // Retrieve a face normal from A
+                var n = A.normals[i];
+
+                // Retrieve support point from B along -n
+                var s = GetSupport(B, new $e.Vector2(-n.x, -n.y));
+
+                // Retrieve vertex on face from A, transform into
+                // B's model space
+                var v = A.vertexs[i];
+
+                // Compute penetration distance (in B's model space)
+                var sv = new $e.Vector2(s.x-v.x, s.y - v.y);
+                var d = n.dot(sv);
+
+                // Store greatest distance
+                if(d > bestDistance)
+                {
+                    bestDistance = d;
+                    bestIndex = i;
+                }
+            }
+
+            //faceIndex = bestIndex;
+            return bestDistance;
         }
 
         function DrawObjects(){
@@ -213,7 +270,24 @@
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                internal.ctx.fillRect(obj.pos.x, internal.size.y - obj.pos.y, 10, 10);
+                internal.ctx.translate(obj.pos.x, internal.size.y - obj.pos.y);
+                internal.ctx.rotate(obj.rotation * Math.PI / 180);
+                internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                if(internal.debug && obj.collider != undefined) {
+                    internal.ctx.beginPath();
+                    if(obj.collider.type == 1){
+                        internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
+                    } else {
+                        internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, obj.collider.vertexs[obj.collider.vertexs.length-1].y);
+                        for(var i = 0; i < obj.collider.vertexs.length; i++){
+                            internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                        }
+                    }
+                    internal.ctx.strokeStyle = '#0F4';
+                    internal.ctx.stroke();
+                }
+                internal.ctx.rotate(-obj.rotation * Math.PI / 180);
+                internal.ctx.translate(-obj.pos.x, -(internal.size.y - obj.pos.y));
                 //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
             }
         }
@@ -230,22 +304,119 @@
         this.Object2D = function(name, x, y, mass, drag, bounce){
             this.name = name;
             this.pos = new $e.Vector2(x,y);
+            this.scale = new $e.Vector2(1,1);
+            this.rotation = 0;
             this.kinematic = (mass == 0);
             this.mass = mass;
             this.drag = drag;
             this.bounce = bounce;
+            this.angularVelocity = 0;
+            this.velocity = new $e.Vector2(0,0);
             this.force = new $e.Vector2(0,0);
-            this.forceType = 0;
             this.color = "#000";
-            this.addForce = function(x, y, forceType){
+        }
+
+
+        //ForceType
+        //  0 - Impulse
+        //  1 - Constant force
+        this.Object2D.prototype.addForce = function(x, y, forceType){
+            if(forceType == undefined || forceType == 0){
+                this.velocity.x += x;
+                this.velocity.y += y;
+            } else {
                 this.force.x += x;
                 this.force.y += y;
-                if(forceType == undefined){
-                    this.forceType = 0;
-                } else {
-                    this.forceType = forceType;
-                }
             }
+        }
+
+        this.Object2D.prototype.setCollider = function(collider){
+            this.collider = collider;
+        }
+
+
+        //COLLIDER TYPES
+        //  0 - Box
+        //  1 - Circle
+        //  2 - Polygon
+
+        this.BoxCollider = function(width, height){
+            $e.BaseCollider.call(this, 0);
+            this.vertexs = [
+                new $e.Vector2(-width/2, height/2),
+                new $e.Vector2(width/2, height/2),
+                new $e.Vector2(width/2, -height/2),
+                new $e.Vector2(-width/2, -height/2)
+            ];
+            this.calculateNormals();
+        }
+
+        this.CircleCollider = function(radius){
+            $e.BaseCollider.call(this, 1);
+            this.radius = radius;
+        }
+
+        this.PolygonCollider = function(vertexs){
+            if(typeof vertexs == "object"){
+                if(vertexs.length > 3){
+                    $e.BaseCollider.call(this, 2);
+                    this.vertexs = vertexs;
+                    this.calculateNormals();
+                } else {
+                    $d.LogError("The polygon collider needs at least 3 points");
+                }
+            } else {
+                $d.LogError("Invalid value, expected Array");
+            }
+        }
+        
+        this.BaseCollider = function(type){
+            this.type = type;
+            this.vertexs = [];
+            this.normals = [];
+        }
+        
+        this.PolygonCollider.prototype.calculateNormals = this.BoxCollider.prototype.calculateNormals = function(){
+            for(var i = 0; i < this.vertexs.length; i++){
+                var next = i + 1;
+                if(next == this.vertexs.length){
+                    next = 0;
+                }
+                this.normals.push(this.vertexs[i].normal(this.vertexs[next]));
+            }
+        }
+
+        //close
+
+        //Vector2 Maths start
+
+        this.Vector2.prototype.normalized = function(){
+            var l = this.magnitude();
+            return new $e.Vector2(x/l, y/l);
+        }
+
+        this.Vector2.prototype.magnitude = function(){
+            return Math.sqrt((this.x * this.x) + (this.y * this.y));
+        }
+
+        this.Vector2.prototype.dot = function(v2){
+            return ((this.x * v2.x) + (this.y * v2.y));
+        }
+
+        this.Vector2.prototype.cross = function(v2){
+            return ((this.x * v2.y) - (v2.x * this.y));
+        }
+
+        this.Vector2.prototype.angle = function(){
+            return Math.atan2(this.y, this.x);
+        }
+
+        this.Vector2.prototype.normal = function(v2){
+            return new $e.Vector2(-(v2.y - this.y), v2.x - this.x);
+        }
+
+        this.Vector2.prototype.toString = function(){
+            return "X: " + this.x + "\tY: " + this.y;
         }
 
         //close
