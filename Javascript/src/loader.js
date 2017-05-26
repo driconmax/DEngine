@@ -1,3 +1,9 @@
+/*
+
+#DSV:1#
+
+*/
+
 var $loader = {};
 (function($loader){
     $loader.script = function (name, url){
