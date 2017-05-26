@@ -12,7 +12,7 @@
                     console.log("Downloading " + r.totalbytes + " bytes");
                 }
                 $loader.onprogresschange = function(p){
-                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + "\t - \t" + p.progress + "%");
+                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + " v" + ((p.current.version)?p.current.version:"") +"\t - \t" + p.progress + "%");
                 };
                 $loader.onload = function(){
                     //If the download went correctly, we should be able to use the common library ($d).

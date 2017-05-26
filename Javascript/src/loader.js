@@ -41,6 +41,7 @@ var $loader = {};
                         filesChecked++;
                         totalBytes += headers.size;
                         item.size = headers.size;
+                        item.version = headers.version;
                     })
                 })(item);
             }
@@ -77,6 +78,7 @@ var $loader = {};
                                                 current: {
                                                     fileindex: currentIndex+1,
                                                     name: scripts[currentIndex].name,
+                                                    version: scripts[currentIndex].version,
                                                     size: event.total,
                                                     progress: percentComplete
                                                 },
