@@ -1,6 +1,6 @@
 /*
 
-    
+
 
 */
 
@@ -172,53 +172,81 @@
         function DrawFPS(){
             internal.ctx.font = "12px Arial";
             internal.ctx.fillStyle = "#000";
-            internal.ctx.fillText("FPS: " + Math.ceil(internal.time.FPSsum / internal.time.FPScount),10,10);
+            //internal.ctx.fillText("FPS: " + Math.ceil(internal.time.FPSsum / internal.time.FPScount),10,10);
+            internal.ctx.fillText("FPS: " + Math.round(internal.time.FPS),10,10);
         }
 
         function UpdatePhysics(){
             var tempObj;
             for(var i = 0; i < internal.phycs.length; i++){
-                
+
                 tempObj = internal.phycs[i];
-                
-                CheckCollision(tempObj);
-                
-                tempObj.velocity.x += tempObj.force.x;
 
-                tempObj.velocity.y -= internal.world.gravity;
-                tempObj.velocity.y += tempObj.force.y;
+                if(!tempObj.kinematic){
+                    CheckCollision(tempObj);  
+                    tempObj.collider.checked = internal.time.elapsedTime;
 
-                tempObj.pos.x += tempObj.velocity.x * internal.time.deltaTime;
-                tempObj.pos.y += tempObj.velocity.y * internal.time.deltaTime;
+                    tempObj.rotation += tempObj.angularVelocity * internal.time.deltaTime;
 
-                if(tempObj.pos.y < 5){
-                    tempObj.pos.y = 5;
-                    tempObj.velocity.y = -tempObj.velocity.y * tempObj.bounce;
+                    tempObj.velocity.x += tempObj.force.x;
+
+                    tempObj.velocity.y -= internal.world.gravity;
+                    tempObj.velocity.y += tempObj.force.y;
+
+                    tempObj.pos.x += tempObj.velocity.x * internal.time.deltaTime;
+                    tempObj.pos.y += tempObj.velocity.y * internal.time.deltaTime;
+
+                    if(tempObj.pos.y < 9){
+                        tempObj.pos.y = 5;
+                        tempObj.velocity.y = -tempObj.velocity.y * tempObj.bounce;
+                    }
+
                 }
             }
         }
 
         function CheckCollision(obj){
             var tempObj;
+            var v3 = new $e.Vector2(0,0);
             for(var i = 0; i < internal.phycs.length; i++){
                 tempObj = internal.phycs[i];
-                if(tempObj != obj){
-                    var a = FindAxisLeastPenetration(obj, tempObj);
-                    if(a.bestDistance < 0){
-                        //$d.Log(a);
-                        obj.collider.contactPoint = a.faceIndex;
-                    } else {
-                        obj.collider.contactPoint = undefined;
+                if(tempObj.collider.checked != internal.time.elapsedTime){
+                    if(tempObj != obj){
+                        v3.x = tempObj.pos.x - obj.pos.x;
+                        v3.y = tempObj.pos.y - obj.pos.y;
+                        var dist = v3.magnitude();
+                        dist = dist - obj.collider.maxRadius - tempObj.collider.maxRadius;
+                        //$d.Log(dist);
+                        if((dist) < 0){
+                            var a = FindAxisLeastPenetration(obj, tempObj);
+                            if(a.bestDistance < 0){
+                                //$d.Log(a);
+                                obj.collider.contactPoint = a.faceIndex;
+
+                                /*var v3 = obj.collider.normals[a.faceIndex];
+                                var mag = obj.velocity.magnitude();
+                                v3 = v3.normalized();
+                                v3.multiply(-mag*0.1);
+                                obj.addForce(v3.x, v3.y);*/
+                                //var tVel = new $e.Vector2(-obj.velocity.x, -obj.velocity.y);
+                                //var inAngle = tVel.angle(tempObj.velocity);
+                                //$d.Log(inAngle);
+                                //obj.velocity.rotate(inAngle);
+                            } else {
+                                obj.collider.contactPoint = undefined;
+                            }
+
+                            /*var b = FindAxisLeastPenetration(tempObj, obj);
+                            if(b.bestDistance < 0){
+                                //$d.Log(a);
+                                tempObj.collider.contactPoint = b.faceIndex;
+                            } else {
+                                tempObj.collider.contactPoint = undefined;
+                            }*/
+
+                            //obj.velocity = obj.velocity.rotate();
+                        }
                     }
-                    
-                    a = FindAxisLeastPenetration(tempObj, obj);
-                    if(a.bestDistance < 0){
-                        //$d.Log(a);
-                        tempObj.collider.contactPoint = a.faceIndex;
-                    } else {
-                        tempObj.collider.contactPoint = undefined;
-                    }
-                    //$d.Log(FindAxisLeastPenetration(tempObj, obj));
                 }
             }
         }
@@ -390,7 +418,7 @@
 
         this.PolygonCollider = function(vertexs){
             if(typeof vertexs == "object"){
-                if(vertexs.length > 3){
+                if(vertexs.length >= 3){
                     $e.BaseCollider.call(this, 2);
                     this.vertexs = vertexs;
                     this.calculateNormals();
@@ -401,14 +429,16 @@
                 $d.LogError("Invalid value, expected Array");
             }
         }
-        
+
         this.BaseCollider = function(type){
             this.type = type;
             this.contactPoint;
             this.vertexs = [];
             this.normals = [];
+            this.maxRadius = -1000000;
+            this.checked = 0;
         }
-        
+
         this.PolygonCollider.prototype.calculateNormals = this.BoxCollider.prototype.calculateNormals = function(){
             for(var i = 0; i < this.vertexs.length; i++){
                 var next = i + 1;
@@ -416,6 +446,10 @@
                     next = 0;
                 }
                 this.normals.push(this.vertexs[i].normal(this.vertexs[next]));
+                var dist = this.vertexs[i].magnitude();
+                if(this.maxRadius < dist){
+                    this.maxRadius = dist;
+                }
             }
         }
 
@@ -423,9 +457,14 @@
 
         //Vector2 Maths start
 
+        this.Vector2.prototype.multiply = function(mul){
+            this.x = this.x * mul;
+            this.y = this.y * mul;
+        }
+
         this.Vector2.prototype.normalized = function(){
             var l = this.magnitude();
-            return new $e.Vector2(x/l, y/l);
+            return new $e.Vector2(this.x/l, this.y/l);
         }
 
         this.Vector2.prototype.magnitude = function(){
@@ -440,14 +479,18 @@
             return ((this.x * v2.y) - (v2.x * this.y));
         }
 
-        this.Vector2.prototype.angle = function(){
-            return Math.atan2(this.y, this.x);
+        this.Vector2.prototype.angle = function(v2){
+            if(v2 == undefined){
+                return Math.atan2(this.y, this.x);
+            } else {
+                return Math.atan2(v2.y - this.y, v2.x - this.x);
+            }
         }
 
         this.Vector2.prototype.normal = function(v2){
             return new $e.Vector2(-(v2.y - this.y), v2.x - this.x);
         }
-        
+
         this.Vector2.prototype.rotate = function(angle){
             angle = angle * (Math.PI/180);
             var cosa = Math.cos(angle);
