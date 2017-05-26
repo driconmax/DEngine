@@ -8,16 +8,6 @@
         new script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js")
     ];
 
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.onreadystatechange= function () {
-        if (this.readyState == 'complete') helper();
-    }
-    script.onload= helper;
-    script.src= 'helper.js';
-    head.appendChild(script);
-
     var lastLoadIndex = -1;
     var currentIndex = 0;
     var inter = setInterval(function(){
