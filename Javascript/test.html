@@ -1,9 +1,28 @@
 <html>
-<head>
-    <script src="src/loader.js"></script>
-</head>
+    <head>
+        <script src="src/loader.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) { 
+                $loader.addscripts([
+                    new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
+                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js")
+                ]);
+                $loader.start();
+                $loader.onstart = function(r){
+                    console.log("Downloading " + r.totalbytes + " bytes");
+                }
+                $loader.onprogresschange = function(p){
+                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + "\t - \t" + p.progress + "%");
+                };
+                $loader.onload = function(){
+                    //If the download went correctly, we should be able to use the common library ($d).
+                    $d.Log("Load complete");
+                }
+            });
+        </script>
+    </head>
 
-<body>
-    <canvas id="mainCanvas" width="200" height="200"></canvas>
-</body>
+    <body>
+        <canvas id="mainCanvas" width="800" height="200"></canvas>
+    </body>
 </html>
