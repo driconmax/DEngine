@@ -435,6 +435,7 @@
             this.contactPoint;
             this.vertexs = [];
             this.normals = [];
+            this.checked = false;
             this.maxRadius = -1000000;
             this.checked = 0;
         }
