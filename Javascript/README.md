@@ -6,7 +6,7 @@ Javascript version.
 
 Your HTML file must have a body with a canvas element
 
-```markdown
+```html
 <html>
     <head>
         <title>DEngine</title>
@@ -21,20 +21,20 @@ Your HTML file must have a body with a canvas element
 ### Offline
 
 Include this line in your HTML file
-```markdown
+```html
 <script src="dengine/javascript/loader.min.js">
 ```
 
 ### Online
 
 Include this line in your HTML file
-```markdown
+```html
 <script src="http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/loader.min.js">
 ```
 
 To test if everything is working try this
 
-```markdown
+```javascript
 $e.init(document.getElementById("mainCanvas"), function(){}, function(){})
 $e.add2DObject(new $e.Object2D("Object 1", 20, 500, 5, 5), -50);
 $e.add2DObject(new $e.Object2D("Object 2", 60, 500, 1, 5), -50);
