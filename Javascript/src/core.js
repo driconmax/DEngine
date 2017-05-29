@@ -27,7 +27,7 @@
                 startTime: 0,
                 elapsedTime: 0,
                 miliseconds: 0,
-                speed: 0.01
+                speed: 1
             },
             controlVars: {
                 update: {
@@ -39,6 +39,12 @@
                 start: false
             },
             debugVars: [],
+            console: {
+                history: [],
+                border: false,
+                font: '7pt Calibri',
+                color: 'black'
+            },
             world: {
                 gravity: 10,
                 drag: 1
@@ -134,6 +140,10 @@
             });
         }
 
+        this.writeDebugConsole = function(string, type){
+            internal.console.history.push({name: string, type: type});
+        }
+
         //close
 
         //Private functions start
@@ -143,6 +153,9 @@
             var sd = new Date().getTime();
             internal.time.miliseconds = sd;
             internal.mouse = new $e.Vector2(0,0);
+
+            internal.console.size = new $e.Vector2(50,50);
+            internal.console.position = new $e.Vector2(internal.size.x - internal.console.size.x,0);
 
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
@@ -159,7 +172,7 @@
                     internal.time.elapsedTime += t;
                     internal.time.deltaTime = (t/1000) * internal.time.speed;
                     internal.time.miliseconds = d;
-                    internal.time.FPS = 1/internal.time.deltaTime/internal.time.speed;
+                    internal.time.FPS = 1/(internal.time.deltaTime/internal.time.speed);
                     internal.time.FPSsum += internal.time.FPS;
                     internal.time.FPScount++;
                     Update();
@@ -185,6 +198,7 @@
             DrawFPS();
             DrawMousePosition();
             DrawDebug();
+            DrawConsole();
             internal.controlVars.update.finish = true;
         }
 
@@ -200,6 +214,10 @@
             internal.ctx.font = '8pt Calibri';
             internal.ctx.fillStyle = 'black';
             internal.ctx.fillText(msg, 10, 25);
+        }
+
+        function DrawConsole(){
+
         }
 
         function DrawDebug(){
@@ -280,7 +298,7 @@
                                     var MTD = (tempObj.collider.vertexs[b.vertexIndex].sum(tempObj.pos)).substract(obj.collider.vertexs[a.vertexIndex].sum(obj.pos));
                                     $e.addDebugObject("MTD", MTD, []);
                                     $d.Log("A: " + a.bestDistance + "\tB: " + b.bestDistance);
-                                    
+
                                     if(obj.kinematic){
                                         tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
                                     } else if(tempObj.kinematic){
@@ -294,9 +312,51 @@
                                 }
                             }*/
 
-                            var MTD = Intersect(obj, tempObj);
+                            var MTD2 = Intersect(obj, tempObj);
+                            if(MTD2.intersect){
+                                
+                                
+                                obj.pos.x -= obj.velocity.x * internal.time.deltaTime;
+                                obj.pos.y -= obj.velocity.y * internal.time.deltaTime;
+
+                                var b = FindAxisLeastPenetration(tempObj, obj);
+                                var MTD = new $e.Vector2(0,0);
+                                
+                                var lastSpeed = obj.velocity.clone();
+                                var magnitud = lastSpeed.magnitude();
+                                obj.velocity.normalize();
+                                
+                                MTD.x = tempObj.collider.normals[b.vertexIndex].x - obj.velocity.x;
+                                MTD.y = tempObj.collider.normals[b.vertexIndex].y - obj.velocity.y;
+                                MTD.normalize();
+                                MTD.scale(magnitud);
+                                
+                                obj.velocity.x = MTD.x;
+                                obj.velocity.y = MTD.y;
+                                
+                                $d.Log("DIST: " + dist + "\tMTD: " + MTD.toString() + "\nOLD SPEED: " + lastSpeed.toString() + "\nNEW SPEED: " + obj.velocity.toString());
+                                
+                                
+                                /*if(obj.kinematic){
+                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
+                                } else if(tempObj.kinematic){
+                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
+                                } else {
+                                    MTD.scale(0.5);
+                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
+                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
+                                }*/
+                            }
+
+                            /*var MTD = Intersect(obj, tempObj);
                             if(MTD.intersect){
-                                $d.Log("DIST: " + dist + "\tMTD \t " + MTD.mtd.toString());
+                                MTD.mtd.rotate(-obj.rotation);
+                                //MTD.mtd.scale(internal.time.deltaTime);
+                                var a = FindAxisLeastPenetration(obj, tempObj);
+                                var b = FindAxisLeastPenetration(tempObj, obj);
+                                $d.Log("A: " + a.bestDistance + "\tB: " + b.bestDistance);
+                                $d.Log("VA: " + obj.velocity + "\tVB: " + tempObj.velocity);
+                                $d.Log("DIST: " + dist + "\tMTD: " + MTD.mtd.toString());
                                 if(obj.kinematic){
                                     tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD.mtd)); //-
                                 } else if(tempObj.kinematic){
@@ -306,7 +366,7 @@
                                     obj.pos = obj.pos.sum(obj.pos.sum(MTD.mtd)); //+
                                     tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD.mtd)); //-
                                 }
-                            }
+                            }*/
 
 
 
@@ -663,9 +723,19 @@
             return new $e.Vector2(this.x - v2.x, this.y - v2.y);
         }
 
+        this.Vector2.prototype.multiply = function(mul){
+            return $e.Vector2(this.x * mul, this.y * mul);
+        }
+
         this.Vector2.prototype.scale = function(mul){
             this.x = this.x * mul;
             this.y = this.y * mul;
+        }
+        
+        this.Vector2.prototype.normalize = function(){
+            var l = this.magnitude();
+            this.x = this.x/l;
+            this.y = this.y/l;
         }
 
         this.Vector2.prototype.normalized = function(){
