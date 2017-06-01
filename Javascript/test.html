@@ -20,6 +20,7 @@
 
                     $e.init(document.getElementById("mainCanvas"), function(){}, function(){})
                     oneObject();
+                    //newtonian();
 
                 }
             });
@@ -53,10 +54,12 @@
                 $e.addDebugObject("OBJ V", obj, ["velocity"]);
             }
             function newtonian(){
+                $e.setGravity(0);
                 for(var i = 0; i < 10; i++){
-                    var obj = new $e.Object2D("Object", Math.random()*800, Math.random()*200, 1, 1, 0.9);
+                    var obj = new $e.Object2D("Object", Math.random()*800, Math.random()*800, Math.random()*80, 1, 0.9);
                     obj.addForce(Math.random()*10-5,Math.random()*10-5);
                     obj.setCollider(new $e.BoxCollider(20,20));
+                    obj.newtonian = true;
                     $e.add2DObject(obj, -50);
                 }
             }
@@ -64,6 +67,6 @@
     </head>
 
     <body>
-        <canvas id="mainCanvas" width="800" height="200"></canvas>
+        <canvas id="mainCanvas" width="800" height="800"></canvas>
     </body>
 </html>

@@ -14,9 +14,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
     var $e = new function(){
 
         var constants = {
-            g: 6674*Math.pow(10,-11)
+            //g: 6674*Math.pow(10,-11)
+            g: 6.66
         }
-        
+
         var internal = {
             debug: true,
             started: false,
@@ -122,7 +123,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 $d.LogError("Invalid value, expected number");
             }
         }
-        
+
         this.setGravity = function(value){
             if(typeof value == "number"){
                 internal.world.gravity = value;
@@ -301,14 +302,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
                     if(tempObj.newtonian){
                         for(var j = 0; j < internal.phycs.length; j++){
-                            var obj = internal.phycs[i];
-                            if(obj.newtonian){
-                                var dist = obj.pos.substract(tempObj.pos);
-                                var dir = dist.normalized();
-                                dist = dist.magnitude();
-                                var f = constants.g*((tempObj.mass * obj.mass)/dist)
-                                dir.scale(f);
-                                tempObj.addForce(f.x, f.y);
+                            var obj = internal.phycs[j];
+                            if(obj != tempObj){
+                                if(obj.newtonian){
+                                    var dist = obj.pos.substract(tempObj.pos);
+                                    var dir = dist.normalized();
+                                    dist = dist.magnitude();
+                                    var f = constants.g*((tempObj.mass * obj.mass)/dist)
+                                    dir.scale(f);
+                                    tempObj.addForce(dir.x, dir.y);
+                                }
                             }
                         }
                     }
