@@ -23,11 +23,14 @@
                 FPSsum: 0,
                 lossedFrames: 0,
                 maxFPS: 60,
+                minFPS: 20,
                 deltaTime: 1,
                 startTime: 0,
+                behindTime: 0,
                 elapsedTime: 0,
                 miliseconds: 0,
-                speed: 1
+                speed: 1,
+                catchUpTime: 1/8
             },
             controlVars: {
                 update: {
@@ -175,6 +178,23 @@
                     internal.time.FPS = 1/(internal.time.deltaTime/internal.time.speed);
                     internal.time.FPSsum += internal.time.FPS;
                     internal.time.FPScount++;
+                    if(internal.time.FPS > 0 && internal.time.FPS < internal.time.minFPS){
+                        $d.LogWarning("Running behind the main timeline ("+internal.time.FPS+" seconds) trying to catch up at " + internal.time.catchUpTime + " seconds per frame.");
+                        internal.time.behindTime += internal.time.deltaTime;
+                        internal.time.deltaTime = 1/internal.time.minFPS;
+                    } else {
+                        if(internal.time.behindTime > 0){
+                            if(internal.time.behindTime < internal.time.catchUpTime){
+                                internal.time.deltaTime += internal.time.behindTime;
+                                internal.time.behindTime = 0;
+                                $d.LogWarning("Main timeline reached.");
+                            } else {
+                                internal.time.deltaTime += internal.time.catchUpTime;
+                                internal.time.behindTime -= internal.time.catchUpTime;
+                            }
+                        }
+
+                    }
                     Update();
                 } else {
                     internal.controlVars.update.exceeded++;
@@ -264,13 +284,7 @@
                     tempObj.velocity.y -= internal.world.gravity;
                     tempObj.velocity.y += tempObj.force.y;
 
-                    tempObj.pos.x += tempObj.velocity.x * internal.time.deltaTime;
-                    tempObj.pos.y += tempObj.velocity.y * internal.time.deltaTime;
-
-                    if(tempObj.pos.y < 9){
-                        tempObj.pos.y = 5;
-                        tempObj.velocity.y = -tempObj.velocity.y * tempObj.bounce;
-                    }
+                    tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
 
                 }
             }
@@ -290,114 +304,64 @@
                         //$d.Log(dist);
                         if((dist) < 0){
 
-                            /*var a = FindAxisLeastPenetration(obj, tempObj);
-                            if(a.bestDistance < 0){
-                                var b = FindAxisLeastPenetration(tempObj, obj);
-                                if(b.bestDistance < 0){
-
-                                    var MTD = (tempObj.collider.vertexs[b.vertexIndex].sum(tempObj.pos)).substract(obj.collider.vertexs[a.vertexIndex].sum(obj.pos));
-                                    $e.addDebugObject("MTD", MTD, []);
-                                    $d.Log("A: " + a.bestDistance + "\tB: " + b.bestDistance);
-
-                                    if(obj.kinematic){
-                                        tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
-                                    } else if(tempObj.kinematic){
-                                        obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
-                                    } else {
-                                        MTD.scale(0.5);
-                                        obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
-                                        tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
-                                    }
-
-                                }
-                            }*/
-
                             var MTD2 = Intersect(obj, tempObj);
                             if(MTD2.intersect){
-                                
-                                
-                                obj.pos.x -= obj.velocity.x * internal.time.deltaTime;
-                                obj.pos.y -= obj.velocity.y * internal.time.deltaTime;
-                                var lastSpeed = obj.velocity.clone();
 
+                                //Reflect velocity
+
+                                //A OBJ
                                 var b = FindAxisLeastPenetration(tempObj, obj);
                                 var MTD = new $e.Vector2(0,0);
-                                
+
                                 var N = tempObj.collider.normals[b.vertexIndex].clone();
+                                N.rotate(tempObj.rotation);
                                 var Ve = obj.velocity.clone();
                                 var dot = Ve.dot(N);
                                 var dot = -2*dot;
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
-                                
-                                obj.velocity.x = MTD.x;
-                                obj.velocity.y = MTD.y;
-                                
-                                $d.Log("DIST: " + dist + "\nOLD SPEED: " + lastSpeed.toString() + "\nNEW SPEED: " + obj.velocity.toString());
-                                
-                                
+
+                                obj.velocity.copy(MTD.multiply(obj.bounce));
+                                //obj.pos = obj.pos.sum(obj.velocity.multiply(internal.time.deltaTime));
+
+                                //B tempObj
+                                var a = FindAxisLeastPenetration(obj, tempObj);
+                                MTD = new $e.Vector2(0,0);
+
+                                N = obj.collider.normals[a.vertexIndex].clone();
+                                N.rotate(obj.rotation);
+                                Ve = tempObj.velocity.clone();
+                                dot = Ve.dot(N);
+                                dot = -2*dot;
+                                N.scale(dot);
+                                MTD = Ve.sum(N);
+
+                                tempObj.velocity.copy(MTD.multiply(tempObj.bounce));
+                                //tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
+
+                                //$d.Log("MTD: " + MTD2.mtd);
+
                                 /*if(obj.kinematic){
-                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
+                                    tempObj.velocity.copy(MTD.multiply(-tempObj.bounce));
                                 } else if(tempObj.kinematic){
-                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
+                                    obj.velocity.copy(MTD.multiply(obj.bounce));
                                 } else {
                                     MTD.scale(0.5);
-                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD)); //+
-                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD)); //-
+                                    obj.velocity.copy(MTD.multiply(obj.bounce));
+                                    tempObj.velocity.copy(MTD.multiply(-tempObj.bounce));
                                 }*/
-                            }
 
-                            /*var MTD = Intersect(obj, tempObj);
-                            if(MTD.intersect){
-                                MTD.mtd.rotate(-obj.rotation);
-                                //MTD.mtd.scale(internal.time.deltaTime);
-                                var a = FindAxisLeastPenetration(obj, tempObj);
-                                var b = FindAxisLeastPenetration(tempObj, obj);
-                                $d.Log("A: " + a.bestDistance + "\tB: " + b.bestDistance);
-                                $d.Log("VA: " + obj.velocity + "\tVB: " + tempObj.velocity);
-                                $d.Log("DIST: " + dist + "\tMTD: " + MTD.mtd.toString());
+                                //Move the object to exit the collision
                                 if(obj.kinematic){
-                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD.mtd)); //-
+                                    tempObj.pos = tempObj.pos.substract(MTD2.mtd);
                                 } else if(tempObj.kinematic){
-                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD.mtd)); //+
+                                    obj.pos = obj.pos.sum(MTD2.mtd);
                                 } else {
-                                    MTD.mtd.scale(0.5);
-                                    obj.pos = obj.pos.sum(obj.pos.sum(MTD.mtd)); //+
-                                    tempObj.pos = tempObj.pos.substract(tempObj.pos.sum(MTD.mtd)); //-
+                                    MTD2.mtd.scale(0.5);
+                                    obj.pos = obj.pos.sum(MTD2.mtd);
+                                    tempObj.pos = tempObj.pos.substract(MTD2.mtd);
                                 }
-                            }*/
-
-
-
-                            //var a = FindAxisLeastPenetration(obj, tempObj);
-                            //if(a.bestDistance < 0){
-                            //$d.Log(a);
-                            //obj.collider.contactPoint = a.faceIndex;
-
-                            /*var v3 = obj.collider.normals[a.faceIndex];
-                                var mag = obj.velocity.magnitude();
-                                v3 = v3.normalized();
-                                v3.scalar(-mag*0.1);
-                                obj.addForce(v3.x, v3.y);*/
-                            //var tVel = new $e.Vector2(-obj.velocity.x, -obj.velocity.y);
-                            //var inAngle = tVel.angle(tempObj.velocity);
-                            //$d.Log(inAngle);
-                            //obj.velocity.rotate(inAngle);
-
-
-                            //} else {
-                            //    obj.collider.contactPoint = undefined;
-                            //}
-
-                            /*var b = FindAxisLeastPenetration(tempObj, obj);
-                            if(b.bestDistance < 0){
-                                //$d.Log(a);
-                                tempObj.collider.contactPoint = b.faceIndex;
-                            } else {
-                                tempObj.collider.contactPoint = undefined;
-                            }*/
-
-                            //obj.velocity = obj.velocity.rotate();
+                            }
                         }
                     }
                 }
@@ -410,9 +374,9 @@
 
             for(var i = 0; i < obj.collider.vertexs.length; i++)
             {
-                var vr = new $e.Vector2(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                var vr = obj.collider.vertexs[i].clone();
                 vr.rotate(obj.rotation);
-                var v = new $e.Vector2(vr.x + obj.pos.x, vr.y + obj.pos.y);
+                var v = obj.pos.sum(vr);
                 var projection = dir.dot(v);
 
                 if(projection > bestProjection)
@@ -433,11 +397,11 @@
             for(var i = 0; i < A.collider.vertexs.length; i++)
             {
                 // Retrieve a face normal from A
-                var n = new $e.Vector2(A.collider.normals[i].x, A.collider.normals[i].y);
+                var n = A.collider.normals[i].clone();
                 n.rotate(A.rotation);
 
                 // Retrieve support point from B along -n
-                var s = GetSupport(B, new $e.Vector2(-n.x, -n.y));
+                var s = GetSupport(B, n.multiply(-1));
 
                 // Retrieve vertex on face from A, transform into
                 // B's model space
@@ -484,8 +448,8 @@
 
             J = B.collider.vertexs.length - 1
             for(var I = 0; I < B.collider.vertexs.length; I++) 
-            { 
-                var E = (B.collider.vertexs[I].rrotate(B.rotation).sum(B.pos)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.pos)); 
+            {
+                var E = (B.collider.vertexs[I].sum(B.pos).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.pos)); 
                 var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x); 
 
                 if (AxisSeparatePolygons (N, A, B)) 
@@ -546,7 +510,7 @@
             // the axis and multiply by interval overlap) 
             var axis_length_squared = Axis.dot(Axis); 
 
-            Axis *= depth / axis_length_squared; 
+            Axis.scale(depth / axis_length_squared); 
             return false;
         }
 
@@ -560,7 +524,7 @@
                 if (d2 < mind2) 
                 { 
                     mind2 = d2; 
-                    MTD = PushVectors[I]; 
+                    MTD = PushVectors[I].clone(); 
                 } 
             } 
             return MTD; 
@@ -583,7 +547,8 @@
                 internal.ctx.fillStyle = obj.color;
                 var tv = new $e.Vector2(obj.pos.x, internal.size.y - obj.pos.y);
                 internal.ctx.translate(tv.x, tv.y);
-                internal.ctx.rotate(obj.rotation * Math.PI / 180);
+                var rot = obj.rotation * Math.PI / 180;
+                internal.ctx.rotate(-rot);
                 internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
                 if(internal.debug && obj.collider != undefined) {
                     internal.ctx.beginPath();
@@ -595,14 +560,15 @@
                             internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
                         }
                     }
-                    internal.ctx.strokeStyle = '#0F4';
+                    //internal.ctx.strokeStyle = '#0F4';
+                    internal.ctx.strokeStyle = '#AFA';
                     internal.ctx.stroke();                    
                     internal.ctx.fillStyle = "#F77";
                     if(obj.collider.contactPoint != undefined){
                         internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
                     }
                 }
-                internal.ctx.rotate(-obj.rotation * Math.PI / 180);
+                internal.ctx.rotate(rot);
                 internal.ctx.translate(-tv.x, -tv.y);
                 //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
             }
@@ -629,7 +595,7 @@
             this.angularVelocity = 0;
             this.velocity = new $e.Vector2(0,0);
             this.force = new $e.Vector2(0,0);
-            this.color = "#000";
+            this.color = "#DDD";
         }
 
 
@@ -723,14 +689,14 @@
         }
 
         this.Vector2.prototype.multiply = function(mul){
-            return $e.Vector2(this.x * mul, this.y * mul);
+            return new $e.Vector2(this.x * mul, this.y * mul);
         }
 
         this.Vector2.prototype.scale = function(mul){
             this.x = this.x * mul;
             this.y = this.y * mul;
         }
-        
+
         this.Vector2.prototype.normalize = function(){
             var l = this.magnitude();
             this.x = this.x/l;
@@ -781,13 +747,24 @@
             return new $e.Vector2(this.x*cosa - this.y*sina, this.x*sina + this.y*cosa);
         }
 
+        this.Vector2.prototype.swap = function(){
+            var tX = this.x;
+            this.x = this.y;
+            this.y = tX;
+        }
+
         this.Vector2.prototype.clone = function(){
             return new $e.Vector2(this.x, this.y);
         }
 
+        this.Vector2.prototype.copy = function(v2){
+            this.x = v2.x;
+            this.y = v2.y;
+        }
+
         this.Vector2.prototype.toString = function(fixed){
             if(fixed != undefined){
-                var f = 10^fixed;
+                var f = Math.pow(10, fixed);
                 return "X: " + Math.round(this.x*f)/f + "\tY: " + Math.round(this.y*f)/f;
             } else {
                 return "X: " + this.x + "\tY: " + this.y;
