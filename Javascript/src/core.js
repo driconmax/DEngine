@@ -318,23 +318,22 @@
                                 
                                 obj.pos.x -= obj.velocity.x * internal.time.deltaTime;
                                 obj.pos.y -= obj.velocity.y * internal.time.deltaTime;
+                                var lastSpeed = obj.velocity.clone();
 
                                 var b = FindAxisLeastPenetration(tempObj, obj);
                                 var MTD = new $e.Vector2(0,0);
                                 
-                                var lastSpeed = obj.velocity.clone();
-                                var magnitud = lastSpeed.magnitude();
-                                obj.velocity.normalize();
-                                
-                                MTD.x = tempObj.collider.normals[b.vertexIndex].x - obj.velocity.x;
-                                MTD.y = tempObj.collider.normals[b.vertexIndex].y - obj.velocity.y;
-                                MTD.normalize();
-                                MTD.scale(magnitud);
+                                var N = tempObj.collider.normals[b.vertexIndex].clone();
+                                var Ve = obj.velocity.clone();
+                                var dot = Ve.dot(N);
+                                var dot = -2*dot;
+                                N.scale(dot);
+                                MTD = Ve.sum(N);
                                 
                                 obj.velocity.x = MTD.x;
                                 obj.velocity.y = MTD.y;
                                 
-                                $d.Log("DIST: " + dist + "\tMTD: " + MTD.toString() + "\nOLD SPEED: " + lastSpeed.toString() + "\nNEW SPEED: " + obj.velocity.toString());
+                                $d.Log("DIST: " + dist + "\nOLD SPEED: " + lastSpeed.toString() + "\nNEW SPEED: " + obj.velocity.toString());
                                 
                                 
                                 /*if(obj.kinematic){
@@ -703,7 +702,7 @@
                 if(next == this.vertexs.length){
                     next = 0;
                 }
-                this.normals.push(this.vertexs[i].normal(this.vertexs[next]));
+                this.normals.push(this.vertexs[i].normal(this.vertexs[next]).normalized());
                 var dist = this.vertexs[i].magnitude();
                 if(this.maxRadius < dist){
                     this.maxRadius = dist;
