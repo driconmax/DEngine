@@ -2,6 +2,8 @@
 
 #DSV:0.5#
 
+Collision Response - http://elancev.name/oliver/2D%20polygon.htm
+
 */
 
 
@@ -11,6 +13,10 @@
 
     var $e = new function(){
 
+        var constants = {
+            g: 6674*Math.pow(10,-11)
+        }
+        
         var internal = {
             debug: true,
             started: false,
@@ -116,6 +122,14 @@
                 $d.LogError("Invalid value, expected number");
             }
         }
+        
+        this.setGravity = function(value){
+            if(typeof value == "number"){
+                internal.world.gravity = value;
+            } else {
+                $d.LogError("Invalid value, expected number");
+            }
+        }
 
         this.stats = function(){
             $d.Log("STATS");
@@ -179,7 +193,7 @@
                     internal.time.FPSsum += internal.time.FPS;
                     internal.time.FPScount++;
                     if(internal.time.FPS > 0 && internal.time.FPS < internal.time.minFPS){
-                        $d.LogWarning("Running behind the main timeline ("+internal.time.FPS+" seconds) trying to catch up at " + internal.time.catchUpTime + " seconds per frame.");
+                        $d.LogWarning("Running behind the main timeline ("+(internal.time.FPS+internal.time.behindTime)+" seconds) trying to catch up at " + internal.time.catchUpTime + " seconds per frame.");
                         internal.time.behindTime += internal.time.deltaTime;
                         internal.time.deltaTime = 1/internal.time.minFPS;
                     } else {
@@ -285,7 +299,19 @@
                     tempObj.velocity.y += tempObj.force.y;
 
                     tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
-
+                    if(tempObj.newtonian){
+                        for(var j = 0; j < internal.phycs.length; j++){
+                            var obj = internal.phycs[i];
+                            if(obj.newtonian){
+                                var dist = obj.pos.substract(tempObj.pos);
+                                var dir = dist.normalized();
+                                dist = dist.magnitude();
+                                var f = constants.g*((tempObj.mass * obj.mass)/dist)
+                                dir.scale(f);
+                                tempObj.addForce(f.x, f.y);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -309,6 +335,8 @@
 
                                 //Reflect velocity
 
+                                var j = (obj.bounce - tempObj.bounce + 1)*(tempObj.velocity.magnitude() - obj.velocity.magnitude())*Math.pow((1/obj.mass + 1/tempObj.mass), -1);
+
                                 //A OBJ
                                 var b = FindAxisLeastPenetration(tempObj, obj);
                                 var MTD = new $e.Vector2(0,0);
@@ -321,7 +349,9 @@
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-                                obj.velocity.copy(MTD.multiply(obj.bounce));
+                                obj.velocity.copy(MTD);
+                                obj.velocity.normalize();
+                                obj.velocity.scale(j/obj.mass);
                                 //obj.pos = obj.pos.sum(obj.velocity.multiply(internal.time.deltaTime));
 
                                 //B tempObj
@@ -336,7 +366,10 @@
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-                                tempObj.velocity.copy(MTD.multiply(tempObj.bounce));
+
+                                tempObj.velocity.copy(MTD);
+                                tempObj.velocity.normalize();
+                                tempObj.velocity.scale(j/tempObj.mass);
                                 //tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
 
                                 //$d.Log("MTD: " + MTD2.mtd);
@@ -389,7 +422,6 @@
             return bestVertex;
         }
 
-        //function FindAxisLeastPenetration(faceIndex, A, B ){
         function FindAxisLeastPenetration(A, B){
             var bestDistance = -1000000;
             var bestIndex;
@@ -427,8 +459,6 @@
                 vertexIndex: bestIndex
             };
         }
-
-        /* Collision Response - http://elancev.name/oliver/2D%20polygon.htm */
 
         function Intersect(A, B){ 
             // potential separation axes. they get converted into push 
@@ -471,7 +501,6 @@
                 mtd: MTD
             }
         }
-
 
         function CalculateInterval(Axis, P){
             var min, max;
@@ -589,7 +618,8 @@
             this.scale = new $e.Vector2(1,1);
             this.rotation = 0;
             this.kinematic = (mass == 0);
-            this.mass = mass;
+            this.mass = ((mass == 0)? 1 : mass);
+            this.newtonian = false;
             this.drag = drag;
             this.bounce = bounce;
             this.angularVelocity = 0;
@@ -603,12 +633,14 @@
         //  0 - Impulse
         //  1 - Constant force
         this.Object2D.prototype.addForce = function(x, y, forceType){
-            if(forceType == undefined || forceType == 0){
-                this.velocity.x += x;
-                this.velocity.y += y;
-            } else {
-                this.force.x += x;
-                this.force.y += y;
+            if(!this.kinematic){
+                if(forceType == undefined || forceType == 0){
+                    this.velocity.x += x/this.mass;
+                    this.velocity.y += y/this.mass;
+                } else {
+                    this.force.x += x;
+                    this.force.y += y;
+                }
             }
         }
 
@@ -698,12 +730,15 @@
         }
 
         this.Vector2.prototype.normalize = function(){
-            var l = this.magnitude();
-            this.x = this.x/l;
-            this.y = this.y/l;
+            if(this.x != 0 && this.y != 0){
+                var l = this.magnitude();
+                this.x = this.x/l;
+                this.y = this.y/l;
+            }
         }
 
         this.Vector2.prototype.normalized = function(){
+            if(this.x == 0 && this.y == 0) return this;
             var l = this.magnitude();
             return new $e.Vector2(this.x/l, this.y/l);
         }
