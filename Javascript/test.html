@@ -63,6 +63,37 @@
                     $e.add2DObject(obj, -50);
                 }
             }
+            function fewobjects(){
+                $e.init(document.getElementById("mainCanvas"), function(){}, function(){})
+                var obj0;
+                for(var i = 0; i < 10; i++){
+                    obj0 = new $e.Object2D("Obj " + i, 20, 60, 1, 1, 0.9);
+                    obj0.addForce(30,10);
+                    obj0.setCollider(new $e.BoxCollider(20,20));
+                    obj0.rotation = 45;
+                    $e.add2DObject(obj0, -50);
+                }
+                var obj2 = new $e.Object2D("Floor", 350, 10, 0, 0, 0.9);
+                obj2.addForce(0,0);
+                obj2.setCollider(new $e.BoxCollider(700,20));
+                obj2.rotation = 0;
+                $e.add2DObject(obj2, -50);
+                var obj5 = new $e.Object2D("Roof", 350, 140, 0, 0, 0.9);
+                obj5.addForce(0,0);
+                obj5.setCollider(new $e.BoxCollider(700,20));
+                obj5.rotation = 0;
+                $e.add2DObject(obj5, -50);
+                var obj3 = new $e.Object2D("WallL", 690, 75, 0, 0, 0.9);
+                obj3.addForce(0,0);
+                obj3.setCollider(new $e.BoxCollider(150,20));
+                obj3.rotation = 90;
+                $e.add2DObject(obj3, -50);
+                var obj4 = new $e.Object2D("WallR", 10, 75, 0, 0, 0.9);
+                obj4.addForce(0,0);
+                obj4.setCollider(new $e.BoxCollider(150,20));
+                obj4.rotation = 90;
+                $e.add2DObject(obj4, -50);
+            }
         </script>
     </head>
 

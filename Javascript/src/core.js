@@ -65,6 +65,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 background: "#FFF"
             },
             mouse: 0,
+            mouseover: undefined,
             layers: [],
             phycs: [],
             user: {}
@@ -172,8 +173,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.time.miliseconds = sd;
             internal.mouse = new $e.Vector2(0,0);
 
+            //Creates a new console
             internal.console.size = new $e.Vector2(50,50);
             internal.console.position = new $e.Vector2(internal.size.x - internal.console.size.x,0);
+
+            //Creates the object for the mouse position
+            internal.mouse = new $e.Object2D("Mouse", 0, 0, 1, 1, 1);
+            internal.mouse.setCollider(new $e.BoxCollider(0.1,0.1));
 
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
@@ -245,7 +251,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawMousePosition(){
-            var msg = 'Mouse position: ' + internal.mouse.x + ',' + internal.mouse.y;
+            var msg = 'Mouse position: ' + internal.mouse.pos.x + ',' + internal.mouse.pos.y;
             internal.ctx.font = '8pt Calibri';
             internal.ctx.fillStyle = 'black';
             internal.ctx.fillText(msg, 10, 25);
@@ -278,8 +284,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
-            internal.mouse.x = evt.clientX - rect.left;
-            internal.mouse.y = evt.clientY - rect.top;
+            internal.mouse.pos.x = evt.clientX - rect.left;
+            internal.mouse.pos.y = internal.size.y - evt.clientY + rect.top;
+            for(var i = 0; i < internal.phycs.length; i++){
+                var obj = internal.phycs[i];
+                var inter = Intersect(internal.mouse, obj);
+                if(inter.intersect){
+                    internal.mouseover = obj;
+                    break;
+                } else {
+                    internal.mouseover = undefined;
+                }
+            }
         }
 
         function UpdatePhysics(){
@@ -581,6 +597,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 internal.ctx.translate(tv.x, tv.y);
                 var rot = obj.rotation * Math.PI / 180;
                 internal.ctx.rotate(-rot);
+                if(internal.mouseover == obj){
+                    internal.ctx.shadowBlur = 2;
+                    internal.ctx.shadowColor = "#3c84c1";
+                }
                 internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
                 if(internal.debug && obj.collider != undefined) {
                     internal.ctx.beginPath();
@@ -593,6 +613,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         }
                     }
                     //internal.ctx.strokeStyle = '#0F4';
+
                     internal.ctx.strokeStyle = '#AFA';
                     internal.ctx.stroke();                    
                     internal.ctx.fillStyle = "#F77";
@@ -601,7 +622,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     }
                 }
                 internal.ctx.rotate(rot);
+                internal.ctx.font = '6pt Calibri';
+                internal.ctx.fillStyle = 'black';
+                internal.ctx.fillText(obj.name, 0, 0);
                 internal.ctx.translate(-tv.x, -tv.y);
+                internal.ctx.shadowBlur = 0;
                 //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
             }
         }
