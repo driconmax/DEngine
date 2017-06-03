@@ -368,10 +368,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-                                obj.velocity.copy(MTD);
-                                obj.velocity.normalize();
-                                obj.velocity.scale(j/obj.mass);
-                                //obj.pos = obj.pos.sum(obj.velocity.multiply(internal.time.deltaTime));
+                                //obj.velocity.copy(MTD);
+                                //obj.velocity.normalize();
+                                //obj.velocity.scale(j/obj.mass);
+                                obj.pos = obj.pos.sum(obj.velocity.multiply(internal.time.deltaTime));
 
                                 //B tempObj
                                 var a = FindAxisLeastPenetration(obj, tempObj);
@@ -386,10 +386,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 MTD = Ve.sum(N);
 
 
-                                tempObj.velocity.copy(MTD);
-                                tempObj.velocity.normalize();
-                                tempObj.velocity.scale(j/tempObj.mass);
-                                //tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
+                                //tempObj.velocity.copy(MTD);
+                                //tempObj.velocity.normalize();
+                                //tempObj.velocity.scale(j/tempObj.mass);
+                                tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
 
                                 //$d.Log("MTD: " + MTD2.mtd);
 
