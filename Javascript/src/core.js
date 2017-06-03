@@ -368,6 +368,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
+                                obj.velocity.copy(MTD.multiply(obj.bounce));
                                 //obj.velocity.copy(MTD);
                                 //obj.velocity.normalize();
                                 //obj.velocity.scale(j/obj.mass);
@@ -385,7 +386,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-
+                                tempObj.velocity.copy(MTD.multiply(tempObj.bounce));
                                 //tempObj.velocity.copy(MTD);
                                 //tempObj.velocity.normalize();
                                 //tempObj.velocity.scale(j/tempObj.mass);
