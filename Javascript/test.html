@@ -64,19 +64,19 @@
                 }
             }
             function planets(){
-                $e.setGravity(0);
+                e.setGravity(0);
                 var planet = new $e.Object2D("Planet", 400, 400, 2000, 1, 0.9);
                 planet.addForce(0,0);
                 planet.setCollider(new $e.BoxCollider(20,20));
                 planet.newtonian = true;
                 $e.add2DObject(planet, -50);
-                
-                var moon = new $e.Object2D("Moon", 450, 400, 200, 1, 0.9);
-                moon.addForce(0,1);
+
+                var moon = new $e.Object2D("Moon", 490, 400, 200, 1, 0.9);
+                moon.addForce(0,4000);
                 moon.setCollider(new $e.BoxCollider(20,20));
                 moon.newtonian = true;
                 $e.add2DObject(moon, -50);
-                
+
             }
             function fewobjects(){
                 $e.init(document.getElementById("mainCanvas"), function(){}, function(){})

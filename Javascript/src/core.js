@@ -15,7 +15,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         var constants = {
             //g: 6674*Math.pow(10,-11)
-            g: 6.66
+            g: 0.01
         }
 
         var internal = {
