@@ -36,8 +36,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 behindTime: 0,
                 elapsedTime: 0,
                 miliseconds: 0,
-                speed: 1,
-                catchUpTime: 1/8
+                speed: 1, //Multiplier
+                catchUpTime: 1/8, //S
+                intervalClear: 10000, //MS
+                elapsedLastClear: 0, //MS
+                intervalRestartDelay: 40 //MS
             },
             controlVars: {
                 update: {
@@ -185,7 +188,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 UpdateMousePos(internal.canvas, evt);
             }, false);
 
-            internal.time.interval = setInterval(function(){
+            internal.time.interval = StartInterval();
+        }
+
+        function StartInterval(){
+            return setInterval(function(){
                 if(internal.controlVars.update.finish){
                     internal.controlVars.update.finish = false;
                     internal.controlVars.update.alerted = false;
@@ -194,6 +201,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     var d = new Date().getTime();
                     var t = d - internal.time.miliseconds;
                     internal.time.elapsedTime += t;
+                    internal.time.elapsedLastClear += t;
                     internal.time.deltaTime = (t/1000) * internal.time.speed;
                     internal.time.miliseconds = d;
                     internal.time.FPS = 1/(internal.time.deltaTime/internal.time.speed);
@@ -216,7 +224,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         }
 
                     }
-                    Update();
+                    if(internal.time.elapsedLastClear >= internal.time.intervalClear){
+                        internal.time.elapsedLastClear = 0;
+                        clearInterval(internal.time.interval);
+                        ReStartInterval();
+                    } else {
+                        Update();
+                    }
                 } else {
                     internal.controlVars.update.exceeded++;
                     internal.time.lossedFrames++;
@@ -226,6 +240,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     }
                 }
             }, 1000/internal.time.maxFPS);
+        }
+
+        function ReStartInterval(){
+            setTimeout(function(){
+                internal.controlVars.update.finish = true;
+                internal.time.interval = StartInterval();
+            }, internal.time.intervalRestartDelay);
         }
 
         function Update(){
@@ -354,8 +375,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                                 //Reflect velocity
 
-                                var j = (obj.bounce - tempObj.bounce + 1)*(tempObj.velocity.magnitude() - obj.velocity.magnitude())*Math.pow((1/obj.mass + 1/tempObj.mass), -1);
-
+                                //var j = (obj.bounce - tempObj.bounce + 1)*(tempObj.velocity.magnitude() - obj.velocity.magnitude())*Math.pow((1/obj.mass + 1/tempObj.mass), -1);
+                                var rf = (obj.bounce + tempObj.bounce)/2;
+                                //var massF = Math.pow((1/obj.mass + 1/tempObj.mass), -1);
+                                //var dV = tempObj.velocity.substract(obj.velocity).magnitude();
+                                var jb = rf * ((obj.velocity.multiply(obj.mass - tempObj.mass).sum(tempObj.velocity.multiply(tempObj.mass*2)).magnitude())/(obj.mass + tempObj.mass));
+                                var ja = rf * ((tempObj.velocity.multiply(tempObj.mass - obj.mass).sum(obj.velocity.multiply(obj.mass*2)).magnitude())/(tempObj.mass + obj.mass));
+                                //$d.Log("RF: "+rf+"\tJ: " + j);
+                                //$d.Log("OV1: "+tempObj.velocity.toString(2)+"\tOV2: " +  obj.velocity.toString(2));
+                                //$d.Log("OM1: "+tempObj.velocity.magnitude()+"\tOM2: " +  obj.velocity.magnitude());
+                                
                                 //A OBJ
                                 var b = FindAxisLeastPenetration(tempObj, obj);
                                 var MTD = new $e.Vector2(0,0);
@@ -368,10 +397,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-                                obj.velocity.copy(MTD.multiply(obj.bounce));
-                                //obj.velocity.copy(MTD);
-                                //obj.velocity.normalize();
-                                //obj.velocity.scale(j/obj.mass);
+                                //obj.velocity.copy(MTD.multiply(obj.bounce));
+                                obj.velocity.copy(MTD);
+                                obj.velocity.normalize();
+                                obj.velocity.scale(ja);
                                 //obj.pos = obj.pos.sum(obj.velocity.multiply(internal.time.deltaTime));
 
                                 //B tempObj
@@ -386,10 +415,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 N.scale(dot);
                                 MTD = Ve.sum(N);
 
-                                tempObj.velocity.copy(MTD.multiply(tempObj.bounce));
-                                //tempObj.velocity.copy(MTD);
-                                //tempObj.velocity.normalize();
-                                //tempObj.velocity.scale(j/tempObj.mass);
+                                //tempObj.velocity.copy(MTD.multiply(tempObj.bounce));
+                                tempObj.velocity.copy(MTD);
+                                tempObj.velocity.normalize();
+                                tempObj.velocity.scale(jb);
                                 //tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
 
                                 //$d.Log("MTD: " + MTD2.mtd);
@@ -404,6 +433,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     tempObj.velocity.copy(MTD.multiply(-tempObj.bounce));
                                 }*/
 
+                                //$d.Log("ja: " + ja + "\tjb: " + jb + "\tVa: " + obj.velocity.toString(2) + "\tVb: " + tempObj.velocity.toString(2));
+                                
                                 //Move the object to exit the collision
                                 if(obj.kinematic){
                                     tempObj.pos = tempObj.pos.substract(MTD2.mtd);
