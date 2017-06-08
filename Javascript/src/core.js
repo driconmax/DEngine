@@ -379,8 +379,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 var rf = (obj.bounce + tempObj.bounce)/2;
                                 //var massF = Math.pow((1/obj.mass + 1/tempObj.mass), -1);
                                 //var dV = tempObj.velocity.substract(obj.velocity).magnitude();
-                                var jb = rf * ((obj.velocity.multiply(obj.mass - tempObj.mass).sum(tempObj.velocity.multiply(tempObj.mass*2)).magnitude())/(obj.mass + tempObj.mass));
-                                var ja = rf * ((tempObj.velocity.multiply(tempObj.mass - obj.mass).sum(obj.velocity.multiply(obj.mass*2)).magnitude())/(tempObj.mass + obj.mass));
+                                var ja = rf * ((obj.velocity.multiply(obj.mass - tempObj.mass).sum(tempObj.velocity.multiply(tempObj.mass*2)).magnitude())/(obj.mass + tempObj.mass));
+                                var jb = rf * ((tempObj.velocity.multiply(tempObj.mass - obj.mass).sum(obj.velocity.multiply(obj.mass*2)).magnitude())/(tempObj.mass + obj.mass));
                                 //$d.Log("RF: "+rf+"\tJ: " + j);
                                 //$d.Log("OV1: "+tempObj.velocity.toString(2)+"\tOV2: " +  obj.velocity.toString(2));
                                 //$d.Log("OM1: "+tempObj.velocity.magnitude()+"\tOM2: " +  obj.velocity.magnitude());
