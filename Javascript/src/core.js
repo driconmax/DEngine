@@ -331,10 +331,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                     tempObj.rotation += tempObj.angularVelocity * internal.time.deltaTime;
 
-                    tempObj.velocity.x += tempObj.force.x;
+                    tempObj.velocity.x += tempObj.force.x/tempObj.mass;
 
                     tempObj.velocity.y -= internal.world.gravity;
-                    tempObj.velocity.y += tempObj.force.y;
+                    tempObj.velocity.y += tempObj.force.y/tempObj.mass;
 
                     tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
                     if(tempObj.newtonian){

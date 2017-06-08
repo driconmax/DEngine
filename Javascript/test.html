@@ -56,12 +56,27 @@
             function newtonian(){
                 $e.setGravity(0);
                 for(var i = 0; i < 10; i++){
-                    var obj = new $e.Object2D("Object", Math.random()*800, Math.random()*800, Math.random()*80, 1, 0.9);
+                    var obj = new $e.Object2D("Object", Math.random()*800, Math.random()*800, Math.random()*1, 1, 0.9);
                     obj.addForce(Math.random()*10-5,Math.random()*10-5);
                     obj.setCollider(new $e.BoxCollider(20,20));
                     obj.newtonian = true;
                     $e.add2DObject(obj, -50);
                 }
+            }
+            function planets(){
+                $e.setGravity(0);
+                var planet = new $e.Object2D("Planet", 400, 400, 2000, 1, 0.9);
+                planet.addForce(0,0);
+                planet.setCollider(new $e.BoxCollider(20,20));
+                planet.newtonian = true;
+                $e.add2DObject(planet, -50);
+                
+                var moon = new $e.Object2D("Moon", 450, 400, 200, 1, 0.9);
+                moon.addForce(0,1);
+                moon.setCollider(new $e.BoxCollider(20,20));
+                moon.newtonian = true;
+                $e.add2DObject(moon, -50);
+                
             }
             function fewobjects(){
                 $e.init(document.getElementById("mainCanvas"), function(){}, function(){})
