@@ -311,34 +311,34 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function UpdatePhysics(){
-            var tempObj;
+            var objA;
             for(var i = 0; i < internal.phycs.length; i++){
 
-                tempObj = internal.phycs[i];
+                objA = internal.phycs[i];
 
-                if(!tempObj.kinematic){
-                    CheckCollision(tempObj, false);  
-                    tempObj.collider.checked = internal.time.elapsedTime;
+                if(!objA.kinematic){
+                    CheckCollision(objA, false);  
+                    objA.collider.checked = internal.time.elapsedTime;
 
-                    tempObj.rotation += tempObj.angularVelocity * internal.time.deltaTime;
+                    objA.rotation -= objA.angularVelocity * internal.time.deltaTime;
 
-                    tempObj.velocity.x += tempObj.force.x/tempObj.mass;
+                    objA.velocity.x += objA.force.x/objA.mass;
 
-                    tempObj.velocity.y -= internal.world.gravity;
-                    tempObj.velocity.y += tempObj.force.y/tempObj.mass;
+                    objA.velocity.y -= internal.world.gravity;
+                    objA.velocity.y += objA.force.y/objA.mass;
 
-                    tempObj.pos = tempObj.pos.sum(tempObj.velocity.multiply(internal.time.deltaTime));
-                    if(tempObj.newtonian){
+                    objA.pos = objA.pos.sum(objA.velocity.multiply(internal.time.deltaTime));
+                    if(objA.newtonian){
                         for(var j = 0; j < internal.phycs.length; j++){
-                            var obj = internal.phycs[j];
-                            if(obj != tempObj){
-                                if(obj.newtonian){
-                                    var dist = obj.pos.substract(tempObj.pos);
+                            var objB = internal.phycs[j];
+                            if(objB != objA){
+                                if(objB.newtonian){
+                                    var dist = objB.pos.substract(objA.pos);
                                     var dir = dist.normalized();
                                     dist = dist.magnitude();
-                                    var f = constants.g*((tempObj.mass * obj.mass)/dist)
+                                    var f = constants.g*((objA.mass * objB.mass)/dist)
                                     dir.scale(f);
-                                    tempObj.addForce(dir.x, dir.y);
+                                    objA.addForce(dir.x, dir.y);
                                 }
                             }
                         }
@@ -348,153 +348,161 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function CheckCollision(obj, retObj){
-            var tempObj;
+            var objA = obj;
+            var objB;
             var v3 = new $e.Vector2(0,0);
             for(var i = 0; i < internal.phycs.length; i++){
-                tempObj = internal.phycs[i];
-                if(tempObj.collider.checked != internal.time.elapsedTime || retObj){
-                    if(tempObj != obj && (!obj.kinematic || !tempObj.kinematic)){
-                        v3.x = tempObj.pos.x - obj.pos.x;
-                        v3.y = tempObj.pos.y - obj.pos.y;
+                objB = internal.phycs[i];
+                if(objB.collider.checked != internal.time.elapsedTime || retObj){
+                    if(objB != obj && (!objA.kinematic || !objB.kinematic)){
+                        v3.x = objB.pos.x - objA.pos.x;
+                        v3.y = objB.pos.y - objA.pos.y;
                         var dist = v3.magnitude();
-                        dist = dist - obj.collider.maxRadius - tempObj.collider.maxRadius;
+                        dist = dist - objA.collider.maxRadius - objB.collider.maxRadius;
                         //$d.Log(dist);
                         if((dist) < 0){
 
                             var Na, Nb, sep;
+                            var contactPA, contactPB;
                             var trueCollide = false;
 
                             //COLLISION CIRCLE-CIRCLE
-                            if(obj.collider.type == 1 && tempObj.collider.type == 1){
-                                if(retObj) return tempObj;
+                            if(objA.collider.type == 1 && objB.collider.type == 1){
+                                if(retObj) return objB;
                                 trueCollide = true;
-                                //sep = tempObj.pos.substract(obj.pos);
-                                var dir = tempObj.pos.substract(obj.pos).normalized();
-                                sep = dir.multiply(obj.pos.substract(tempObj.pos).magnitude() - obj.collider.maxRadius - tempObj.collider.maxRadius);
-                                Na = obj.pos.substract(tempObj.pos).normalized();
-                                Nb = tempObj.pos.substract(obj.pos).normalized();
-                            } else if(obj.collider.type == 1 && (tempObj.collider.type == 0 || tempObj.collider.type == 2)){ //COLLISION CIRCLE-POLYGON
+                                //sep = objB.pos.substract(objA.pos);
+                                var dir = objB.pos.substract(objA.pos).normalized();
+                                sep = dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
+                                Na = objA.pos.substract(objB.pos).normalized();
+                                Nb = objB.pos.substract(objA.pos).normalized();
+                            } else if(objA.collider.type == 1 && (objB.collider.type == 0 || objB.collider.type == 2)){ //COLLISION CIRCLE-POLYGON
                                 var closest = {
                                     vertex: -1,
                                     distance: 1000000
                                 };
-                                for(var j = 0; j < tempObj.collider.vertexs.length; j++){
-                                    var sub = tempObj.collider.vertexs[j].clone().rrotate(tempObj.rotation).sum(tempObj.pos).substract(obj.pos);
+                                /*for(var j = 0; j < objB.collider.vertexs.length; j++){
+                                    var sub = objB.collider.vertexs[j].clone().rrotate(objB.rotation).sum(objB.pos).substract(objA.pos);
                                     var dist = sub.magnitude();
                                     var dir = sub.normalized();
-                                    if(dist < obj.collider.radius){
+                                    if(dist < objA.collider.radius){
                                         if(closest.distance > dist){
                                             closest.distance = dist;
                                             closest.vertex = j;
                                             closest.dir = dir;
                                         }
                                     }
-                                }
-                                if(closest.vertex != -1){
-                                    for(var j = 0; j < tempObj.collider.vertexs.length; j++){
-                                        var aV = tempObj.collider.vertexs[j].sum(tempObj.pos).rrotate(tempObj.rotation);
+                                }*/
+                                if(closest.vertex == -1){
+                                    for(var j = 0; j < objB.collider.vertexs.length; j++){
+                                        var aV = objB.collider.vertexs[j].rrotate(objB.rotation).sum(objB.pos);
                                         var bV;
-                                        var p = obj.pos;
-                                        if(j == tempObj.collider.vertexs.length - 1){
-                                            bV = tempObj.collider.vertexs[0].sum(tempObj.pos).rrotate(tempObj.rotation);
+                                        var p = objA.pos;
+                                        if(j == objB.collider.vertexs.length - 1){
+                                            bV = objB.collider.vertexs[0].rrotate(objB.rotation).sum(objB.pos);
                                         } else {
-                                            bV = tempObj.collider.vertexs[j+1].sum(tempObj.pos).rrotate(tempObj.rotation);
+                                            bV = objB.collider.vertexs[j+1].rrotate(objB.rotation).sum(objB.pos);
                                         }
-                                        var dist = (((aV.x - p.x)*(bV.y-p.y))-((aV.y-p.y)*(bV.x-p.x)))/(bV.substract(aV).magnitude());
-                                        if(dist < obj.collider.radius){
-                                            if(closest.distance > dist){
-                                                closest.distance = dist;
+                                        //var dist = (((aV.x - p.x)*(bV.y-p.y))-((aV.y-p.y)*(bV.x-p.x)))/(bV.substract(aV).magnitude());
+                                        var resp = pnt2line(p, aV, bV);
+                                        if(resp.dist < objA.collider.radius){
+                                            if(closest.distance > resp.dist){
+                                                closest.distance = resp.dist;
                                                 closest.vertex = j;
-                                                closest.dir = dir;
+                                                closest.dir = resp.nearest.substract(p).normalized();
+                                                contactPB = resp.nearest.substract(objB.pos);
+                                                contactPA = closest.dir.multiply(objA.collider.radius);
                                             }
                                         }
                                     }
                                 }
                                 if(closest.vertex != -1){
-                                    if(retObj) return tempObj;
+                                    if(retObj) return objB;
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    sep = closest.dir.multiply(tempObj.pos.substract(obj.pos).magnitude() - tempObj.collider.maxRadius - obj.collider.maxRadius);
-                                    Na = obj.pos.substract(tempObj.pos).normalized();
+                                    sep = closest.dir.multiply(objB.pos.substract(objA.pos).magnitude() - objB.collider.maxRadius - objA.collider.maxRadius);
+                                    Na = objA.pos.substract(objB.pos).normalized();
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = tempObj.collider.normals[closest.vertex].clone();
-                                    Nb.rotate(tempObj.rotation);
+                                    Nb = objB.collider.normals[closest.vertex].clone();
+                                    Nb.rotate(objB.rotation);
                                 }
-                            } else if((obj.collider.type == 0 || obj.collider.type == 2) && tempObj.collider.type == 1){ //COLLISION POLYGON-CIRCLE
+                            } else if((objA.collider.type == 0 || objA.collider.type == 2) && objB.collider.type == 1){ //COLLISION POLYGON-CIRCLE
                                 var closest = {
                                     vertex: -1,
                                     distance: 1000000
                                 };
-                                for(var j = 0; j < obj.collider.vertexs.length; j++){
-                                    var sub = obj.collider.vertexs[j].clone().rrotate(obj.rotation).sum(obj.pos).substract(tempObj.pos);
+                                /*for(var j = 0; j < objA.collider.vertexs.length; j++){
+                                    var sub = objA.collider.vertexs[j].clone().rrotate(objA.rotation).sum(objA.pos).substract(objB.pos);
                                     var dist = sub.magnitude();
                                     var dir = sub.normalized();
-                                    if(dist < tempObj.collider.radius){
+                                    if(dist < objB.collider.radius){
                                         if(closest.distance > dist){
                                             closest.distance = dist;
                                             closest.vertex = j;
                                             closest.dir = dir;
                                         }
                                     }
-                                }
-                                if(closest.vertex != -1){
-                                    for(var j = 0; j < obj.collider.vertexs.length; j++){
-                                        var aV = obj.collider.vertexs[j].sum(obj.pos).rrotate(obj.rotation);
+                                }*/
+                                if(closest.vertex == -1){
+                                    for(var j = 0; j < objA.collider.vertexs.length; j++){
+                                        var aV = objA.collider.vertexs[j].rrotate(objA.rotation).sum(objA.pos);
                                         var bV;
-                                        var p = tempObj.pos;
-                                        if(j == obj.collider.vertexs.length - 1){
-                                            bV = obj.collider.vertexs[0].sum(obj.pos).rrotate(obj.rotation);
+                                        var p = objB.pos;
+                                        if(j == objA.collider.vertexs.length - 1){
+                                            bV = objA.collider.vertexs[0].rrotate(objA.rotation).sum(objA.pos);
                                         } else {
-                                            bV = obj.collider.vertexs[j+1].sum(obj.pos).rrotate(obj.rotation);
+                                            bV = objA.collider.vertexs[j+1].rrotate(objA.rotation).sum(objA.pos);
                                         }
-                                        var dist = ((aV.x - p.x)*(bV.y-p.y)-(aV.y-p.y)*(bV.x-p.x))/(bV.substract(aV).magnitude());
-                                        if(dist < tempObj.collider.radius){
-                                            if(closest.distance > dist){
-                                                closest.distance = dist;
+                                        //var dist = ((aV.x - p.x)*(bV.y-p.y)-(aV.y-p.y)*(bV.x-p.x))/(bV.substract(aV).magnitude());
+                                        var resp = pnt2line(p, aV, bV);
+                                        if(resp.dist < objB.collider.radius){
+                                            if(closest.distance > resp.dist){
+                                                closest.distance = resp.dist;
                                                 closest.vertex = j;
-                                                closest.dir = dir;
+                                                closest.dir = resp.nearest.substract(p).normalized();
+                                                contactPA = resp.nearest.substract(objA.pos);
+                                                contactPB = closest.dir.multiply(objB.collider.radius);
                                             }
                                         }
                                     }
                                 }
                                 if(closest.vertex != -1){
-                                    if(retObj) return tempObj;
+                                    if(retObj) return objB;
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    sep = closest.dir.multiply(obj.pos.substract(tempObj.pos).magnitude() - obj.collider.maxRadius - tempObj.collider.maxRadius);
-                                    Na = tempObj.pos.substract(obj.pos).normalized();
+                                    sep = closest.dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
+                                    Na = objB.pos.substract(objA.pos).normalized();
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = obj.collider.normals[closest.vertex].clone();
-                                    Nb.rotate(obj.rotation);
+                                    Nb = objA.collider.normals[closest.vertex].clone();
+                                    Nb.rotate(objA.rotation);
                                 }
                             } else {
 
                                 //COLLISION POLYGON-POLYGON
-                                var MTD2 = Intersect(obj, tempObj);
+                                var MTD2 = Intersect(obj, objB);
                                 if(MTD2.intersect){
 
-                                    if(retObj) return tempObj;
+                                    if(retObj) return objB;
                                     trueCollide = true;
 
                                     //A OBJ
-                                    var b = FindAxisLeastPenetration(tempObj, obj);
+                                    var b = FindAxisLeastPenetration(objB, obj);
                                     MTDa = new $e.Vector2(0,0);
 
-                                    Na = tempObj.collider.normals[b.vertexIndex].clone();
-                                    Na.rotate(tempObj.rotation);
+                                    Na = objB.collider.normals[b.vertexIndex].clone();
+                                    Na.rotate(objB.rotation);
 
-                                    //B tempObj
-                                    var a = FindAxisLeastPenetration(obj, tempObj);
+                                    //B objB
+                                    var a = FindAxisLeastPenetration(obj, objB);
                                     MTDb = new $e.Vector2(0,0);
 
-                                    Nb = obj.collider.normals[a.vertexIndex].clone();
-                                    Nb.rotate(obj.rotation);
+                                    Nb = objA.collider.normals[a.vertexIndex].clone();
+                                    Nb.rotate(objA.rotation);
 
                                     sep = MTD2.mtd;
                                 }
@@ -503,47 +511,89 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                             if(trueCollide){
 
                                 //Reflect velocity
-                                var rf = (obj.bounce + tempObj.bounce)/2;
-                                var ja = rf * ((obj.velocity.multiply(obj.mass - tempObj.mass).sum(tempObj.velocity.multiply(tempObj.mass*2)).magnitude())/(obj.mass + tempObj.mass));
-                                var jb = rf * ((tempObj.velocity.multiply(tempObj.mass - obj.mass).sum(obj.velocity.multiply(obj.mass*2)).magnitude())/(tempObj.mass + obj.mass));
+                                var rf = (objA.bounce + objB.bounce)/2;
+                                var ja = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
+                                var jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
 
                                 //A OBJ
-                                var Vea = obj.velocity.clone();
+                                var Vea = objA.velocity.clone();
                                 var dota = Vea.dot(Na);
                                 dota = -2*dota;
                                 Na.scale(dota);
                                 var MTDa = Vea.sum(Na);
 
-                                obj.velocity.copy(MTDa);
-                                obj.velocity.normalize();
-                                obj.velocity.scale(ja);
+                                objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
+                                /*
+                                objA.velocity.copy(MTDa);
+                                objA.velocity.normalize();
+                                objA.velocity.scale(ja);
+                                */
 
                                 //B OBJ
-                                var Veb = tempObj.velocity.clone();
+                                var Veb = objB.velocity.clone();
                                 var dotb = Veb.dot(Nb);
                                 dotb = -2*dotb;
                                 Nb.scale(dotb);
                                 var MTDb = Veb.sum(Nb);
 
-                                tempObj.velocity.copy(MTDb);
-                                tempObj.velocity.normalize();
-                                tempObj.velocity.scale(jb);
+                                objB.applyImpulse(MTDb.normalized().multiply(jb), contactPB);
+                                /*
+                                objB.velocity.copy(MTDb);
+                                objB.velocity.normalize();
+                                objB.velocity.scale(jb);
+                                */
 
                                 //Move the object to exit the collision
-                                if(obj.kinematic){
-                                    tempObj.pos = tempObj.pos.substract(sep);
-                                } else if(tempObj.kinematic){
-                                    obj.pos = obj.pos.sum(sep);
+                                if(objA.kinematic){
+                                    objB.pos = objB.pos.substract(sep);
+                                } else if(objB.kinematic){
+                                    objA.pos = objA.pos.sum(sep);
                                 } else {
                                     sep.scale(0.5);
-                                    obj.pos = obj.pos.sum(sep);
-                                    tempObj.pos = tempObj.pos.substract(sep);
+                                    objA.pos = objA.pos.sum(sep);
+                                    objB.pos = objB.pos.substract(sep);
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+        /*
+# Given a line with coordinates 'start' and 'end' and the
+# coordinates of a point 'pnt' the proc returns the shortest 
+# distance from pnt to the line and the coordinates of the 
+# nearest point on the line.
+#
+# 1  Convert the line segment to a vector ('line_vec').
+# 2  Create a vector connecting start to pnt ('pnt_vec').
+# 3  Find the length of the line vector ('line_len').
+# 4  Convert line_vec to a unit vector ('line_unitvec').
+# 5  Scale pnt_vec by line_len ('pnt_vec_scaled').
+# 6  Get the dot product of line_unitvec and pnt_vec_scaled ('t').
+# 7  Ensure t is in the range 0 to 1.
+# 8  Use t to get the nearest location on the line to the end
+#    of vector pnt_vec_scaled ('nearest').
+# 9  Calculate the distance from nearest to pnt_vec_scaled.
+# 10 Translate nearest back to the start/end line. 
+# Malcolm Kesson 16 Dec 2012
+*/
+        function pnt2line(pnt, start, end){
+            var line_vec = end.substract(start);
+            var pnt_vec = pnt.substract(start);
+            var line_len = line_vec.magnitude();
+            var line_unitvec = line_vec.normalized();   
+            var pnt_vec_scaled = pnt_vec.multiply(1.0/line_len);
+            var t = line_unitvec.dot(pnt_vec_scaled);    
+            if(t < 0){
+                t = 0;
+            } else if(t > 1){
+                t = 1;
+            }
+            var nearest = line_vec.multiply(t);
+            var dist = nearest.substract(pnt_vec).magnitude();
+            nearest = nearest.sum(start);
+            return {dist: dist, nearest: nearest};
         }
 
         function GetSupport(obj, dir){
@@ -802,6 +852,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     this.force.y += y;
                 }
             }
+        }
+
+        this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
+            this.velocity.x += impulse.x/this.mass;
+            this.velocity.y += impulse.y/this.mass;
+            this.angularVelocity += 1 / this.mass * contactVector.cross(impulse);
         }
 
         this.Object2D.prototype.setCollider = function(collider){
