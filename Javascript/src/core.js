@@ -496,6 +496,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                                     Na = objB.collider.normals[b.vertexIndex].clone();
                                     Na.rotate(objB.rotation);
+                                    contactPA = objA.collider.vertexs[a.vertexIndex];
 
                                     //B objB
                                     var a = FindAxisLeastPenetration(obj, objB);
@@ -503,6 +504,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                                     Nb = objA.collider.normals[a.vertexIndex].clone();
                                     Nb.rotate(objA.rotation);
+                                    contactPB = objB.collider.vertexs[b.vertexIndex];
 
                                     sep = MTD2.mtd;
                                 }
