@@ -944,8 +944,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @param  {Vector2} contactVector The point of the impulse
          */
         this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
-            this.velocity.x -= impulse.x/this.mass;
-            this.velocity.y -= impulse.y/this.mass;
+            this.velocity.x = impulse.x;
+            this.velocity.y = impulse.y;
             var rot = -contactVector.cross(impulse)/(this.mass);
             this.angularVelocity += rot;
         }
