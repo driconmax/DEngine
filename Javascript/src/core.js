@@ -584,11 +584,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     Na.scale(dota);
                                     var MTDa = Vea.sum(Na);
 
-                                    objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
+                                    //objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
 
-                                    //objA.velocity.copy(MTDa);
-                                    //objA.velocity.normalize();
-                                    //objA.velocity.scale(ja);
+                                    objA.velocity.copy(MTDa);
+                                    objA.velocity.normalize();
+                                    objA.velocity.scale(ja);
                                 //}
 
                                 //B OBJ
@@ -599,11 +599,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     Nb.scale(dotb);
                                     var MTDb = Veb.sum(Nb);
 
-                                    objB.applyImpulse(MTDb.normalized().multiply(jb), contactPB);
+                                    //objB.applyImpulse(MTDb.normalized().multiply(jb), contactPB);
 
-                                    //objB.velocity.copy(MTDb);
-                                    //objB.velocity.normalize();
-                                    //objB.velocity.scale(jb);
+                                    objB.velocity.copy(MTDb);
+                                    objB.velocity.normalize();
+                                    objB.velocity.scale(jb);
                                 //}
 
                                 //Move the object to exit the collision
