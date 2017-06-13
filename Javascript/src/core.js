@@ -948,7 +948,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var rotatedForce = impulse.rrotate(90).normalized();
             var dot = rotatedForce.dot(contactVector);
             var rot = -rotatedForce.multiply(dot).cross(impulse)/(this.mass);
-            if(rot == 0) $d.Log(rot);
+            if(rot != 0) $d.Log(rot);
             this.angularVelocity += rot;
         }
 
