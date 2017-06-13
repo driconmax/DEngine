@@ -378,6 +378,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     objA.collider.checked = internal.time.elapsedTime;
 
                     objA.rotation += objA.angularVelocity * internal.time.deltaTime;
+                    objA.angularVelocity *= objA.drag;
 
                     objA.velocity.x += objA.force.x/objA.mass;
 
@@ -946,7 +947,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
             this.velocity.x = impulse.x;
             this.velocity.y = impulse.y;
-            var rot = -contactVector.cross(impulse)/(this.mass);
+            var rotatedForce = impulse.rrotate(90).normalized();
+            var dot = rotatedForce.dot(contactVector);
+            var rot = -dot.cross(impulse)/(this.mass);
             this.angularVelocity += rot;
         }
 
