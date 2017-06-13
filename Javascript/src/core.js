@@ -11,6 +11,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
     'use strict';
 
+    /**
+     * The Engine
+     *
+     * @class $e $e
+     * @constructor
+     */
     var $e = new function(){
 
         var constants = {
@@ -76,6 +82,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         //Public Functions start
 
+        /**
+         * Starts the engine
+         *
+         * @param  {element} canvas The html element of the canvas
+         * @param  {type} start  The user function to be called when the engine starts
+         * @param  {type} update The user function to be called on each frame
+         */
         this.init = function(canvas, start, update){
             if(!internal.started){
                 if(canvas != undefined && typeof canvas == "object"){
@@ -104,6 +117,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Sets the maximum fps of the engine
+         *
+         * @param  {number} value MAX FPS
+         */
         this.setMaxFPS = function(value){
             if(typeof value == "number"){
                 internal.time.maxFPS = value;
@@ -112,6 +130,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Enabled the debug mode
+         *
+         * @param  {bool} value On/Off
+         */
         this.setDebug = function(value){
             if(typeof value == "boolean"){
                 internal.debug = value;
@@ -120,6 +143,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Sets the speed of the engine (Default: 1)
+         *
+         * @param  {type} value description
+         * @return {type}       description
+         */
         this.setSpeed = function(value){
             if(typeof value == "number"){
                 internal.time.speed = value;
@@ -128,6 +157,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Sets the gravity for the physics calcs
+         *
+         * @param  {number} value The gravity aceleration (Default: 9.98)
+         */
         this.setGravity = function(value){
             if(typeof value == "number"){
                 internal.world.gravity = value;
@@ -136,6 +170,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Prints the actual engine stats
+         */
         this.stats = function(){
             $d.Log("STATS");
             $d.Log("FPS: " + internal.time.FPS);
@@ -145,6 +182,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             $d.Stats();
         }
 
+        /**
+         * Adds a Object2D to the engine in a specified layer
+         *
+         * @param  {Object2D} The Object2D
+         * @param  {number} layer The layer of the object (-50 to 50)
+         */
         this.add2DObject = function(obj, layer){
             var ind = internal.phycs.push(obj);
             if(internal.layers[layer+50] == undefined){
@@ -153,6 +196,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.layers[layer+50].push(internal.phycs[ind-1]);
         }
 
+        /**
+         * Adds an object to the debug console
+         *
+         * @param  {string} name     Name to be displayed
+         * @param  {object} obj      The object
+         * @param  {string[]} vars     The vars that are going to be debugged
+         * @param  {number} duration The duration in scren of the Debbug in seconds
+         */
         this.addDebugObject = function(name, obj, vars, duration){
             internal.debugVars.push({
                 name: name,
@@ -162,6 +213,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             });
         }
 
+        /**
+         * Writes a message to the debug console
+         *
+         * @param  {string} string Message
+         * @param  {number} type   Type of message
+         */
         this.writeDebugConsole = function(string, type){
             internal.console.history.push({name: string, type: type});
         }
@@ -181,7 +238,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.console.position = new $e.Vector2(internal.size.x - internal.console.size.x,0);
 
             //Creates the object for the mouse position
-            internal.mouse = new $e.Object2D("Mouse", 0, 0, 1, 1, 1);
+            internal.mouse = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
             internal.mouse.setCollider(new $e.BoxCollider(0.1,0.1));
 
             internal.canvas.addEventListener('mousemove', function(evt) {
@@ -251,7 +308,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function Update(){
             try{
-                internal.user.udpate();    
+                internal.user.udpate();
             } catch(e){
                 $d.LogError("Error in User Update function", e);
             }
@@ -317,10 +374,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 objA = internal.phycs[i];
 
                 if(!objA.kinematic){
-                    CheckCollision(objA, false);  
+                    CheckCollision(objA, false);
                     objA.collider.checked = internal.time.elapsedTime;
 
-                    objA.rotation -= objA.angularVelocity * internal.time.deltaTime;
+                    objA.rotation += objA.angularVelocity * internal.time.deltaTime;
 
                     objA.velocity.x += objA.force.x/objA.mass;
 
@@ -338,7 +395,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     dist = dist.magnitude();
                                     var f = constants.g*((objA.mass * objB.mass)/dist)
                                     dir.scale(f);
-                                    objA.addForce(dir.x, dir.y);
+                                    objA.addForce(dir);
                                 }
                             }
                         }
@@ -375,6 +432,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 sep = dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
                                 Na = objA.pos.substract(objB.pos).normalized();
                                 Nb = objB.pos.substract(objA.pos).normalized();
+                                contactPA = dir.multiply(objA.collider.radius);
+                                contactPB = dir.multiply(-objB.collider.radius);
                             } else if(objA.collider.type == 1 && (objB.collider.type == 0 || objB.collider.type == 2)){ //COLLISION CIRCLE-POLYGON
                                 var closest = {
                                     vertex: -1,
@@ -490,7 +549,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     if(retObj) return objB;
                                     trueCollide = true;
 
-                                    //A OBJ
+                                    //A objA
                                     var b = FindAxisLeastPenetration(objB, obj);
                                     MTDa = new $e.Vector2(0,0);
 
@@ -518,32 +577,34 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 var jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
 
                                 //A OBJ
-                                var Vea = objA.velocity.clone();
-                                var dota = Vea.dot(Na);
-                                dota = -2*dota;
-                                Na.scale(dota);
-                                var MTDa = Vea.sum(Na);
+                                //if(!objA.kinematic){
+                                    var Vea = objA.velocity.clone();
+                                    var dota = Vea.dot(Na);
+                                    dota = -2*dota;
+                                    Na.scale(dota);
+                                    var MTDa = Vea.sum(Na);
 
-                                objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
-                                /*
-                                objA.velocity.copy(MTDa);
-                                objA.velocity.normalize();
-                                objA.velocity.scale(ja);
-                                */
+                                    objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
+
+                                    //objA.velocity.copy(MTDa);
+                                    //objA.velocity.normalize();
+                                    //objA.velocity.scale(ja);
+                                //}
 
                                 //B OBJ
-                                var Veb = objB.velocity.clone();
-                                var dotb = Veb.dot(Nb);
-                                dotb = -2*dotb;
-                                Nb.scale(dotb);
-                                var MTDb = Veb.sum(Nb);
+                                //if(!objB.kinematic){
+                                    var Veb = objB.velocity.clone();
+                                    var dotb = Veb.dot(Nb);
+                                    dotb = -2*dotb;
+                                    Nb.scale(dotb);
+                                    var MTDb = Veb.sum(Nb);
 
-                                objB.applyImpulse(MTDb.normalized().multiply(jb), contactPB);
-                                /*
-                                objB.velocity.copy(MTDb);
-                                objB.velocity.normalize();
-                                objB.velocity.scale(jb);
-                                */
+                                    objB.applyImpulse(MTDb.normalized().multiply(jb), contactPB);
+
+                                    //objB.velocity.copy(MTDb);
+                                    //objB.velocity.normalize();
+                                    //objB.velocity.scale(jb);
+                                //}
 
                                 //Move the object to exit the collision
                                 if(objA.kinematic){
@@ -551,9 +612,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 } else if(objB.kinematic){
                                     objA.pos = objA.pos.sum(sep);
                                 } else {
-                                    sep.scale(0.5);
-                                    objA.pos = objA.pos.sum(sep);
-                                    objB.pos = objB.pos.substract(sep);
+                                    //sep.scale(0.5);
+                                    objA.pos = objA.pos.sum(sep.multiply(objB.mass / (objB.mass + objA.mass)));
+                                    objB.pos = objB.pos.substract(sep.multiply(objA.mass / (objB.mass + objA.mass)));
                                 }
                             }
                         }
@@ -563,8 +624,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
         /*
 # Given a line with coordinates 'start' and 'end' and the
-# coordinates of a point 'pnt' the proc returns the shortest 
-# distance from pnt to the line and the coordinates of the 
+# coordinates of a point 'pnt' the proc returns the shortest
+# distance from pnt to the line and the coordinates of the
 # nearest point on the line.
 #
 # 1  Convert the line segment to a vector ('line_vec').
@@ -577,16 +638,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 # 8  Use t to get the nearest location on the line to the end
 #    of vector pnt_vec_scaled ('nearest').
 # 9  Calculate the distance from nearest to pnt_vec_scaled.
-# 10 Translate nearest back to the start/end line. 
+# 10 Translate nearest back to the start/end line.
 # Malcolm Kesson 16 Dec 2012
 */
         function pnt2line(pnt, start, end){
             var line_vec = end.substract(start);
             var pnt_vec = pnt.substract(start);
             var line_len = line_vec.magnitude();
-            var line_unitvec = line_vec.normalized();   
+            var line_unitvec = line_vec.normalized();
             var pnt_vec_scaled = pnt_vec.multiply(1.0/line_len);
-            var t = line_unitvec.dot(pnt_vec_scaled);    
+            var t = line_unitvec.dot(pnt_vec_scaled);
             if(t < 0){
                 t = 0;
             } else if(t > 1){
@@ -657,41 +718,41 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             };
         }
 
-        function Intersect(A, B){ 
-            // potential separation axes. they get converted into push 
+        function Intersect(A, B){
+            // potential separation axes. they get converted into push
             var Axis = [];
-            // max of 16 vertices per polygon 
-            var iNumAxis = 0; 
+            // max of 16 vertices per polygon
+            var iNumAxis = 0;
             var J = A.collider.vertexs.length - 1;
-            for(var I = 0; I < A.collider.vertexs.length; I++) 
+            for(var I = 0; I < A.collider.vertexs.length; I++)
             {
                 var E = (A.collider.vertexs[I].rrotate(A.rotation).sum(A.pos)).substract(A.collider.vertexs[J].rrotate(A.rotation).sum(A.pos));
-                var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x); 
+                var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
 
-                if (AxisSeparatePolygons(N, A, B)) 
+                if (AxisSeparatePolygons(N, A, B))
                     return false;
                 J = I;
-            } 
+            }
 
             J = B.collider.vertexs.length - 1
-            for(var I = 0; I < B.collider.vertexs.length; I++) 
+            for(var I = 0; I < B.collider.vertexs.length; I++)
             {
-                var E = (B.collider.vertexs[I].sum(B.pos).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.pos)); 
-                var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x); 
+                var E = (B.collider.vertexs[I].sum(B.pos).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.pos));
+                var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
 
-                if (AxisSeparatePolygons (N, A, B)) 
+                if (AxisSeparatePolygons (N, A, B))
                     return false;
 
                 J = I;
             }
 
-            // find the MTD among all the separation vectors 
+            // find the MTD among all the separation vectors
             var MTD = FindMTD(Axis, iNumAxis);
 
-            // makes sure the push vector is pushing A away from B 
-            var D = A.pos.substract(B.pos); 
-            if (D.dot(MTD) < 0.0) 
-                MTD.scale(-1); 
+            // makes sure the push vector is pushing A away from B
+            var D = A.pos.substract(B.pos);
+            if (D.dot(MTD) < 0.0)
+                MTD.scale(-1);
 
             return {
                 intersect: true,
@@ -702,58 +763,58 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function CalculateInterval(Axis, P){
             var min, max;
 
-            var d = Axis.dot(P.collider.vertexs[0].rrotate(P.rotation).sum(P.pos)); 
-            min = max = d; 
-            for(var I = 0; I < P.collider.vertexs.length; I ++) 
-            { 
-                var d = (P.collider.vertexs[I].rrotate(P.rotation).sum(P.pos)).dot(Axis); 
-                if (d < min) 
-                    min = d; 
-                else 
+            var d = Axis.dot(P.collider.vertexs[0].rrotate(P.rotation).sum(P.pos));
+            min = max = d;
+            for(var I = 0; I < P.collider.vertexs.length; I ++)
+            {
+                var d = (P.collider.vertexs[I].rrotate(P.rotation).sum(P.pos)).dot(Axis);
+                if (d < min)
+                    min = d;
+                else
                     if(d > max)
-                        max = d; 
-            } 
+                        max = d;
+            }
             return {
                 min: min,
                 max: max
             }
         }
 
-        function AxisSeparatePolygons(Axis, A, B){ 
+        function AxisSeparatePolygons(Axis, A, B){
 
-            var a = CalculateInterval(Axis, A); 
-            var b = CalculateInterval(Axis, B); 
+            var a = CalculateInterval(Axis, A);
+            var b = CalculateInterval(Axis, B);
 
-            if (a.min > b.max || b.min > a.max) 
-                return true; 
+            if (a.min > b.max || b.min > a.max)
+                return true;
 
-            // find the interval overlap 
-            var d0 = a.max - b.min; 
-            var d1 = b.max - a.min; 
-            var depth = (d0 < d1)? d0 : d1; 
+            // find the interval overlap
+            var d0 = a.max - b.min;
+            var d1 = b.max - a.min;
+            var depth = (d0 < d1)? d0 : d1;
 
-            // convert the separation axis into a push vector (re-normalise 
-            // the axis and multiply by interval overlap) 
-            var axis_length_squared = Axis.dot(Axis); 
+            // convert the separation axis into a push vector (re-normalise
+            // the axis and multiply by interval overlap)
+            var axis_length_squared = Axis.dot(Axis);
 
-            Axis.scale(depth / axis_length_squared); 
+            Axis.scale(depth / axis_length_squared);
             return false;
         }
 
-        function FindMTD(PushVectors, iNumVectors){ 
+        function FindMTD(PushVectors, iNumVectors){
             var MTD = PushVectors[0].clone();
             var mind2 = MTD.dot(MTD);
 
-            for(var I = 1; I < iNumVectors; I++) 
-            { 
+            for(var I = 1; I < iNumVectors; I++)
+            {
                 var d2 = PushVectors[I].dot(PushVectors[I]);
-                if (d2 < mind2) 
-                { 
-                    mind2 = d2; 
-                    MTD = PushVectors[I].clone(); 
-                } 
-            } 
-            return MTD; 
+                if (d2 < mind2)
+                {
+                    mind2 = d2;
+                    MTD = PushVectors[I].clone();
+                }
+            }
+            return MTD;
         }
 
         function DrawObjects(){
@@ -799,7 +860,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     //internal.ctx.strokeStyle = '#0F4';
 
                     internal.ctx.strokeStyle = '#AFA';
-                    internal.ctx.stroke();                    
+                    internal.ctx.stroke();
                     internal.ctx.fillStyle = "#F77";
                     if(obj.collider.contactPoint != undefined){
                         internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
@@ -819,14 +880,32 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         //DEngine Objects start
 
+        /**
+         * Vector2 - Creates a new 2 dimensional Vector
+         *
+         * @constructor
+         * @param  {number} x X axis position
+         * @param  {number} y Y axis position
+         */
         this.Vector2 = function(x, y){
             this.x = x;
             this.y = y;
         }
 
-        this.Object2D = function(name, x, y, mass, drag, bounce){
+
+        /**
+         * Object2D - Creates a new Object2D
+         *
+         * @constructor
+         * @param  {string} name   Name
+         * @param  {Vector2} pos    Start position
+         * @param  {number} mass   Mass
+         * @param  {number} drag   Drag
+         * @param  {number} bounce Bounce factor
+         */
+        this.Object2D = function(name, pos, mass, drag, bounce){
             this.name = name;
-            this.pos = new $e.Vector2(x,y);
+            this.pos = pos.clone();
             this.scale = new $e.Vector2(1,1);
             this.rotation = 0;
             this.kinematic = (mass == 0);
@@ -840,28 +919,42 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.color = "#DDD";
         }
 
-
-        //ForceType
-        //  0 - Impulse
-        //  1 - Constant force
-        this.Object2D.prototype.addForce = function(x, y, forceType){
+        /**
+         * Object2D.prototype.addForce - Applies a force to the Object2D
+         *
+         * @param  {Vector2} force     description
+         * @param  {int} [forceType] The type of force: 0-Impulse, 1-Constant Force (0 By default)
+         */
+        this.Object2D.prototype.addForce = function(force, forceType){
             if(!this.kinematic){
                 if(forceType == undefined || forceType == 0){
-                    this.velocity.x += x/this.mass;
-                    this.velocity.y += y/this.mass;
+                    this.velocity.x += force.x/this.mass;
+                    this.velocity.y += force.y/this.mass;
                 } else {
-                    this.force.x += x;
-                    this.force.y += y;
+                    this.force.x += force.x;
+                    this.force.y += force.y;
                 }
             }
         }
 
+        /**
+         * Object2D.prototype.applyImpulse - Applies an impulse
+         *
+         * @param  {Vector2} impulse       The impulse
+         * @param  {Vector2} contactVector The point of the impulse
+         */
         this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
-            this.velocity.x += impulse.x/this.mass;
-            this.velocity.y += impulse.y/this.mass;
-            this.angularVelocity += 1 / this.mass * contactVector.cross(impulse);
+            this.velocity.x -= impulse.x/this.mass;
+            this.velocity.y -= impulse.y/this.mass;
+            var rot = -contactVector.cross(impulse)/(this.mass);
+            this.angularVelocity += rot;
         }
 
+        /**
+         * Object2D.prototype.setCollider - Sets the collider
+         *
+         * @param  {Collider} collider The collider
+         */
         this.Object2D.prototype.setCollider = function(collider){
             this.collider = collider;
         }
@@ -872,6 +965,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         //  1 - Circle
         //  2 - Polygon
 
+        /**
+         * BoxCollider - Creates a new Collider
+         *
+         * @constructor
+         * @param  {number} width  Width of the box
+         * @param  {number} height Height of the box
+         */
         this.BoxCollider = function(width, height){
             $e.BaseCollider.call(this, 0);
             this.vertexs = [
@@ -883,12 +983,24 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.calculateNormals();
         }
 
+        /**
+         * CircleCollider - Creates a new Collider
+         *
+         * @constructor
+         * @param  {number} radius The Radius of the Circle
+         */
         this.CircleCollider = function(radius){
             $e.BaseCollider.call(this, 1);
             this.radius = radius;
             this.maxRadius = radius;
         }
 
+        /**
+         * PolygonCollider - Creates a new Collider
+         *
+         * @constructor
+         * @param  {Vector2[]} vertexs The array of Vertexs
+         */
         this.PolygonCollider = function(vertexs){
             if(typeof vertexs == "object"){
                 if(vertexs.length >= 3){
@@ -913,6 +1025,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.checked = 0;
         }
 
+        /**
+         * BoxCollider.prototype.calculateNormals - Calculates the normals for each face of the polygon
+         *
+         * @return {undefined}  This function doesn't return anything
+         */
         this.PolygonCollider.prototype.calculateNormals = this.BoxCollider.prototype.calculateNormals = function(){
             for(var i = 0; i < this.vertexs.length; i++){
                 var next = i + 1;
@@ -931,23 +1048,52 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         //Vector2 Maths start
 
+        /**
+         * Vector2.prototype.sum - Adds the second Vector2 from the origin
+         *
+         * @param  {Vector2} v2 The second Vector2
+         * @return {Vector2}    Returns the new Vector2
+         */
         this.Vector2.prototype.sum = function(v2){
             return new $e.Vector2(this.x + v2.x, this.y + v2.y);
         }
 
+        /**
+         * Vector2.prototype.substract - Substracts the second Vector2 from the origin
+         *
+         * @param  {Vector2} v2 The substractor Vector2
+         * @return {Vector2}    Returns the new Vector2
+         */
         this.Vector2.prototype.substract = function(v2){
             return new $e.Vector2(this.x - v2.x, this.y - v2.y);
         }
 
+        /**
+         * Vector2.prototype.multiply - Scales the Vector2 by the multiplier
+         *
+         * @param  {number} mul The Multiplier
+         * @return {Vector2}  Returns the new multiplied Vector2
+         */
         this.Vector2.prototype.multiply = function(mul){
             return new $e.Vector2(this.x * mul, this.y * mul);
         }
 
+        /**
+         * Vector2.prototype.scale - Scales the Vector2 by the multiplier
+         *
+         * @param  {number} mul The Multiplier
+         * @return {undefined}  This function doesn't return anything
+         */
         this.Vector2.prototype.scale = function(mul){
             this.x = this.x * mul;
             this.y = this.y * mul;
         }
 
+        /**
+         * Vector2.prototype.normalize - Normalizes the Vector2 to return a Vector2 of length 1
+         *
+         * @return {undefined}  This function doesn't return anything
+         */
         this.Vector2.prototype.normalize = function(){
             if(this.x != 0 && this.y != 0){
                 var l = this.magnitude();
@@ -956,24 +1102,52 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Vector2.prototype.normalized - Normalizes the Vector2 to return a Vector2 of length 1
+         *
+         * @return {Vector2}  returns the normalized Vector2
+         */
         this.Vector2.prototype.normalized = function(){
             if(this.x == 0 && this.y == 0) return this;
             var l = this.magnitude();
             return new $e.Vector2(this.x/l, this.y/l);
         }
 
+        /**
+         * Vector2.prototype.magnitude - Calculates the length of the Vector2
+         *
+         * @return {number}  returns the length of the Vector2
+         */
         this.Vector2.prototype.magnitude = function(){
             return Math.sqrt((this.x * this.x) + (this.y * this.y));
         }
 
+        /**
+         * Vector2.prototype.dot - Calculates the Dot Vector
+         *
+         * @param  {Vector2} v2 The second Vector2
+         * @return {number}    The Dot Vector
+         */
         this.Vector2.prototype.dot = function(v2){
             return ((this.x * v2.x) + (this.y * v2.y));
         }
 
+        /**
+         * Vector2.prototype.cross - Calculates the Cross Vector
+         *
+         * @param  {Vector2} v2 The second Vector2
+         * @return {number}    The Cross Vector
+         */
         this.Vector2.prototype.cross = function(v2){
             return ((this.x * v2.y) - (v2.x * this.y));
         }
 
+        /**
+         * Vector2.prototype.angle - Calculates de Angle between 2 Vector2
+         *
+         * @param  {Vector2} v2 The second Vector2
+         * @return {number}    The angle between the 2 bectors
+         */
         this.Vector2.prototype.angle = function(v2){
             if(v2 == undefined){
                 return Math.atan2(this.y, this.x);
@@ -982,10 +1156,22 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         }
 
+        /**
+         * Vector2.prototype.normal - Normalizes Vector2 of the substraction
+         *
+         * @param  {Vector2} v2 The other Vector2
+         * @return {Vector2}    The normalized Vector2 of the substraction
+         */
         this.Vector2.prototype.normal = function(v2){
             return new $e.Vector2(-(v2.y - this.y), v2.x - this.x);
         }
 
+        /**
+         * Vector2.prototype.rotate - Rotates the Vector2 by the angle
+         *
+         * @param  {number} angle The angle in degreees
+         * @return {undefined}  This function doesn't return anything
+         */
         this.Vector2.prototype.rotate = function(angle){
             angle = angle * (Math.PI/180);
             var cosa = Math.cos(angle);
@@ -994,6 +1180,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.y = this.x*sina + this.y*cosa;
         }
 
+        /**
+         * Vector2.prototype.rrotate - Returns a new Vector2 rotated by the angle
+         *
+         * @param  {numeric} angle The angle in degreees
+         * @return {Vector2}       The new Vector2 rotated
+         */
         this.Vector2.prototype.rrotate = function(angle){
             angle = angle * (Math.PI/180);
             var cosa = Math.cos(angle);
@@ -1001,21 +1193,45 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             return new $e.Vector2(this.x*cosa - this.y*sina, this.x*sina + this.y*cosa);
         }
 
+        /**
+         * Vector2.prototype.swap - Swtiches the X and the Y
+         *
+         * @return {undefined}  This function doesn't return anything
+         */
         this.Vector2.prototype.swap = function(){
             var tX = this.x;
             this.x = this.y;
             this.y = tX;
         }
 
+        /**
+         * Vector2.prototype.clone - returns a new Vector2
+         *
+         * @return {Vector2}  The new copy of itself
+         */
         this.Vector2.prototype.clone = function(){
             return new $e.Vector2(this.x, this.y);
         }
 
+
+        /**
+         * Vector2.prototype.copy - Copy a second Vector2 into the origin
+         *
+         * @param  {Vector2} v2 The Vector2 to be copied
+         * @return {undefined}    This function doesn't return anything
+         */
         this.Vector2.prototype.copy = function(v2){
             this.x = v2.x;
             this.y = v2.y;
         }
 
+
+        /**
+         * Vector2.prototype.toString - Transforms Vector2 to String
+         *
+         * @param  {Vector2} fixed Decimals to print
+         * @return {String}       The printable string
+         */
         this.Vector2.prototype.toString = function(fixed){
             if(fixed != undefined){
                 var f = Math.pow(10, fixed);
