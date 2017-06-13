@@ -574,8 +574,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                                 //Reflect velocity
                                 var rf = (objA.bounce + objB.bounce)/2;
-                                var ja = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
-                                var jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
+                                var jb = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
+                                var ja = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
 
                                 //A OBJ
                                 //if(!objA.kinematic){
@@ -585,7 +585,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     Na.scale(dota);
                                     var MTDa = Vea.sum(Na);
 
-
+									objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
                                     //objA.velocity.copy(MTDa);
                                     //objA.velocity.normalize();
                                     //objA.velocity.scale(ja);
@@ -859,7 +859,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     }
                     //internal.ctx.strokeStyle = '#0F4';
 
-                    internal.ctx.strokeStyle = '#AFA';
+                    internal.ctx.strokeStyle = '#000';
                     internal.ctx.stroke();
                     internal.ctx.fillStyle = "#F77";
                     if(obj.collider.contactPoint != undefined){
@@ -944,12 +944,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @param  {Vector2} contactVector The point of the impulse
          */
         this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
-            this.velocity = impulse.clone();
-            var rotatedForce = impulse.rrotate(90).normalized();
-            var dot = rotatedForce.dot(contactVector.normalized());
-            var rot = -rotatedForce.multiply(dot).cross(impulse)/(this.mass);
-            if(rot != 0) $d.Log(rot);
-            this.angularVelocity += rot;
+			if(!this.kinematic){
+				this.velocity = impulse.clone();
+				/*var rotatedForce = impulse.rrotate(-90).normalized();
+				var dot = -rotatedForce.dot(contactVector.normalized());
+				$d.Log("CONTACT: " + contactVector.toString(2) + "\t IMPULSE: " + impulse.toString(2) + "\t DOT: " + dot);
+				var contact2 = rotatedForce.multiply(contactVector.magnitude()*dot);
+				var rot = -contact2.cross(impulse)/(this.mass)/100;*/
+				var rot = -contactVector.rrotate(this.rotation).cross(impulse)/this.mass/10;
+				$d.Log("CONTACT: " + contactVector.toString(2) + "\t IMPULSE: " + impulse.toString(2) + "\t ROT: " + rot);
+				//if(rot != 0) $d.Log(rot);
+				this.angularVelocity += rot;				
+			}
         }
 
         /**
