@@ -585,7 +585,6 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     Na.scale(dota);
                                     var MTDa = Vea.sum(Na);
 
-                                    objA.applyImpulse(MTDa.normalized().multiply(ja), contactPA);
 
                                     //objA.velocity.copy(MTDa);
                                     //objA.velocity.normalize();
@@ -949,7 +948,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.velocity.y = impulse.y;
             var rotatedForce = impulse.rrotate(90).normalized();
             var dot = rotatedForce.dot(contactVector);
-            var rot = -dot.cross(impulse)/(this.mass);
+            var rot = -rotatedForce.multiply(dot).cross(impulse)/(this.mass);
             this.angularVelocity += rot;
         }
 
