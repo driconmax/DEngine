@@ -429,10 +429,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var objA = obj;
             var objB;
             var v3 = new $e.Vector2(0,0);
+            objA.collisions = 0;
             for(var i = 0; i < internal.phycs.length; i++){
                 objB = internal.phycs[i];
-                if(objB.collider.checked != internal.time.elapsedTime || retObj){
-                    if(objB != obj && (!objA.kinematic || !objB.kinematic)){
+                //if(objB.collider.checked != internal.time.elapsedTime || retObj){
+                if(true){
+                    if(objB != objA && (!objA.kinematic || !objB.kinematic)){
                         v3.x = objB.pos.x - objA.pos.x;
                         v3.y = objB.pos.y - objA.pos.y;
                         var dist = v3.magnitude();
@@ -579,7 +581,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                             }
 
                             if(trueCollide){
-
+                                objA.collisions++;
                                 //Reflect velocity
                                 var rf = (objA.bounce + objB.bounce)/2;
                                 var jb = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
@@ -813,6 +815,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.ctx.globalAlpha = 1;
             for(var i = 0; i < internal.layers.length; i++){
                 for(var f = 0; f < internal.layers[i].length; f++){
+                    //var timeoutTime = 1000*(i+1)*(f+1);
+                    //$d.Log(timeoutTime);
+                    //setTimeout(Draw(internal.layers[i][f]), timeoutTime);
                     Draw(internal.layers[i][f]);
                 }
             }
@@ -822,6 +827,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
                 var tv = new $e.Vector2(obj.pos.x, internal.size.y - obj.pos.y);
+                tv.toFixed(0);
                 internal.ctx.translate(tv.x, tv.y);
                 var rot = obj.rotation * Math.PI / 180;
                 internal.ctx.rotate(-rot);
@@ -859,7 +865,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 internal.ctx.font = '6pt Calibri';
                 internal.ctx.fillStyle = 'black';
                 internal.ctx.fillText(obj.name, 0, 0);
-                internal.ctx.translate(-tv.x, -tv.y);
+                //internal.ctx.translate(-tv.x, -tv.y);
+                internal.ctx.setTransform(1,0,0,1,0,0);
                 internal.ctx.shadowBlur = 0;
                 //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
             }
@@ -905,17 +912,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.drag = drag;
             this.angularDrag = angularDrag;
             this.bounce = bounce;
-            this.setInertia(1);
+            this.setInertia(4);
             this.angularVelocity = 0;
             this.velocity = new $e.Vector2(0,0);
             this.force = new $e.Vector2(0,0);
             this.color = "#DDD";
+            this.collisions = 0;
         }
 
         /**
          * Object2D.prototype.setInertia - Sets the inertia and the inverse inertia to the Object2D
          *
-         * @param  {number} value The inertia       
+         * @param  {number} value The inertia
          */
         this.Object2D.prototype.setInertia = function(value){
             this.inertia = value;
@@ -1220,6 +1228,17 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var tX = this.x;
             this.x = this.y;
             this.y = tX;
+        }
+
+
+        /**
+         * Vector2.prototype.toFixed - Fixes the Vector2
+         *
+         * @param  {number} fix decimal places
+         */
+        this.Vector2.prototype.toFixed = function(fix){
+            this.x = this.x.toFixed(fix);
+            this.y = this.y.toFixed(fix);
         }
 
         /**
