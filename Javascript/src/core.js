@@ -80,7 +80,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             },
             mouse: {
                 over: undefined,
-                selected: undefined,
+                selected: [],
                 obj: undefined,
                 click: {
                     left: false,
@@ -435,7 +435,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     internal.mouse.selected.push(internal.mouse.over);
                                 }
                             } else {
-                                internal.mouse.selected = internal.mouse.over;
+                                internal.mouse.selected.push(internal.mouse.over);
                             }
                         } else {
                             internal.mouse.selected = [];
