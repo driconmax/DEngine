@@ -435,7 +435,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     internal.mouse.selected.push(internal.mouse.over);
                                 }
                             } else {
-                                internal.mouse.selected.push(internal.mouse.over);
+                                internal.mouse.selected = [internal.mouse.over];
                             }
                         } else {
                             internal.mouse.selected = [];
