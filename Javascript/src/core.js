@@ -78,8 +78,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 opacity: 0.9,
                 background: "#FFF"
             },
-            mouse: 0,
-            mouseover: undefined,
+            mouse: {
+                over: undefined,
+                selected: undefined,
+                obj: undefined,
+                click: {
+                    left: false,
+                    middle: false,
+                    right: false
+                }
+            },
             layers: [],
             phycs: [],
             user: {}
@@ -254,19 +262,27 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.controlVars.update.finish = true;
             var sd = new Date().getTime();
             internal.time.miliseconds = sd;
-            internal.mouse = new $e.Vector2(0,0);
+            //internal.mouse.obj = new $e.Vector2(0,0);
 
             //Creates a new console
             internal.console.size = new $e.Vector2(50,50);
             internal.console.position = new $e.Vector2(internal.size.x - internal.console.size.x,0);
 
             //Creates the object for the mouse position
-            internal.mouse = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
-            internal.mouse.setCollider(new $e.BoxCollider(0.1,0.1));
+            internal.mouse.obj = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
+            internal.mouse.obj.setCollider(new $e.BoxCollider(0.1,0.1));
 
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
             }, false);
+            
+            internal.canvas.addEventListener("mousedown", function(evt) {
+                UpdateMouseAction(evt.button, true);
+            });
+            
+            internal.canvas.addEventListener("mouseup", function(evt) {
+                UpdateMouseAction(evt.button, false);
+            });
 
             internal.time.interval = StartInterval();
         }
@@ -335,14 +351,20 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function Update(){
             try{
-                internal.user.udpate();
+                internal.user.udpate({
+                    FPS: internal.time.FPS,
+                    deltaTime: internal.time.deltaTime,
+                    totalTime: internal.time.elapsedTime,
+                    selected: internal.mouse.selected,
+                    over: internal.mouse.over
+                });
             } catch(e){
                 $d.LogError("Error in User Update function", e);
             }
             UpdatePhysics();
             DrawObjects();
-            DrawFPS();
-            DrawMousePosition();
+            //DrawFPS();
+            //DrawMousePosition();
             DrawDebug();
             DrawConsole();
             internal.controlVars.update.finish = true;
@@ -356,7 +378,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawMousePosition(){
-            var msg = 'Mouse position: ' + internal.mouse.pos.x + ',' + internal.mouse.pos.y;
+            var msg = 'Mouse position: ' + internal.mouse.obj.pos.x + ',' + internal.mouse.obj.pos.y;
             internal.ctx.font = '8pt Calibri';
             internal.ctx.fillStyle = 'black';
             internal.ctx.fillText(msg, 10, 25);
@@ -393,9 +415,25 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
-            internal.mouse.pos.x = evt.clientX - rect.left;
-            internal.mouse.pos.y = internal.size.y - evt.clientY + rect.top;
-            internal.mouseover = CheckCollision(internal.mouse, true);
+            internal.mouse.obj.pos.x = evt.clientX - rect.left;
+            internal.mouse.obj.pos.y = internal.size.y - evt.clientY + rect.top;
+            internal.mouse.over = CheckCollision(internal.mouse.obj, true);
+        }
+        
+        function UpdateMouseAction(button, active){
+            switch(button){
+                case 0:
+                    internal.mouse.click.left = active;
+                    break;
+                case 1:
+                    internal.mouse.click.middle = active;
+                    break;
+                case 2:
+                    internal.mouse.click.right = active;
+                    break;
+                case default;
+                    break;
+            }
         }
 
         function UpdatePhysics(){
@@ -845,7 +883,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 internal.ctx.translate(tv.x, tv.y);
                 var rot = obj.rotation * Math.PI / 180;
                 internal.ctx.rotate(-rot);
-                if(internal.mouseover == obj){
+                if(internal.mouse.over == obj){
                     internal.ctx.shadowBlur = 2;
                     internal.ctx.shadowColor = "#3c84c1";
                 }
