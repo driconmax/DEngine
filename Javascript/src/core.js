@@ -430,7 +430,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 var ind = internal.mouse.selected.indexOf(internal.mouse.over);
                                 if(ind != -1){
                                     var last = internal.mouse.selected.slice(ind+1);
-                                    internal.mouse.selected.splice(0,ind, last);
+                                    internal.mouse.selected.splice(0,ind);
+                                    for(var i = 0; i < last.length; i++){
+                                        internal.mouse.selected.push(last[i]);
+                                    }
                                 } else {
                                     internal.mouse.selected.push(internal.mouse.over);
                                 }
