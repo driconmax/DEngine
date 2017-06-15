@@ -431,7 +431,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 case 2:
                     internal.mouse.click.right = active;
                     break;
-                default;
+                default:
                     break;
             }
         }
