@@ -184,7 +184,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {number} value The Color in HEX
         */        
         this.setBackground = function(value){
-            if($d.ValidateInput(arguments, ["number"])){
+            if($d.ValidateInput(arguments, ["string"])){
                 internal.globals.background = value;
             }
         }
