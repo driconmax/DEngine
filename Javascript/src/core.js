@@ -9,6 +9,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
  * @file DEngine - Physics Engine for Javascript
  * @author Driconmax <driconmax@gmail.com>
  * @version 1.0
+ * @todo Constrains, Convex Colliders, Multiplayer,
  *
  * @module $e
 */
@@ -809,6 +810,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawObjects(){
+            internal.ctx.canvas.width = internal.canvas.clientWidth;
+            internal.ctx.canvas.height = internal.canvas.clientHeight;
             internal.ctx.globalAlpha = internal.globals.opacity;
             internal.ctx.fillStyle = internal.globals.background;
             internal.ctx.fillRect(0,0,internal.size.x, internal.size.y);
