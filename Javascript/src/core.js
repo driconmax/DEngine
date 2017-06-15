@@ -179,6 +179,17 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         /**
+        * Sets the background color (Default: #FFF)
+        *
+        * @param  {number} value The Color in HEX
+        */        
+        this.setBackground = function(value){
+            if($d.ValidateInput(arguments, ["number"])){
+                internal.globals.background = value;
+            }
+        }
+
+        /**
         * Prints the actual engine stats
         */
         this.stats = function(){
