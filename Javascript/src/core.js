@@ -275,13 +275,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
             }, false);
-            
+
             internal.canvas.addEventListener("mousedown", function(evt) {
-                UpdateMouseAction(evt.button, true);
+                UpdateMouseAction(evt, true);
             });
-            
+
             internal.canvas.addEventListener("mouseup", function(evt) {
-                UpdateMouseAction(evt.button, false);
+                UpdateMouseAction(evt, false);
             });
 
             internal.time.interval = StartInterval();
@@ -419,11 +419,28 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.mouse.obj.pos.y = internal.size.y - evt.clientY + rect.top;
             internal.mouse.over = CheckCollision(internal.mouse.obj, true);
         }
-        
-        function UpdateMouseAction(button, active){
-            switch(button){
+
+        function UpdateMouseAction(evt, active){
+            switch(evt.button){
                 case 0:
                     internal.mouse.click.left = active;
+                    if(!active){
+                        if(internal.mouse.over != undefined){
+                            if(evt.shiftKey){
+                                var ind = internal.mouse.selected.indexOf(internal.mouse.over);
+                                if(ind != -1){
+                                    var last = internal.mouse.selected.slice(ind+1);
+                                    internal.mouse.selected.splice(0,ind, last);
+                                } else {
+                                    internal.mouse.selected.push(internal.mouse.over);
+                                }
+                            } else {
+                                internal.mouse.selected = internal.mouse.over;
+                            }
+                        } else {
+                            internal.mouse.selected = [];
+                        }
+                    }
                     break;
                 case 1:
                     internal.mouse.click.middle = active;
@@ -433,7 +450,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     break;
                 default:
                     break;
-            }
+                             }
         }
 
         function UpdatePhysics(){
