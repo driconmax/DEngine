@@ -654,8 +654,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 objA.collisions++;
                                 //Reflect velocity
                                 var rf = (objA.bounce + objB.bounce)/2;
-                                var jb = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
-                                var ja = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
+                                var ja = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
+                                var jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
 
                                 //A OBJ
                                 //if(!objA.kinematic){
