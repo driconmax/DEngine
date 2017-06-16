@@ -984,7 +984,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.drag = drag;
             this.angularDrag = angularDrag;
             this.bounce = bounce;
-            this.setInertia(4);
+            this.setInertia(1);
             this.angularVelocity = 0;
             this.velocity = new $e.Vector2(0,0);
             this.force = new $e.Vector2(0,0);
