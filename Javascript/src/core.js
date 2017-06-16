@@ -515,6 +515,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                             var Na, Nb, sep;
                             var contactPA, contactPB;
                             var trueCollide = false;
+                            var circlepolygon = false;
 
                             //COLLISION CIRCLE-CIRCLE
                             if(objA.collider.type == 1 && objB.collider.type == 1){
@@ -527,23 +528,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 Nb = objB.pos.substract(objA.pos).normalized();
                                 contactPA = dir.multiply(objA.collider.radius);
                                 contactPB = dir.multiply(-objB.collider.radius);
-                            } else if(objA.collider.type == 1 && (objB.collider.type == 0 || objB.collider.type == 2)){ //COLLISION CIRCLE-POLYGON
+                            } else if(objA.collider.type == 1 && (objB.collider.type == 0 || objB.collider.type == 2)){
+                                //COLLISION CIRCLE-POLYGON
+                                circlepolygon = true;
                                 var closest = {
                                     vertex: -1,
                                     distance: 1000000
                                 };
-                                /*for(var j = 0; j < objB.collider.vertexs.length; j++){
-                                var sub = objB.collider.vertexs[j].clone().rrotate(objB.rotation).sum(objB.pos).substract(objA.pos);
-                                var dist = sub.magnitude();
-                                var dir = sub.normalized();
-                                if(dist < objA.collider.radius){
-                                if(closest.distance > dist){
-                                closest.distance = dist;
-                                closest.vertex = j;
-                                closest.dir = dir;
-                            }
-                        }
-                    }*/
                                 if(closest.vertex == -1){
                                     for(var j = 0; j < objB.collider.vertexs.length; j++){
                                         var aV = objB.collider.vertexs[j].rrotate(objB.rotation).sum(objB.pos);
@@ -572,15 +563,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    sep = closest.dir.multiply(objB.pos.substract(objA.pos).magnitude() - objB.collider.maxRadius - objA.collider.maxRadius);
-                                    Na = objA.pos.substract(objB.pos).normalized();
+                                    //sep = closest.dir.multiply(objB.pos.substract(objA.pos).magnitude() - objB.collider.maxRadius - objA.collider.maxRadius);
+                                    sep = closest.dir.multiply(closest.distance - objA.collider.maxRadius);
+                                    Na = objB.collider.normals[closest.vertex].clone();
+                                    Na.rotate(objB.rotation);
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = objB.collider.normals[closest.vertex].clone();
-                                    Nb.rotate(objB.rotation);
+                                    Nb = objA.pos.substract(objB.pos).normalized();
                                 }
-                            } else if((objA.collider.type == 0 || objA.collider.type == 2) && objB.collider.type == 1){ //COLLISION POLYGON-CIRCLE
+                            } else if(objB.collider.type == 1 && (objA.collider.type == 0 || objA.collider.type == 2)){
+                                //COLLISION POLYGON-CIRCLE
+                                circlepolygon = true;
                                 var closest = {
                                     vertex: -1,
                                     distance: 1000000
@@ -613,13 +607,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    sep = closest.dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
-                                    Na = objB.pos.substract(objA.pos).normalized();
+                                    //sep = closest.dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
+                                    sep = closest.dir.multiply(closest.distance - objB.collider.maxRadius);
+                                    Na = objA.collider.normals[closest.vertex].clone();
+                                    Na.rotate(objA.rotation);
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = objA.collider.normals[closest.vertex].clone();
-                                    Nb.rotate(objA.rotation);
+                                    Nb = objB.pos.substract(objA.pos).normalized();
                                 }
                             } else {
 
@@ -654,9 +649,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 objA.collisions++;
                                 //Reflect velocity
                                 var rf = (objA.bounce + objB.bounce)/2;
-                                var ja = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
-                                var jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
-
+                                var ja, jb;
+                                if(circlepolygon){
+                                    jb = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
+                                    ja = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
+                                } else {
+                                    ja = rf * ((objA.velocity.multiply(objA.mass - objB.mass).sum(objB.velocity.multiply(objB.mass*2)).magnitude())/(objA.mass + objB.mass));
+                                    jb = rf * ((objB.velocity.multiply(objB.mass - objA.mass).sum(objA.velocity.multiply(objA.mass*2)).magnitude())/(objB.mass + objA.mass));
+                                }
                                 //A OBJ
                                 //if(!objA.kinematic){
                                 var Vea = objA.velocity.clone();
@@ -1037,7 +1037,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 //var rContactVector = contactVector.rrotate(this.rotation).normalized();
                 //var dot = impulse.dot(rContactVector);
                 //var cross = impulse.normalized().cross(rContactVector);
-                var rot = this.inverseInertia * contactVector.normalized().cross(impulse);
+                var rot = -this.inverseInertia * contactVector.normalized().cross(impulse);
                 //var rot = (dot*cross)/this.mass;
                 //$d.Log("CONTACT: " + rContactVector.toString(2) + "\tDOT: " + dot.toFixed(2) + "\tCROSS: " + cross.toFixed(2) + "\tROT: " + rot.toFixed(2));
                 //if(rot != 0) $d.Log(rot);
