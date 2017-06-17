@@ -923,23 +923,27 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     }
                 }
 
-                if(internal.debug && obj.collider != undefined) {
-                    internal.ctx.beginPath();
-                    if(obj.collider.type == 1){
-                        internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
-                    } else {
-                        internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, obj.collider.vertexs[obj.collider.vertexs.length-1].y);
-                        for(var i = 0; i < obj.collider.vertexs.length; i++){
-                            internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                if(internal.debug){
+                    internal.ctx.fillStyle = "#F22";
+                    internal.ctx.fillRect(obj.pivot.x, obj.pivot.y, 10, 10);
+                    if(obj.collider != undefined) {
+                        internal.ctx.beginPath();
+                        if(obj.collider.type == 1){
+                            internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
+                        } else {
+                            internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, obj.collider.vertexs[obj.collider.vertexs.length-1].y);
+                            for(var i = 0; i < obj.collider.vertexs.length; i++){
+                                internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                            }
                         }
-                    }
-                    //internal.ctx.strokeStyle = '#0F4';
+                        //internal.ctx.strokeStyle = '#0F4';
 
-                    internal.ctx.strokeStyle = '#AFA';
-                    internal.ctx.stroke();
-                    internal.ctx.fillStyle = "#F77";
-                    if(obj.collider.contactPoint != undefined){
-                        internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
+                        internal.ctx.strokeStyle = '#AFA';
+                        internal.ctx.stroke();
+                        internal.ctx.fillStyle = "#F77";
+                        if(obj.collider.contactPoint != undefined){
+                            internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
+                        }
                     }
                 }
                 internal.ctx.rotate(rot);
