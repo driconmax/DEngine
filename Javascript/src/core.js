@@ -463,7 +463,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 objA = internal.phycs[i];
                 if(objA.lookAtTarget != undefined){
                     objA.angularVelocity = 0;
-                    objA.lookAt(lookAtTarget);
+                    objA.lookAt(objA.lookAtTarget);
                 }
 
                 if(!objA.kinematic){
