@@ -1014,6 +1014,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.id = -1;
             this.name = name;
             this.pos = pos.clone();
+            this.posOrigin = this.pos.clone();
             this.scale = new $e.Vector2(1,1);
             this.rotation = 0;
             this.pivot = new $e.Vector2(0,0);
@@ -1051,7 +1052,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @param  {Vector2} value The Pivot
          */
         this.Object2D.prototype.setPivot = function(position){
-            this.pos = this.pos.substract(this.pivot.rrotate(this.rotation));
+            this.pos = this.posOrigin;
             this.pivot = position;
             this.pos = this.pos.sum(this.pivot.rrotate(this.rotation));
         }
@@ -1119,7 +1120,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Object2D} Obj2 The target
         */
         this.Object2D.prototype.lookAt = function(Obj2){
-            this.pos = this.pos.substract(this.pivot.rrotate(this.rotation));
+            this.pos = this.posOrigin;
             var target = Obj2.pos.substract(this.pos);
             this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
             this.pos = this.pos.sum(this.pivot.rrotate(this.rotation));
