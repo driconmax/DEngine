@@ -926,7 +926,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 if(internal.debug){
                     internal.ctx.fillStyle = "#F22";
                     internal.ctx.beginPath();
-                    internal.ctx.arc(-obj.pivot.x, -obj.pivot.y, 5, 0, 2*Math.PI);
+                    internal.ctx.arc(obj.pivot.x, -obj.pivot.y, 5, 0, 2*Math.PI);
                     internal.ctx.fill();
                     if(obj.collider != undefined) {
                         internal.ctx.beginPath();
