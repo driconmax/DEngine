@@ -1104,10 +1104,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         /**
         * Object2D.prototype.lookAt - Rotates the object to looks at a target
         *
-        * @param  {Vector2} v2 The target
+        * @param  {Object2D} Obj2 The target
         */
-        this.Object2D.prototype.lookAt = function(v2){
-            var target = v2.substract(this.pos);
+        this.Object2D.prototype.lookAt = function(Obj2){
+            var target = Obj2.pos.substract(this.pos);
             this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
         }
 
