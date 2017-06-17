@@ -270,7 +270,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             //Creates the object for the mouse position
             internal.mouse.obj = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
-            internal.mouse.obj.setCollider(new $e.BoxCollider(0.1,0.1));
+            internal.mouse.obj.setCollider(new $e.BoxCollider(0.1,0.1), true);
 
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
@@ -1092,9 +1092,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         *
         * @param  {Collider} collider The collider
         */
-        this.Object2D.prototype.setCollider = function(collider){
-            if(this.collider == undefined){
-                internal.phycs.push(this);
+        this.Object2D.prototype.setCollider = function(collider, noadd){
+            if(!noadd || noadd != undefined){
+                if(this.collider == undefined){
+                    internal.phycs.push(this);
+                }
             }
             this.collider = collider;
         }
