@@ -220,7 +220,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 if(internal.layers[layer+50] == undefined){
                     internal.layers[layer+50] = [];
                 }
-                obj.id = internal.layers[layer+50].push(internal.phycs[ind-1]);
+                obj.id = internal.layers[layer+50].push(obj);
                 obj.layer = layer;
             }
         }
