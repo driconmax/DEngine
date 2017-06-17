@@ -217,11 +217,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.add2DObject = function(obj, layer){
             if($d.ValidateInput(arguments, ["object","number"])){
-                var ind = internal.phycs.push(obj);
                 if(internal.layers[layer+50] == undefined){
                     internal.layers[layer+50] = [];
                 }
-                internal.layers[layer+50].push(internal.phycs[ind-1]);
+                obj.id = internal.layers[layer+50].push(internal.phycs[ind-1]);
+                obj.layer = layer;
             }
         }
 
@@ -453,7 +453,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     break;
                 default:
                     break;
-                             }
+            }
         }
 
         function UpdatePhysics(){
@@ -1011,10 +1011,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {bool} [newtonian=false] Newtonian object (Atracts other bodys based on it's mass)
         */
         this.Object2D = function(name, pos, mass, drag, angularDrag, bounce, newtonian){
+            this.id = -1;
             this.name = name;
             this.pos = pos.clone();
             this.scale = new $e.Vector2(1,1);
             this.rotation = 0;
+            this.pivot = new $e.Vector2(0,0);
             this.kinematic = (mass == 0);
             this.mass = ((mass == 0)? 1 : mass);
             this.newtonian = (newtonian == undefined)? false : newtonian;
@@ -1029,6 +1031,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.force = new $e.Vector2(0,0);
             this.color = "#DDD";
             this.collisions = 0;
+            this.layer = -99;
         }
 
         /**
@@ -1087,9 +1090,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         /**
         * Object2D.prototype.setCollider - Sets the collider
         *
-        * @param  {Collider} collider The collider
+        * @param  {Collider} collider The collider 
         */
         this.Object2D.prototype.setCollider = function(collider){
+            if(this.collider == undefined){
+                internal.phycs.push(obj);
+            }
             this.collider = collider;
         }
 
@@ -1099,7 +1105,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Vector2} v2 The target
         */
         this.Object2D.prototype.lookAt = function(v2){
-
+            var dir = new $e.Vector2(1,0);
+            dir.rotate(this.rotation);
+            var target = v2.substract(this.pos);
+            this.rotation = dir.dot(target);
         }
 
         /**
