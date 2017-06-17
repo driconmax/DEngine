@@ -1090,11 +1090,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         /**
         * Object2D.prototype.setCollider - Sets the collider
         *
-        * @param  {Collider} collider The collider 
+        * @param  {Collider} collider The collider
         */
         this.Object2D.prototype.setCollider = function(collider){
             if(this.collider == undefined){
-                internal.phycs.push(obj);
+                internal.phycs.push(this);
             }
             this.collider = collider;
         }
