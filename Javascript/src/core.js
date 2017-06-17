@@ -924,10 +924,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 }
 
                 if(internal.debug){
+                    internal.ctx.globalAlpha = 0.1;
                     internal.ctx.fillStyle = "#F22";
                     internal.ctx.beginPath();
                     internal.ctx.arc(obj.pivot.x, -obj.pivot.y, 5, 0, 2*Math.PI);
                     internal.ctx.fill();
+                    internal.ctx.globalAlpha = internal.globals.opacity;
                     if(obj.collider != undefined) {
                         internal.ctx.beginPath();
                         if(obj.collider.type == 1){
