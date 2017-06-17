@@ -999,10 +999,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 return this.img[0];
             }
             this.counter += internal.time.deltaTime * 1000;
-            var ret = this.img[Math.floor(this.counter/this.frameTime)];
             if(this.counter > this.time){
                 this.counter = 0;
             }
+            var ret = this.img[Math.floor(this.counter/this.frameTime)];
             return ret;
         }
 
