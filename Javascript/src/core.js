@@ -1107,10 +1107,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Vector2} v2 The target
         */
         this.Object2D.prototype.lookAt = function(v2){
-            var dir = new $e.Vector2(1,0);
-            dir.rotate(this.rotation);
             var target = v2.substract(this.pos);
-            this.rotation = dir.dot(target);
+            this.rotation = target.angle() + this.lookAtOffset;
         }
 
         /**
