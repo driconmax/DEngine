@@ -942,9 +942,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         }
                         //internal.ctx.strokeStyle = '#0F4';
 
-                        internal.ctx.strokeStyle = '#AFA';
+                        internal.ctx.strokeStyle = '#F00';
                         internal.ctx.stroke();
-                        internal.ctx.fillStyle = "#F77";
+                        internal.ctx.fillStyle = "#FA0";
                         if(obj.collider.contactPoint != undefined){
                             internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
                         }
