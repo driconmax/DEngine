@@ -190,7 +190,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * Sets the background color (Default: #FFF)
         *
         * @param  {number} value The Color in HEX
-        */        
+        */
         this.setBackground = function(value){
             if($d.ValidateInput(arguments, ["string"])){
                 internal.globals.background = value;
@@ -461,6 +461,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             for(var i = 0; i < internal.phycs.length; i++){
 
                 objA = internal.phycs[i];
+                if(objA.lookAtTarget != undefined){
+                    objA.angularVelocity = 0;
+                    objA.lookAt(lookAtTarget);
+                }
 
                 if(!objA.kinematic){
                     CheckCollision(objA, false);
@@ -986,6 +990,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.bounce = bounce;
             this.setInertia(1);
             this.angularVelocity = 0;
+            this.lookAtTarget = undefined;
+            this.lookAtOffset = 0;
             this.velocity = new $e.Vector2(0,0);
             this.force = new $e.Vector2(0,0);
             this.color = "#DDD";
@@ -1054,11 +1060,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.collider = collider;
         }
 
+        /**
+        * Object2D.prototype.lookAt - Rotates the object to looks at a target
+        *
+        * @param  {Vector2} v2 The target
+        */
+        this.Object2D.prototype.lookAt = function(v2){
 
-        //COLLIDER TYPES
-        //  0 - Box
-        //  1 - Circle
-        //  2 - Polygon
+        }
 
         /**
         * BoxCollider - Creates a new Collider
