@@ -365,7 +365,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             UpdatePhysics();
             DrawObjects();
             //DrawFPS();
-            //DrawMousePosition();
+            DrawMousePosition();
             DrawDebug();
             DrawConsole();
             internal.controlVars.update.finish = true;
