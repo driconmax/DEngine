@@ -911,13 +911,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     internal.ctx.shadowBlur = 2;
                     internal.ctx.shadowColor = "#3c84c1";
                 }
-                if(obj.collider.type == 1){
-                    //internal.ctx.arc(0, 0, obj.collider.radius/4, 0, 2*Math.PI);
-                    //internal.ctx.fill();
-                    internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                if(obj.texture != undefined){
+                    internal.ctx.drawImage(obj.texture.getTexture(), -obj.texture.size.x/2, -obj.texture.size.y/2, obj.texture.size.x, obj.texture.size.y);
                 } else {
-                    internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                    if(obj.collider.type == 1){
+                        //internal.ctx.arc(0, 0, obj.collider.radius/4, 0, 2*Math.PI);
+                        //internal.ctx.fill();
+                        internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                    } else {
+                        internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                    }
                 }
+
                 if(internal.debug && obj.collider != undefined) {
                     internal.ctx.beginPath();
                     if(obj.collider.type == 1){
@@ -964,6 +969,34 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.y = y;
         }
 
+        this.Texture = function(name, srcs, size, time, loop){
+            this.name = name;
+            this.loop = loop;
+            this.time = time;
+            this.size = size;
+
+            this.img = [];
+            for(var i = 0; i < srcs.length; i++){
+                var tempImg = new Image();
+                tempImg.src = srcs[i];
+                this.img.push(tempImg);
+            }
+
+            this.counter = 0;
+            this.frameTime = time / this.img.length;
+        }
+
+        this.Texture.prototype.getTexture = function(){
+            if(this.img.length == 1){
+                return this.img[0];
+            }
+            this.counter += internal.time.deltaTime;
+            var ret = this.img[Math.floor(this.counter/this.frameTime)];
+            if(this.counter > this.time){
+                this.counter = 0;
+            }
+            return ret;
+        }
 
         /**
         * Object2D - Creates a new Object2D
