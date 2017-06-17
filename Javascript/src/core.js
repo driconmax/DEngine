@@ -1044,6 +1044,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.inverseInertia = (value != 0)? 1/value : 0;
         }
 
+
+        /**
+         * Object2D.prototype.setPivot - Sets the pivot to the Object2D
+         *
+         * @param  {Vector2} value The Pivot
+         */
+        this.Object2D.prototype.setPivot = function(position){
+            this.pos = this.pos.substract(this.pivot.rrotate(this.rotation));
+            this.pivot = position;
+            this.pos = this.pos.sum(this.pivot.rrotate(this.rotation));
+        }
+
         /**
         * Object2D.prototype.addForce - Applies a force to the Object2D
         *
