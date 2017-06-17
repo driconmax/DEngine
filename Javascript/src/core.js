@@ -1093,7 +1093,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Collider} collider The collider
         */
         this.Object2D.prototype.setCollider = function(collider, noadd){
-            if(!noadd && noadd != undefined){
+            if(noadd == undefined || !noadd){
                 if(this.collider == undefined){
                     internal.phycs.push(this);
                 }
