@@ -4,12 +4,12 @@ class NaviaBase {
     
     constructor(){
         super();
-        this.modules = [];
+        this.running = false;
     }
     
     //Navia Starts here
     start() {
-        
+        this.running = true;
     }
     
     //Called once each frame
