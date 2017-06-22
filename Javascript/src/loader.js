@@ -31,6 +31,7 @@ var $loader = {};
         for(var i = 0; i < items.length; i++){
             var item = items[i];
             scripts.push(item);
+            if(item.local) filesChecked++;
         }
     }
 
