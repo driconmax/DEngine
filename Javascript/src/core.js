@@ -285,6 +285,18 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             });
 
             internal.time.interval = StartInterval();
+            try{
+                internal.user.udpate({
+                    FPS: internal.time.FPS,
+                    deltaTime: internal.time.deltaTime,
+                    totalTime: internal.time.elapsedTime,
+                    selected: internal.mouse.selected,
+                    over: internal.mouse.over,
+                    screenSize: internal.size
+                });
+            } catch(e){
+                $d.LogError("Error in User Start function", e);
+            }
         }
 
         function StartInterval(){
