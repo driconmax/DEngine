@@ -3,7 +3,6 @@
 class NaviaBase {
     
     constructor(){
-        super();
         this.running = false;
     }
     

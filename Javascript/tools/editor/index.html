@@ -20,9 +20,9 @@
                     //If the download went correctly, we should be able to use the common library ($d).
                     $d.Log("Load complete");
                     $e.init(document.getElementById("mainCanvas"), function(){
-                        naviaEditor.Start();
+                        naviaEditor.start();
                     }, function(obj){
-                        naviaEditor.Update(obj);
+                        naviaEditor.update(obj);
                     })
                 }
             });
