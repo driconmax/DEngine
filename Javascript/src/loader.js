@@ -46,6 +46,8 @@ var $loader = {};
                             item.version = headers.version;
                         })
                     })(item);
+                } else {
+                    filesChecked++;
                 }
             }
             inter = setInterval(function(){
