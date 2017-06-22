@@ -24,6 +24,7 @@ var $loader = {};
 
     $loader.addscript = function(item){
         scripts.push(item);
+        if(item.local) filesChecked++;
     }
 
     $loader.addscripts = function(items){
@@ -46,8 +47,6 @@ var $loader = {};
                             item.version = headers.version;
                         })
                     })(item);
-                } else {
-                    filesChecked++;
                 }
             }
             inter = setInterval(function(){
