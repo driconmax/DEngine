@@ -1,9 +1,8 @@
 /* Navia Engine Base Class */
-console.log("Test");
+
 class NaviaBase {
     
     constructor(){
-        super();
         this.modules = [];
     }
     
