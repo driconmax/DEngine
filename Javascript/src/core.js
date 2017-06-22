@@ -1033,7 +1033,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.drag = drag;
             this.angularDrag = angularDrag;
             this.bounce = bounce;
-            //this.setInertia(1);
+            this.setInertia(1);
             this.angularVelocity = 0;
             this.lookAtTarget = undefined;
             this.lookAtOffset = 0;
