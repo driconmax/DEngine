@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <script src="http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/loader.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) {
+                $loader.addscripts([
+                    new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
+                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
+                    new $loader.script("Base Class", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/base.js"),
+                    new $loader.script("NaviaEditor", "js/editor.js", true)
+                ]);
+                $loader.start();
+                $loader.onstart = function(r){
+                    console.log("Downloading " + r.totalbytes + " bytes");
+                }
+                $loader.onprogresschange = function(p){
+                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + " v" + ((p.current.version)?p.current.version:"") +"\t - \t" + p.progress + "%");
+                };
+                $loader.onload = function(){
+                    //If the download went correctly, we should be able to use the common library ($d).
+                    $d.Log("Load complete");
+                    $e.init(document.getElementById("mainCanvas"), function(){
+                        naviaEditor.Start();
+                    }, function(obj){
+                        naviaEditor.Update(obj);
+                    })
+                }
+            });
+        </script>
+        <style>
+            #mainCanvas {
+                position: absolute;;
+                top: 0px;
+                bottom: 0px;
+                right: 0px;
+                left: 0px;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <canvas id="mainCanvas"></canvas>
+    </body>
+</html>
