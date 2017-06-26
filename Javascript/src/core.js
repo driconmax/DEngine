@@ -286,7 +286,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             internal.time.interval = StartInterval();
             try{
-                internal.user.udpate({
+                internal.user.start({
                     FPS: internal.time.FPS,
                     deltaTime: internal.time.deltaTime,
                     totalTime: internal.time.elapsedTime,
