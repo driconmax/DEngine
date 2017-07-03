@@ -1097,7 +1097,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @property     {number}    layer               Layer
         * @property     {Object2D}  parent              Parent Object. If set, the position is relative to the parent
         */
-        class Object2D extends this.BaseObject2D {
+        class this.Object2D extends this.BaseObject2D {
             constructor(name, pos, mass, drag, angularDrag, bounce, newtonian){
                 super(name, pos);
                 this.kinematic = (mass == 0);
