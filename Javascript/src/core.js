@@ -1097,7 +1097,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @property     {number}    layer               Layer
         * @property     {Object2D}  parent              Parent Object. If set, the position is relative to the parent
         */
-        class this.Object2D extends this.BaseObject2D {
+        class Object2D extends this.BaseObject2D {
             constructor(name, pos, mass, drag, angularDrag, bounce, newtonian){
                 super(name, pos);
                 this.kinematic = (mass == 0);
@@ -1161,7 +1161,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          *
          * @param  {number} value The inertia
          */
-        this.Object2D.prototype.setInertia = function(value){
+        Object2D.prototype.setInertia = function(value){
             this.inertia = value;
             this.inverseInertia = (value != 0)? 1/value : 0;
         };
@@ -1184,7 +1184,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Vector2} force       description
         * @param  {number}     [forceType=0] The type of force: 0-Impulse, 1-Constant Force
         */
-        this.Object2D.prototype.addForce = function(force, forceType){
+        Object2D.prototype.addForce = function(force, forceType){
             if(!this.kinematic){
                 if(forceType == undefined || forceType == 0){
                     this.velocity.x += force.x/this.mass;
@@ -1202,7 +1202,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Vector2} impulse       The impulse
         * @param  {Vector2} contactVector The point of the impulse
         */
-        this.Object2D.prototype.applyImpulse = function(impulse, contactVector){
+        Object2D.prototype.applyImpulse = function(impulse, contactVector){
             if(!this.kinematic){
                 this.velocity = impulse.clone();
                 /*var rotatedForce = impulse.rrotate(-90).normalized();
@@ -1226,7 +1226,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         *
         * @param  {Collider} collider The collider
         */
-        this.Object2D.prototype.setCollider = function(collider, noadd){
+        Object2D.prototype.setCollider = function(collider, noadd){
             if(noadd == undefined || !noadd){
                 if(this.collider == undefined){
                     internal.phycs.push(this);
@@ -1246,6 +1246,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
             this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
         };
+
+        this.Object2D = Object2D;
 
         /**
         * BoxCollider - Creates a new Collider
