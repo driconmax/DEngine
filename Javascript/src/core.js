@@ -26,7 +26,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         var constants = {
             //g: 6674*Math.pow(10,-11)
             g: 0.01
-        }
+        };
 
         var internal = {
             debug: true,
@@ -91,7 +91,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             layers: [],
             phycs: [],
             user: {}
-        }
+        };
 
         //Public Functions start
 
@@ -139,7 +139,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["number"])){
                 internal.time.maxFPS = value;
             }
-        }
+        };
 
         /**
         * Enables the debug mode
@@ -150,7 +150,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["boolean"])){
                 internal.debug = value;
             }
-        }
+        };
 
         /**
         * Sets the speed of the engine (Default: 1)
@@ -162,7 +162,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["number"])){
                 internal.time.speed = value;
             }
-        }
+        };
 
         /**
         * Sets the gravity for the physics calcs (Default: 9.98)
@@ -173,7 +173,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["number"])){
                 internal.world.gravity = value;
             }
-        }
+        };
 
         /**
         * Enables the Catch Up function. This function checks if the engine is running slower than the expected speed and tryies to catch up with the expected main timeline
@@ -184,7 +184,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["boolean"])){
                 internal.catchUp = value;
             }
-        }
+        };
 
         /**
         * Sets the background color (Default: #FFF)
@@ -195,7 +195,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["string"])){
                 internal.globals.background = value;
             }
-        }
+        };
 
         /**
         * Prints the actual engine stats
@@ -207,7 +207,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             $d.Log("Frame loss count: " + internal.time.lossedFrames);
             $d.Log("Elapsed Time: " + $d.FormatMiliseconds(internal.time.elapsedTime));
             $d.Stats();
-        }
+        };
 
         /**
         * Adds a Object2D to the engine in a specified layer
@@ -223,7 +223,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 obj.id = internal.layers[layer+50].push(obj);
                 obj.layer = layer;
             }
-        }
+        };
 
         /**
         * Adds an object to the debug console
@@ -242,7 +242,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     duration: duration
                 });
             }
-        }
+        };
 
         /**
         * Writes a message to the debug console
@@ -252,7 +252,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.writeDebugConsole = function(string, type){
             internal.console.history.push({name: string, type: type});
-        }
+        };
 
         //close
 
@@ -286,7 +286,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             internal.time.interval = StartInterval();
             try{
-                internal.user.udpate({
+                internal.user.start({
                     FPS: internal.time.FPS,
                     deltaTime: internal.time.deltaTime,
                     totalTime: internal.time.elapsedTime,
@@ -501,7 +501,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     var dist = objB.getPos().substract(objA.getPos());
                                     var dir = dist.normalized();
                                     dist = dist.magnitude();
-                                    var f = constants.g*((objA.mass * objB.mass)/dist)
+                                    var f = constants.g*((objA.mass * objB.mass)/dist);
                                     dir.scale(f);
                                     objA.addForce(dir);
                                 }
@@ -811,7 +811,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 J = I;
             }
 
-            J = B.collider.vertexs.length - 1
+            J = B.collider.vertexs.length - 1;
             for(var I = 0; I < B.collider.vertexs.length; I++)
             {
                 var E = (B.collider.vertexs[I].sum(B.getPos()).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.getPos()));
@@ -834,7 +834,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             return {
                 intersect: true,
                 mtd: MTD
-            }
+            };
         }
 
         function CalculateInterval(Axis, P){
@@ -854,7 +854,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             return {
                 min: min,
                 max: max
-            }
+            };
         }
 
         function AxisSeparatePolygons(Axis, A, B){
@@ -987,7 +987,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Vector2 = function(x, y){
             this.x = x;
             this.y = y;
-        }
+        };
 
         /**
          * Texture - Creates a Texture object with optional animations
@@ -1012,7 +1012,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             this.counter = 0;
             this.frameTime = time / this.img.length;
-        }
+        };
 
         /**
          * Texture.getTexture - Returns the current Texture.
@@ -1028,10 +1028,43 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
             var ret = this.img[Math.floor(this.counter/this.frameTime)];
             return ret;
-        }
+        };
 
         /**
-        * Object2D - Creates a new Object2D
+        * BaseObject2D - Base class of Object2D without all the physics properties
+        * @param {string} name Name
+        * @param {Vector2} pos Position
+        *
+        * @property     {number}    id                  Internal ID
+        * @property     {string}    name                Object's name
+        * @property     {Vector2}   posOrigin           Original Positon
+        * @property     {Vector2}   scale               Scale
+        * @property     {number}    rotation            Rotation
+        * @property     {Vector2}   pivot               Rotation Pivot
+        * @property     {BaseObject2D}  lookAtTarget        Target look at
+        * @property     {Vector2}   lookAtOffset        Offset pivot on target look at
+        * @property     {string}    color               Color
+        * @property     {number}    layer               Layer
+        * @property     {BaseObject2D}  parent              Parent Object. If set, the position is relative to the parent
+        */
+        this.BaseObject2D = function(name, pos){
+            this.id = -1;
+            this.name = name;
+            //this.pos = pos.clone();
+            //this.posOrigin = this.pos.clone();
+            this.posOrigin = pos.clone();
+            this.scale = new $e.Vector2(1,1);
+            this.rotation = 0;
+            this.pivot = new $e.Vector2(0,0);
+            this.lookAtTarget = undefined;
+            this.lookAtOffset = 0;
+            this.color = "#DDD";
+            this.layer = -99;
+            this.parent = null;
+        };
+
+        /**
+        * Object2D - Creates a new Object2D that extends BaseObject2D with Physics properties
         *
         * @constructor
         * @param  {string} name   Name
@@ -1064,50 +1097,40 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @property     {number}    layer               Layer
         * @property     {Object2D}  parent              Parent Object. If set, the position is relative to the parent
         */
-        this.Object2D = function(name, pos, mass, drag, angularDrag, bounce, newtonian){
-            this.id = -1;
-            this.name = name;
-            //this.pos = pos.clone();
-            //this.posOrigin = this.pos.clone();
-            this.posOrigin = pos.clone();
-            this.scale = new $e.Vector2(1,1);
-            this.rotation = 0;
-            this.pivot = new $e.Vector2(0,0);
-            this.kinematic = (mass == 0);
-            this.mass = ((mass == 0)? 1 : mass);
-            this.newtonian = (newtonian == undefined)? false : newtonian;
-            this.drag = drag;
-            this.angularDrag = angularDrag;
-            this.bounce = bounce;
-            this.setInertia(1);
-            this.angularVelocity = 0;
-            this.lookAtTarget = undefined;
-            this.lookAtOffset = 0;
-            this.velocity = new $e.Vector2(0,0);
-            this.force = new $e.Vector2(0,0);
-            this.color = "#DDD";
-            this.collisions = 0;
-            this.layer = -99;
-            this.parent = null;
+        class Object2D extends this.BaseObject2D {
+            constructor(name, pos, mass, drag, angularDrag, bounce, newtonian){
+                super(name, pos);
+                this.kinematic = (mass == 0);
+                this.mass = ((mass == 0)? 1 : mass);
+                this.newtonian = (newtonian == undefined)? false : newtonian;
+                this.drag = drag;
+                this.angularDrag = angularDrag;
+                this.bounce = bounce;
+                this.setInertia(1);
+                this.angularVelocity = 0;
+                this.velocity = new $e.Vector2(0,0);
+                this.force = new $e.Vector2(0,0);
+                this.collisions = 0;
+            }
         }
 
         /**
-         * Object2D.prototype.getPos - Returns the object position
+         * BaseObject2D.prototype.getPos - Returns the object position
          * @return {Vector2} A Vector2 Representing the Object position
          */
-        this.Object2D.prototype.getPos = function(){
+        this.BaseObject2D.prototype.getPos = function(){
             if(this.parent != null){
                 return this.posOrigin.sum(this.parent.getPos());    
             } else {
                 return this.posOrigin;
             }
-        }
+        };
 
         /**
-         * Object2D.prototype.setPos - Sets the position of the Object2D
+         * BaseObject2D.prototype.setPos - Sets the position of the BaseObject2D
          * @param {Vector2} v2 The new position
          */
-        this.Object2D.prototype.setPos = function(v2) {
+        this.BaseObject2D.prototype.setPos = function(v2) {
             var f;
             if(arguments.length == 1){
                 f = v2;
@@ -1125,13 +1148,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         };
 
         /**
-         * Object2D.prototype.setInertia - Sets the object's parent
-         * @param {Object2D} parent The Object2D parent
+         * BaseObject2D.prototype.setParent - Sets the object's parent
+         * @param {BaseObject2D} parent The BaseObject2D parent
          */
-        this.Object2D.prototype.setParent = function (parent) {
+        this.BaseObject2D.prototype.setParent = function (parent) {
             this.parent = parent;
             this.offSetPos = this.getPos();
-        }
+        };
 
         /**
          * Object2D.prototype.setInertia - Sets the inertia and the inverse inertia to the Object2D
@@ -1141,19 +1164,19 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Object2D.prototype.setInertia = function(value){
             this.inertia = value;
             this.inverseInertia = (value != 0)? 1/value : 0;
-        }
+        };
 
 
         /**
-         * Object2D.prototype.setPivot - Sets the pivot to the Object2D
+         * BaseObject2D.prototype.setPivot - Sets the pivot to the Object2D
          *
          * @param  {Vector2} value The Pivot
          */
-        this.Object2D.prototype.setPivot = function(position){
+        this.BaseObject2D.prototype.setPivot = function(position){
             this.setPos(this.posOrigin);
             this.pivot = position;
             this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
-        }
+        };
 
         /**
         * Object2D.prototype.addForce - Applies a force to the Object2D
@@ -1171,7 +1194,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     this.force.y += force.y;
                 }
             }
-        }
+        };
 
         /**
         * Object2D.prototype.applyImpulse - Applies an impulse
@@ -1196,7 +1219,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 //if(rot != 0) $d.Log(rot);
                 this.angularVelocity += rot;
             }
-        }
+        };
 
         /**
         * Object2D.prototype.setCollider - Sets the collider
@@ -1210,19 +1233,19 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 }
             }
             this.collider = collider;
-        }
+        };
 
         /**
-        * Object2D.prototype.lookAt - Rotates the object to looks at a target
+        * BaseObject2D.prototype.lookAt - Rotates the object to looks at a target
         *
-        * @param  {Object2D} Obj2 The target
+        * @param  {BaseObject2D} Obj2 The target
         */
-        this.Object2D.prototype.lookAt = function(Obj2){
+        this.BaseObject2D.prototype.lookAt = function(Obj2){
             this.setPos(this.posOrigin);
             var target = Obj2.getPos().substract(this.getPos());
             this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
             this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
-        }
+        };
 
         /**
         * BoxCollider - Creates a new Collider
@@ -1241,7 +1264,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 new $e.Vector2(-width/2, -height/2)
             ];
             this.calculateNormals();
-        }
+        };
 
         /**
         * CircleCollider - Creates a new Collider
@@ -1254,7 +1277,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             $e.BaseCollider.call(this, 1);
             this.radius = radius;
             this.maxRadius = radius;
-        }
+        };
 
         /**
         * PolygonCollider - Creates a new Collider
@@ -1275,7 +1298,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             } else {
                 $d.LogError("Invalid value, expected Array");
             }
-        }
+        };
 
         /**
          * The Virtual Base Collider
@@ -1290,7 +1313,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.checked = false;
             this.maxRadius = -1000000;
             this.checked = 0;
-        }
+        };
 
         /**
         * BoxCollider.prototype.calculateNormals - Calculates the normals for each face of the polygon
@@ -1307,7 +1330,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     this.maxRadius = dist;
                 }
             }
-        }
+        };
 
         //close
 
@@ -1321,7 +1344,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.sum = function(v2){
             return new $e.Vector2(this.x + v2.x, this.y + v2.y);
-        }
+        };
 
         /**
         * Vector2.prototype.substract - Substracts the second Vector2 from the origin
@@ -1331,7 +1354,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.substract = function(v2){
             return new $e.Vector2(this.x - v2.x, this.y - v2.y);
-        }
+        };
 
         /**
         * Vector2.prototype.multiply - Scales the Vector2 by the multiplier
@@ -1341,7 +1364,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.multiply = function(mul){
             return new $e.Vector2(this.x * mul, this.y * mul);
-        }
+        };
 
         /**
         * Vector2.prototype.scale - Scales the Vector2 by the multiplier
@@ -1351,7 +1374,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Vector2.prototype.scale = function(mul){
             this.x = this.x * mul;
             this.y = this.y * mul;
-        }
+        };
 
         /**
         * Vector2.prototype.normalize - Normalizes the Vector2 to return a Vector2 of length 1
@@ -1362,7 +1385,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 this.x = this.x/l;
                 this.y = this.y/l;
             }
-        }
+        };
 
         /**
         * Vector2.prototype.normalized - Normalizes the Vector2 to return a Vector2 of length 1
@@ -1373,7 +1396,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if(this.x == 0 && this.y == 0) return this;
             var l = this.magnitude();
             return new $e.Vector2(this.x/l, this.y/l);
-        }
+        };
 
         /**
         * Vector2.prototype.magnitude - Calculates the length of the Vector2
@@ -1382,7 +1405,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.magnitude = function(){
             return Math.sqrt((this.x * this.x) + (this.y * this.y));
-        }
+        };
 
         /**
         * Vector2.prototype.dot - Calculates the Dot Vector
@@ -1392,7 +1415,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.dot = function(v2){
             return ((this.x * v2.x) + (this.y * v2.y));
-        }
+        };
 
         /**
         * Vector2.prototype.cross - Calculates the Cross Vector
@@ -1402,7 +1425,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.cross = function(v2){
             return ((this.x * v2.y) - (v2.x * this.y));
-        }
+        };
 
         /**
         * Vector2.prototype.angle - Calculates de Angle between 2 Vector2
@@ -1416,7 +1439,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             } else {
                 return Math.atan2(v2.y - this.y, v2.x - this.x);
             }
-        }
+        };
 
         /**
         * Vector2.prototype.normal - Normalizes Vector2 of the substraction
@@ -1426,7 +1449,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.normal = function(v2){
             return new $e.Vector2(-(v2.y - this.y), v2.x - this.x);
-        }
+        };
 
         /**
         * Vector2.prototype.rotate - Rotates the Vector2 by the angle
@@ -1443,7 +1466,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if(Math.abs(tempY) < 0.0000001) tempY = 0;
             this.x = tempX;
             this.y = tempY;
-        }
+        };
 
         /**
         * Vector2.prototype.rrotate - Returns a new Vector2 rotated by the angle
@@ -1455,7 +1478,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var v2 = new $e.Vector2(this.x, this.y);
             v2.rotate(angle);
             return v2;
-        }
+        };
 
         /**
         * Vector2.prototype.swap - Swtiches the X and the Y
@@ -1464,7 +1487,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var tX = this.x;
             this.x = this.y;
             this.y = tX;
-        }
+        };
 
 
         /**
@@ -1475,7 +1498,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Vector2.prototype.toFixed = function(fix){
             this.x = this.x.toFixed(fix);
             this.y = this.y.toFixed(fix);
-        }
+        };
 
         /**
         * Vector2.prototype.clone - returns a new Vector2
@@ -1484,7 +1507,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         */
         this.Vector2.prototype.clone = function(){
             return new $e.Vector2(this.x, this.y);
-        }
+        };
 
 
         /**
@@ -1495,7 +1518,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Vector2.prototype.copy = function(v2){
             this.x = v2.x;
             this.y = v2.y;
-        }
+        };
 
 
         /**
@@ -1510,7 +1533,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             } else {
                 return "(" + this.x + "," + this.y + ")";
             }
-        }
+        };
 
         //close
 
@@ -1519,4 +1542,4 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
     window.$e = $e;
 
 
-})(window)
+})(window);
