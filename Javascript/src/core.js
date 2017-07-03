@@ -1058,7 +1058,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.pivot = new $e.Vector2(0,0);
             this.lookAtTarget = undefined;
             this.lookAtOffset = 0;
-            this.color = "#DDD";
+            this.color = "#DDD"; 
             this.layer = -99;
             this.parent = null;
         };
