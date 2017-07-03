@@ -128,7 +128,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             } else {
                 $d.LogWarning("The engine is already running!");
             }
-        }
+        };
 
         /**
         * Sets the maximum fps of the engine
@@ -391,7 +391,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawMousePosition(){
-            var msg = 'Mouse position: ' + internal.mouse.obj.pos.x + ',' + internal.mouse.obj.pos.y;
+            var msg = 'Mouse position: ' + internal.mouse.obj.getPos().x + ',' + internal.mouse.obj.getPos().y;
             internal.ctx.font = '8pt Calibri';
             internal.ctx.fillStyle = 'black';
             internal.ctx.fillText(msg, 10, 25);
@@ -409,10 +409,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     for(var x = 0; x < internal.debugVars[i].vars.length; x++){
                         finalObj = finalObj[internal.debugVars[i].vars[x]];
                     }
+                    var msg = "";
                     if(finalObj.x != undefined){
-                        var msg = internal.debugVars[i].name + ":\t" + finalObj.toString(2);
+                        msg = internal.debugVars[i].name + ":\t" + finalObj.toString(2);
                     } else {
-                        var msg = internal.debugVars[i].name + ":\t" + finalObj;
+                        msg = internal.debugVars[i].name + ":\t" + finalObj;
                     }
                     internal.ctx.font = '7pt Calibri';
                     internal.ctx.fillStyle = 'black';
@@ -428,8 +429,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
-            internal.mouse.obj.pos.x = evt.clientX - rect.left;
-            internal.mouse.obj.pos.y = internal.size.y - evt.clientY + rect.top;
+            internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left, internal.size.y - evt.clientY + rect.top));
             internal.mouse.over = CheckCollision(internal.mouse.obj, true);
         }
 
@@ -492,13 +492,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     objA.velocity.y -= internal.world.gravity;
                     objA.velocity.y += objA.force.y/objA.mass;
 
-                    objA.pos = objA.pos.sum(objA.velocity.multiply(internal.time.deltaTime));
+                    objA.setPos(objA.getPos().sum(objA.velocity.multiply(internal.time.deltaTime)));
                     if(objA.newtonian){
                         for(var j = 0; j < internal.phycs.length; j++){
                             var objB = internal.phycs[j];
                             if(objB != objA){
                                 if(objB.newtonian){
-                                    var dist = objB.pos.substract(objA.pos);
+                                    var dist = objB.getPos().substract(objA.getPos());
                                     var dir = dist.normalized();
                                     dist = dist.magnitude();
                                     var f = constants.g*((objA.mass * objB.mass)/dist)
@@ -522,8 +522,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 //if(objB.collider.checked != internal.time.elapsedTime || retObj){
                 if(true){
                     if(objB != objA && (!objA.kinematic || !objB.kinematic)){
-                        v3.x = objB.pos.x - objA.pos.x;
-                        v3.y = objB.pos.y - objA.pos.y;
+                        v3.copy(objB.getPos().substract(objA.getPos()));
                         var dist = v3.magnitude();
                         dist = dist - objA.collider.maxRadius - objB.collider.maxRadius;
                         //$d.Log(dist);
@@ -538,11 +537,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                             if(objA.collider.type == 1 && objB.collider.type == 1){
                                 if(retObj) return objB;
                                 trueCollide = true;
-                                //sep = objB.pos.substract(objA.pos);
-                                var dir = objB.pos.substract(objA.pos).normalized();
-                                sep = dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
-                                Na = objA.pos.substract(objB.pos).normalized();
-                                Nb = objB.pos.substract(objA.pos).normalized();
+                                //sep = objB.getpos().substract(objA.getPos());
+                                var dir = objB.getPos().substract(objA.getPos()).normalized();
+                                sep = dir.multiply(objA.getPos().substract(objB.getPos()).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
+                                Na = objA.getPos().substract(objB.getPos()).normalized();
+                                Nb = objB.getPos().substract(objA.getPos()).normalized();
                                 contactPA = dir.multiply(objA.collider.radius);
                                 contactPB = dir.multiply(-objB.collider.radius);
                             } else if(objA.collider.type == 1 && (objB.collider.type == 0 || objB.collider.type == 2)){
@@ -554,13 +553,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 };
                                 if(closest.vertex == -1){
                                     for(var j = 0; j < objB.collider.vertexs.length; j++){
-                                        var aV = objB.collider.vertexs[j].rrotate(objB.rotation).sum(objB.pos);
+                                        var aV = objB.collider.vertexs[j].rrotate(objB.rotation).sum(objB.getPos());
                                         var bV;
-                                        var p = objA.pos;
+                                        var p = objA.getPos();
                                         if(j == objB.collider.vertexs.length - 1){
-                                            bV = objB.collider.vertexs[0].rrotate(objB.rotation).sum(objB.pos);
+                                            bV = objB.collider.vertexs[0].rrotate(objB.rotation).sum(objB.getPos());
                                         } else {
-                                            bV = objB.collider.vertexs[j+1].rrotate(objB.rotation).sum(objB.pos);
+                                            bV = objB.collider.vertexs[j+1].rrotate(objB.rotation).sum(objB.getPos());
                                         }
                                         //var dist = (((aV.x - p.x)*(bV.y-p.y))-((aV.y-p.y)*(bV.x-p.x)))/(bV.substract(aV).magnitude());
                                         var resp = pnt2line(p, aV, bV);
@@ -569,7 +568,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                                 closest.distance = resp.dist;
                                                 closest.vertex = j;
                                                 closest.dir = resp.nearest.substract(p).normalized();
-                                                contactPB = resp.nearest.substract(objB.pos);
+                                                contactPB = resp.nearest.substract(objB.getPos());
                                                 contactPA = closest.dir.multiply(objA.collider.radius);
                                             }
                                         }
@@ -580,14 +579,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    //sep = closest.dir.multiply(objB.pos.substract(objA.pos).magnitude() - objB.collider.maxRadius - objA.collider.maxRadius);
+                                    //sep = closest.dir.multiply(objB.getPos().substract(objA.getPos()).magnitude() - objB.collider.maxRadius - objA.collider.maxRadius);
                                     sep = closest.dir.multiply(closest.distance - objA.collider.maxRadius);
                                     Na = objB.collider.normals[closest.vertex].clone();
                                     Na.rotate(objB.rotation);
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = objA.pos.substract(objB.pos).normalized();
+                                    Nb = objA.getPos().substract(objB.getPos()).normalized();
                                 }
                             } else if(objB.collider.type == 1 && (objA.collider.type == 0 || objA.collider.type == 2)){
                                 //COLLISION POLYGON-CIRCLE
@@ -598,13 +597,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 };
                                 if(closest.vertex == -1){
                                     for(var j = 0; j < objA.collider.vertexs.length; j++){
-                                        var aV = objA.collider.vertexs[j].rrotate(objA.rotation).sum(objA.pos);
+                                        var aV = objA.collider.vertexs[j].rrotate(objA.rotation).sum(objA.getPos());
                                         var bV;
-                                        var p = objB.pos;
+                                        var p = objB.getPos();
                                         if(j == objA.collider.vertexs.length - 1){
-                                            bV = objA.collider.vertexs[0].rrotate(objA.rotation).sum(objA.pos);
+                                            bV = objA.collider.vertexs[0].rrotate(objA.rotation).sum(objA.getPos());
                                         } else {
-                                            bV = objA.collider.vertexs[j+1].rrotate(objA.rotation).sum(objA.pos);
+                                            bV = objA.collider.vertexs[j+1].rrotate(objA.rotation).sum(objA.getPos());
                                         }
                                         //var dist = ((aV.x - p.x)*(bV.y-p.y)-(aV.y-p.y)*(bV.x-p.x))/(bV.substract(aV).magnitude());
                                         var resp = pnt2line(p, aV, bV);
@@ -613,7 +612,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                                 closest.distance = resp.dist;
                                                 closest.vertex = j;
                                                 closest.dir = resp.nearest.substract(p).normalized();
-                                                contactPA = resp.nearest.substract(objA.pos);
+                                                contactPA = resp.nearest.substract(objA.getPos());
                                                 contactPB = closest.dir.multiply(objB.collider.radius);
                                             }
                                         }
@@ -624,14 +623,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                     trueCollide = true;
 
                                     //CIRCLE
-                                    //sep = closest.dir.multiply(objA.pos.substract(objB.pos).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
+                                    //sep = closest.dir.multiply(objA.getPos().substract(objB.getPos()).magnitude() - objA.collider.maxRadius - objB.collider.maxRadius);
                                     sep = closest.dir.multiply(closest.distance - objB.collider.maxRadius);
                                     Na = objA.collider.normals[closest.vertex].clone();
                                     Na.rotate(objA.rotation);
 
                                     //POLYGON
                                     MTDb = new $e.Vector2(0,0);
-                                    Nb = objB.pos.substract(objA.pos).normalized();
+                                    Nb = objB.getPos().substract(objA.getPos()).normalized();
                                 }
                             } else {
 
@@ -705,13 +704,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
                                 //Move the object to exit the collision
                                 if(objA.kinematic){
-                                    objB.pos = objB.pos.substract(sep);
+                                    objB.setPos(objB.getPos().substract(sep));
                                 } else if(objB.kinematic){
-                                    objA.pos = objA.pos.sum(sep);
+                                    objA.setPos(objA.getPos().sum(sep));
                                 } else {
                                     //sep.scale(0.5);
-                                    objA.pos = objA.pos.sum(sep.multiply(objB.mass / (objB.mass + objA.mass)));
-                                    objB.pos = objB.pos.substract(sep.multiply(objA.mass / (objB.mass + objA.mass)));
+                                    objA.setPos(objA.getPos().sum(sep.multiply(objB.mass / (objB.mass + objA.mass))));
+                                    objB.setPos(objB.getPos().substract(sep.multiply(objA.mass / (objB.mass + objA.mass))));
                                 }
                             }
                         }
@@ -745,7 +744,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             {
                 var vr = obj.collider.vertexs[i].clone();
                 vr.rotate(obj.rotation);
-                var v = obj.pos.sum(vr);
+                var v = obj.getPos().sum(vr);
                 var projection = dir.dot(v);
 
                 if(projection > bestProjection)
@@ -775,7 +774,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 // B's model space
                 var vr = new $e.Vector2(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
                 vr.rotate(A.rotation);
-                var v = new $e.Vector2(vr.x + A.pos.x, vr.y + A.pos.y);
+                var v = new $e.Vector2(vr.x + A.getPos().x, vr.y + A.getPos().y);
 
                 // Compute penetration distance (in B's model space)
                 var sv = new $e.Vector2(s.x-v.x, s.y - v.y);
@@ -804,7 +803,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var J = A.collider.vertexs.length - 1;
             for(var I = 0; I < A.collider.vertexs.length; I++)
             {
-                var E = (A.collider.vertexs[I].rrotate(A.rotation).sum(A.pos)).substract(A.collider.vertexs[J].rrotate(A.rotation).sum(A.pos));
+                var E = (A.collider.vertexs[I].rrotate(A.rotation).sum(A.getPos())).substract(A.collider.vertexs[J].rrotate(A.rotation).sum(A.getPos()));
                 var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
 
                 if (AxisSeparatePolygons(N, A, B))
@@ -815,7 +814,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             J = B.collider.vertexs.length - 1
             for(var I = 0; I < B.collider.vertexs.length; I++)
             {
-                var E = (B.collider.vertexs[I].sum(B.pos).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.pos));
+                var E = (B.collider.vertexs[I].sum(B.getPos()).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.getPos()));
                 var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
 
                 if (AxisSeparatePolygons (N, A, B))
@@ -828,7 +827,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var MTD = FindMTD(Axis, iNumAxis);
 
             // makes sure the push vector is pushing A away from B
-            var D = A.pos.substract(B.pos);
+            var D = A.getPos().substract(B.getPos());
             if (D.dot(MTD) < 0.0)
                 MTD.scale(-1);
 
@@ -841,11 +840,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function CalculateInterval(Axis, P){
             var min, max;
 
-            var d = Axis.dot(P.collider.vertexs[0].rrotate(P.rotation).sum(P.pos));
+            var d = Axis.dot(P.collider.vertexs[0].rrotate(P.rotation).sum(P.getPos()));
             min = max = d;
             for(var I = 0; I < P.collider.vertexs.length; I ++)
             {
-                var d = (P.collider.vertexs[I].rrotate(P.rotation).sum(P.pos)).dot(Axis);
+                var d = (P.collider.vertexs[I].rrotate(P.rotation).sum(P.getPos())).dot(Axis);
                 if (d < min)
                     min = d;
                 else
@@ -915,7 +914,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2(obj.pos.x, internal.size.y - obj.pos.y);
+                var tv = new $e.Vector2(obj.getPos().x, internal.size.y - obj.getPos().y);
                 tv.toFixed(0);
                 internal.ctx.translate(tv.x, tv.y);
                 var rot = obj.rotation * Math.PI / 180;
@@ -970,7 +969,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 //internal.ctx.translate(-tv.x, -tv.y);
                 internal.ctx.setTransform(1,0,0,1,0,0);
                 internal.ctx.shadowBlur = 0;
-                //$d.Log(obj.name + "\tX: " + obj.pos.x + "\tY: " + obj.pos.y);
+                //$d.Log(obj.name + "\tX: " + obj.getPos().x + "\tY: " + obj.getPos().y);
             }
         }
 
@@ -990,6 +989,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.y = y;
         }
 
+        /**
+         * Texture - Creates a Texture object with optional animations
+         * @param {string}      name The name of the texture
+         * @param {string[]}    srcs The paths to all the textures
+         * @param {Vector2}     size The size of the texture
+         * @param {number}      time The duration of the animation
+         * @param {bool}        loop Set to make a loo
+         */
         this.Texture = function(name, srcs, size, time, loop){
             this.name = name;
             this.loop = loop;
@@ -1007,6 +1014,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.frameTime = time / this.img.length;
         }
 
+        /**
+         * Texture.getTexture - Returns the current Texture.
+         * @return {image} The image element
+         */
         this.Texture.prototype.getTexture = function(){
             if(this.img.length == 1){
                 return this.img[0];
@@ -1030,12 +1041,35 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {number} angularDrag   Angular Drag
         * @param  {number} bounce Bounce factor
         * @param  {bool} [newtonian=false] Newtonian object (Atracts other bodys based on it's mass)
+        *
+        * @property     {number}    id                  Internal ID
+        * @property     {string}    name                Object's name
+        * @property     {Vector2}   posOrigin           Original Positon
+        * @property     {Vector2}   scale               Scale
+        * @property     {number}    rotation            Rotation
+        * @property     {Vector2}   pivot               Rotation Pivot
+        * @property     {bool}      kinematic           Kinematic Object (not affected by physics)
+        * @property     {number}    mass                Mass
+        * @property     {bool}      newtonian           Newtonian Object (Orbits, atracts other bodies)
+        * @property     {number}    drag                Drag
+        * @property     {number}    angularDrag         Angular Drag
+        * @property     {number}    bounce              Coeficient of Restitution 
+        * @property     {number}    angularVelocity     Angular Velocity
+        * @property     {Object2D}  lookAtTarget        Target look at
+        * @property     {Vector2}   lookAtOffset        Offset pivot on target look at
+        * @property     {Vector2}   velocity            Current Velocity
+        * @property     {number}    force               Force pending to apply
+        * @property     {string}    color               Color
+        * @property     {number}    collisions          Number of current collisions
+        * @property     {number}    layer               Layer
+        * @property     {Object2D}  parent              Parent Object. If set, the position is relative to the parent
         */
         this.Object2D = function(name, pos, mass, drag, angularDrag, bounce, newtonian){
             this.id = -1;
             this.name = name;
-            this.pos = pos.clone();
-            this.posOrigin = this.pos.clone();
+            //this.pos = pos.clone();
+            //this.posOrigin = this.pos.clone();
+            this.posOrigin = pos.clone();
             this.scale = new $e.Vector2(1,1);
             this.rotation = 0;
             this.pivot = new $e.Vector2(0,0);
@@ -1054,6 +1088,49 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.color = "#DDD";
             this.collisions = 0;
             this.layer = -99;
+            this.parent = null;
+        }
+
+        /**
+         * Object2D.prototype.getPos - Returns the object position
+         * @return {Vector2} A Vector2 Representing the Object position
+         */
+        this.Object2D.prototype.getPos = function(){
+            if(this.parent != null){
+                return this.posOrigin.sum(this.parent.getPos());    
+            } else {
+                return this.posOrigin;
+            }
+        }
+
+        /**
+         * Object2D.prototype.setPos - Sets the position of the Object2D
+         * @param {Vector2} v2 The new position
+         */
+        this.Object2D.prototype.setPos = function(v2) {
+            var f;
+            if(arguments.length == 1){
+                f = v2;
+            } else if(arguments.length == 2 && !isNaN(parseFloat(arguments[0])) && !isNaN(parseFloat(arguments[1]))){
+                f = new $e.Vector2(arguments[0], arguments[1]);
+            } else {
+                $d.LogError("Invalid value, expected Vector2");
+                return;
+            }
+            if(this.parent != null){
+                this.posOrigin.copy(f.substract(this.parent.getPos()));
+            } else {
+                this.posOrigin.copy(f);
+            }
+        };
+
+        /**
+         * Object2D.prototype.setInertia - Sets the object's parent
+         * @param {Object2D} parent The Object2D parent
+         */
+        this.Object2D.prototype.setParent = function (parent) {
+            this.parent = parent;
+            this.offSetPos = this.getPos();
         }
 
         /**
@@ -1073,16 +1150,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @param  {Vector2} value The Pivot
          */
         this.Object2D.prototype.setPivot = function(position){
-            this.pos = this.posOrigin;
+            this.setPos(this.posOrigin);
             this.pivot = position;
-            this.pos = this.pos.sum(this.pivot.rrotate(this.rotation));
+            this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
         }
 
         /**
         * Object2D.prototype.addForce - Applies a force to the Object2D
         *
         * @param  {Vector2} force       description
-        * @param  {int}     [forceType=0] The type of force: 0-Impulse, 1-Constant Force
+        * @param  {number}     [forceType=0] The type of force: 0-Impulse, 1-Constant Force
         */
         this.Object2D.prototype.addForce = function(force, forceType){
             if(!this.kinematic){
@@ -1141,10 +1218,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @param  {Object2D} Obj2 The target
         */
         this.Object2D.prototype.lookAt = function(Obj2){
-            this.pos = this.posOrigin;
-            var target = Obj2.pos.substract(this.pos);
+            this.setPos(this.posOrigin);
+            var target = Obj2.getPos().substract(this.getPos());
             this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
-            this.pos = this.pos.sum(this.pivot.rrotate(this.rotation));
+            this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
         }
 
         /**
