@@ -1539,7 +1539,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
     }
 
-    window.$e = $e;
+    window.$e = $e; 
 
 
 })(window);
