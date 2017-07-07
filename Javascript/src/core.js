@@ -298,11 +298,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 UpdateMouseAction(evt, false);
             });
 
-            internal.canvas.addEventListener("keydown", function(evt){
+            window.addEventListener("keydown", function(evt){
                 UpdateInputs(evt, true)
             });
             
-            internal.canvas.addEventListener("keyup", function(evt){
+            window.addEventListener("keyup", function(evt){
                 UpdateInputs(evt, false)
             });
 
