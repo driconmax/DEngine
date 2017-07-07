@@ -88,6 +88,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     right: false
                 }
             },
+            inputs: {},
             layers: [],
             phycs: [],
             user: {}
@@ -254,6 +255,19 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.console.history.push({name: string, type: type});
         };
 
+        /**
+        * Checks if the key is pressed
+        * 
+        * @param  {string}   keyCode The Key Code
+        * @return {bool}             Status of the key
+        */
+        this.getKey = function(keyCode){
+            if(internal.inputs[keyCode] != undefined){
+                return internal.inputs[keyCode];
+            }
+            return false;
+        }
+
         //close
 
         //Private functions start
@@ -282,6 +296,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             internal.canvas.addEventListener("mouseup", function(evt) {
                 UpdateMouseAction(evt, false);
+            });
+
+            internal.canvas.addEventListener("keydown", function(evt){
+                UpdateInputs(evt, true)
+            });
+            
+            internal.canvas.addEventListener("keyup", function(evt){
+                UpdateInputs(evt, false)
             });
 
             internal.time.interval = StartInterval();
@@ -470,6 +492,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 default:
                     break;
             }
+        }
+
+        function UpdateInputs(evt, press){
+            internal.inputs[evt.code] = press;
         }
 
         function UpdatePhysics(){
