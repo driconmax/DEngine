@@ -369,7 +369,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     totalTime: internal.time.elapsedTime,
                     selected: internal.mouse.selected,
                     over: internal.mouse.over,
-                    screenSize: internal.size
+                    screenSize: internal.size,
+                    mouse: {
+                        pos: internal.mouse.obj.getPos()
+                    }
                 });
             } catch(e){
                 $d.LogError("Error in User Update function", e);
@@ -991,6 +994,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         /**
          * Texture - Creates a Texture object with optional animations
+         * @class
+         * 
          * @param {string}      name The name of the texture
          * @param {string[]}    srcs The paths to all the textures
          * @param {Vector2}     size The size of the texture
@@ -1032,6 +1037,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         /**
         * BaseObject2D - Base class of Object2D without all the physics properties
+        * @class
+        * 
         * @param {string} name Name
         * @param {Vector2} pos Position
         *
@@ -1065,6 +1072,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         /**
         * Object2D - Creates a new Object2D that extends BaseObject2D with Physics properties
+        * @class
+        * @augments BaseObject2D
         *
         * @constructor
         * @param  {string} name   Name
