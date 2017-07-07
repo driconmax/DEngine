@@ -496,6 +496,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function UpdateInputs(evt, press){
             internal.inputs[evt.code] = press;
+            console.log(internal.inputs);
         }
 
         function UpdatePhysics(){
