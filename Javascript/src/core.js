@@ -458,8 +458,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
             internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left, internal.size.y - evt.clientY + rect.top));
-            var over = CheckCollision(internal.mouse.obj, true);
-            internal.mouse.over = (over != undefined && over.collider.selectable)? over : undefined;
+            internal.mouse.over = CheckCollision(internal.mouse.obj, true);
         }
 
         function UpdateMouseAction(evt, active){
@@ -469,19 +468,21 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     internal.inputs.ClickLeft = active;
                     if(!active){
                         if(internal.mouse.over != undefined){
-                            if(evt.shiftKey){
-                                var ind = internal.mouse.selected.indexOf(internal.mouse.over);
-                                if(ind != -1){
-                                    var last = internal.mouse.selected.slice(ind+1);
-                                    internal.mouse.selected.splice(0,ind);
-                                    for(var i = 0; i < last.length; i++){
-                                        internal.mouse.selected.push(last[i]);
+                            if(internal.mouse.over.collider.selectable){
+                                if(evt.shiftKey){
+                                    var ind = internal.mouse.selected.indexOf(internal.mouse.over);
+                                    if(ind != -1){
+                                        var last = internal.mouse.selected.slice(ind+1);
+                                        internal.mouse.selected.splice(0,ind);
+                                        for(var i = 0; i < last.length; i++){
+                                            internal.mouse.selected.push(last[i]);
+                                        }
+                                    } else {
+                                        internal.mouse.selected.push(internal.mouse.over);
                                     }
                                 } else {
-                                    internal.mouse.selected.push(internal.mouse.over);
+                                    internal.mouse.selected = [internal.mouse.over];
                                 }
-                            } else {
-                                internal.mouse.selected = [internal.mouse.over];
                             }
                         } else {
                             internal.mouse.selected = [];
