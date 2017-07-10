@@ -466,7 +466,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 case 0:
                     internal.mouse.click.left = active;
                     internal.inputs.ClickLeft = active;
-                    if(!active){
+                    if(active){
                         if(internal.mouse.over != undefined){
                             if(internal.mouse.over.collider.selectable){
                                 if(evt.shiftKey){
