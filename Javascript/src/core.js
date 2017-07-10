@@ -317,7 +317,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     totalTime: internal.time.elapsedTime,
                     selected: internal.mouse.selected,
                     over: internal.mouse.over,
-                    screenSize: internal.size
+                    screenSize: internal.size,
+                    mouse: {
+                        pos: internal.mouse.obj.getPos()
+                    },
+                    objects: internal.layers
                 });
             } catch(e){
                 $d.LogError("Error in User Start function", e);
@@ -397,7 +401,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     screenSize: internal.size,
                     mouse: {
                         pos: internal.mouse.obj.getPos()
-                    }
+                    },
+                    objects: internal.layers
                 });
             } catch(e){
                 $d.LogError("Error in User Update function", e);
@@ -1089,6 +1094,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         * @property     {string}    color               Color
         * @property     {number}    layer               Layer
         * @property     {BaseObject2D}  parent              Parent Object. If set, the position is relative to the parent
+        * @property     {BaseObject2D[]}  childs              Childs Objects
         */
         this.BaseObject2D = function(name, pos){
             this.id = -1;
@@ -1104,6 +1110,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             this.color = "#DDD"; 
             this.layer = -99;
             this.parent = null;
+            this.childs = [];
         };
 
         /**
@@ -1197,7 +1204,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @param {BaseObject2D} parent The BaseObject2D parent
          */
         this.BaseObject2D.prototype.setParent = function (parent) {
+            if(this.parent != null){
+                this.parent.childs.splice(this.parent.childs.indexOf(this), 1);
+            }
             this.parent = parent;
+            this.parent.childs.push(this);
             this.offSetPos = this.getPos();
         };
 
