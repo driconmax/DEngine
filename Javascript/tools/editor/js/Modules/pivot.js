@@ -15,6 +15,7 @@ class NaviaEditorPivots extends NaviaBase
 		this.moveXPivot.texture = texture;
 		this.moveXPivot.setPivot(new $e.Vector2(0,texture.height / 2));		
 		this.moveXPivot.setCollider(new $e.BoxCollider(49,11));
+		this.moveXPivot.collider.selectable = false;
 		$e.add2DObject(this.moveXPivot, -49);
 		
         this.moveYPivot = new $e.Object2D("moveYPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
@@ -22,6 +23,7 @@ class NaviaEditorPivots extends NaviaBase
 		this.moveYPivot.texture = texture;		
 		this.moveYPivot.setPivot(new $e.Vector2(texture.width / 2,texture.height));
 		this.moveYPivot.setCollider(new $e.BoxCollider(11,49));
+		this.moveYPivot.collider.selectable = false;
 		$e.add2DObject(this.moveYPivot, -49);
 		
         //this.rotationPivot = new $e.Object2D("rotationPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
@@ -36,24 +38,30 @@ class NaviaEditorPivots extends NaviaBase
 		this.newX = obj.mouse.pos.x; //mouseX
 		this.newY = obj.mouse.pos.y; //mouseY
 		
-		// Guado la lista de seleccionados si no contiene algun pivot
-		var objs = [this.moveXPivot, this.moveYPivot];
-		if(!this.contains(obj.selected, objs))
-			this.myObj = obj.selected;
+		// Guado la lista de seleccionados
+		this.myObj = obj.selected;
 				
 		// Muevo el objeto si esta presionado el pivot
-		if($e.getKey("KeyA")) // TODO: Hacer que esto sea con el click izquierdo del mouse
-		{			
-			if(this.myObj[0] == null) return;
-			
-			if(obj.over == this.moveXPivot && this.currentAxis != "Y")
-				this.currentAxis = "X";
-			else if(obj.over == this.moveYPivot && this.currentAxis != "X")
-				this.currentAxis = "Y";			
-			
-			if(this.currentAxis == "") return;
-			
-			this.move(this.myObj[0], this.currentAxis);
+		if($e.getKey("ClickLeft"))
+		{
+			if(this.currentAxis == ""){
+				if(this.myObj[0] == null) {
+					this.moveXPivot.setPos(new $e.Vector2(0,0));
+					this.moveYPivot.setPos(new $e.Vector2(0,0));
+					return;
+				}
+				
+				if(obj.over == this.moveXPivot && this.currentAxis != "Y"){
+					this.currentAxis = "X";
+					this.initialOffset = obj.over.getPos().x - obj.mouse.pos.x;
+				}
+				else if(obj.over == this.moveYPivot && this.currentAxis != "X"){
+					this.currentAxis = "Y";			
+					this.initialOffset = obj.over.getPos().y - obj.mouse.pos.y;
+				}
+			} else {
+				this.move(obj.mouse.pos, this.myObj[0], this.currentAxis, this.initialOffset);
+			}
 		}
 		else
 		{
@@ -87,30 +95,23 @@ class NaviaEditorPivots extends NaviaBase
 		return lala;
 	}
 	
-	move(obj, axis)
+	move(mouse, obj, axis, offset)
 	{ 					
-		// Calculo la diferencia entre la pisicion vieja y la nueva
-		var diffX = this.newX - this.oldX;
-		var diffY = this.newY - this.oldY;
-		
-		if(diffX > 100) diffX = 0;
-		if(diffY > 100) diffY = 0;
-		
-		$d.Log(new $e.Vector2(diffX, diffY));
-		// Le sumo la diferencia al eje correspondiente
+		var newPos;
 		switch(axis)
 		{
 			case "X":
-					var newPos = obj.getPos().sum(new $e.Vector2(diffX, 0));
-					obj.setPos(newPos);
+					newPos = mouse.sum(new $e.Vector2(offset, 0));
+					newPos.y = obj.getPos().y;
 					break;
 			case "Y":
-					var newPos = obj.getPos().sum(new $e.Vector2(0, diffY));
-					obj.setPos(newPos);
+					newPos = mouse.sum(new $e.Vector2(0, offset));
+					newPos.x = obj.getPos().x;
 					break;
 			default:
 					break;
 		}
+		obj.setPos(newPos);
 	}
 	
 }
