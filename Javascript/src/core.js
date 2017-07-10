@@ -459,7 +459,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var rect = canvas.getBoundingClientRect();
             internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left, internal.size.y - evt.clientY + rect.top));
             var over = CheckCollision(internal.mouse.obj, true);
-            internal.mouse.over = (over.selectable)? over : undefined;
+            internal.mouse.over = (over != undefined && over.selectable)? over : undefined;
         }
 
         function UpdateMouseAction(evt, active){
