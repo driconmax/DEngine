@@ -7,7 +7,8 @@
                     new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
                     new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
                     new $loader.script("Base Class", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/base.js"),
-                    new $loader.script("NaviaEditor", "js/editor.js", true)
+                    new $loader.script("NaviaEditor", "js/editor.js", true),
+					new $loader.script("NaviaEditor", "js/Modules/pivot.js", true)
                 ]);
                 $loader.start();
                 $loader.onstart = function(r){
@@ -19,6 +20,7 @@
                 $loader.onload = function(){
                     //If the download went correctly, we should be able to use the common library ($d).
                     $d.Log("Load complete");
+					naviaEditor.addModule(new NaviaEditorPivots());
                     $e.init(document.getElementById("mainCanvas"), function(){
                         naviaEditor.start();
                     }, function(obj){
