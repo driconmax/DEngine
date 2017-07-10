@@ -24,6 +24,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
     var $e = new function(){
 
         const vbn = 1000000;
+        const vln = 1/vbn;
 
         var constants = {
             //g: 6674*Math.pow(10,-11)
@@ -465,6 +466,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             switch(evt.button){
                 case 0:
                     internal.mouse.click.left = active;
+                    internal.inputs.ClickLeft = active;
                     if(!active){
                         if(internal.mouse.over != undefined){
                             if(evt.shiftKey){
@@ -488,9 +490,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     break;
                 case 1:
                     internal.mouse.click.middle = active;
+                    internal.inputs.ClickMiddle = active;
                     break;
                 case 2:
                     internal.mouse.click.right = active;
+                    internal.inputs.ClickRight = active;
                     break;
                 default:
                     break;
@@ -1505,8 +1509,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             var sina = Math.sin(radians);
             var tempX = this.x*cosa - this.y*sina;
             var tempY = this.x*sina + this.y*cosa;
-            if(Math.abs(tempX) < 0.0000001) tempX = 0;
-            if(Math.abs(tempY) < 0.0000001) tempY = 0;
+            if(Math.abs(tempX) < vln) tempX = 0;
+            if(Math.abs(tempY) < vln) tempY = 0;
             this.x = tempX;
             this.y = tempY;
         };
