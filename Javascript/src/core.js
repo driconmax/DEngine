@@ -23,6 +23,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
     */
     var $e = new function(){
 
+        const vbn = 1000000;
+
         var constants = {
             //g: 6674*Math.pow(10,-11)
             g: 0.01
@@ -455,7 +457,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
             internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left, internal.size.y - evt.clientY + rect.top));
-            internal.mouse.over = CheckCollision(internal.mouse.obj, true);
+            var over = CheckCollision(internal.mouse.obj, true);
+            internal.mouse.over = (over.selectable)? over : undefined;
         }
 
         function UpdateMouseAction(evt, active){
@@ -580,7 +583,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 circlepolygon = true;
                                 var closest = {
                                     vertex: -1,
-                                    distance: 1000000
+                                    distance: vbn
                                 };
                                 if(closest.vertex == -1){
                                     for(var j = 0; j < objB.collider.vertexs.length; j++){
@@ -624,7 +627,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                                 circlepolygon = true;
                                 var closest = {
                                     vertex: -1,
-                                    distance: 1000000
+                                    distance: vbn
                                 };
                                 if(closest.vertex == -1){
                                     for(var j = 0; j < objA.collider.vertexs.length; j++){
@@ -768,7 +771,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function GetSupport(obj, dir){
-            var bestProjection = -1000000;
+            var bestProjection = -vbn;
             var bestVertex = new $e.Vector2(0,0);
 
             for(var i = 0; i < obj.collider.vertexs.length; i++)
@@ -789,7 +792,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function FindAxisLeastPenetration(A, B){
-            var bestDistance = -1000000;
+            var bestDistance = -vbn;
             var bestIndex;
 
             for(var i = 0; i < A.collider.vertexs.length; i++)
@@ -1345,12 +1348,13 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
          * @abstract
          */
         this.BaseCollider = function(type){
+            this.selectable = true;
             this.type = type;
             this.contactPoint;
             this.vertexs = [];
             this.normals = [];
             this.checked = false;
-            this.maxRadius = -1000000;
+            this.maxRadius = -vbn;
             this.checked = 0;
         };
 
