@@ -1,48 +1,67 @@
+<!doctype html>
 <html>
-    <head>
-        <script src="http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/loader.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function(event) {
-                $loader.addscripts([
-                    new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
-                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
-                    new $loader.script("Base Class", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/base.js"),
-                    new $loader.script("NaviaEditor", "js/editor.js", true),
-					new $loader.script("NaviaEditor", "js/Modules/pivot.js", true)
-                ]);
-                $loader.start();
-                $loader.onstart = function(r){
-                    console.log("Downloading " + r.totalbytes + " bytes");
-                }
-                $loader.onprogresschange = function(p){
-                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + " v" + ((p.current.version)?p.current.version:"") +"\t - \t" + p.progress + "%");
-                };
-                $loader.onload = function(){
-                    //If the download went correctly, we should be able to use the common library ($d).
-                    $d.Log("Load complete");
-					naviaEditor.addModule(new NaviaEditorPivots());
-                    $e.init(document.getElementById("mainCanvas"), function(){
-                        naviaEditor.start();
-                    }, function(obj){
-                        naviaEditor.update(obj);
-                    })
-                }
-            });
-        </script>
-        <style>
-            #mainCanvas {
-                position: absolute;;
-                top: 0px;
-                bottom: 0px;
-                right: 0px;
-                left: 0px;
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-    </head>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multilevel Sliding Accordion Menu Demo</title>
+  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/loader.js"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+          $loader.addscripts([
+              new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
+              new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
+              new $loader.script("Base Class", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/base.js"),
+              new $loader.script("NaviaEditor", "js/editor.js", true),
+              new $loader.script("NaviaEditor Pivot", "js/Modules/pivot.js", true)
+          ]);
+          $loader.start();
+          $loader.onstart = function(r){
+              console.log("Downloading " + r.totalbytes + " bytes");
+          }
+          $loader.onprogresschange = function(p){
+              console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + " v" + ((p.current.version)?p.current.version:"") +"\t - \t" + p.progress + "%");
+          };
+          $loader.onload = function(){
+              //If the download went correctly, we should be able to use the common library ($d).
+              $d.Log("Load complete");
+              naviaEditor.addModule(new NaviaEditorPivots());
+              $e.init(document.getElementById("mainCanvas"), function(){
+                  naviaEditor.start();
+              }, function(obj){
+                  naviaEditor.update(obj);
+              })
+          }
+      });
+  </script>
+</head>
 
-    <body>
+<body>
+<header role="banner">
+  <nav class="nav" role="navigation">
+    <ul class="nav__list">
+      <li>
+        <input id="group-1" type="checkbox" hidden />
+        <label for="group-1"><span class="fa fa-angle-right"></span>List of Object2D</label>
+        <ul class="group-list">
+          <li><a href="#">1st level item</a></li>
+          <li>
+            <input id="sub-group-1" type="checkbox" hidden />
+            <label for="sub-group-1"><span class="fa fa-angle-right"></span> Second level</label>
+            <ul class="group-list">
+              <li><a href="#">2nd level nav item</a></li>
+              <li><a href="#">2nd level nav item</a></li>
+              <li><a href="#">2nd level nav item</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
         <canvas id="mainCanvas"></canvas>
-    </body>
+</body>
 </html>
