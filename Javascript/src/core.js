@@ -325,10 +325,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             });
 
             window.addEventListener("mousewheel", function(evt){
-                UpdateInputs({
-                    code: "mousewheel",
-                    preventDefault: evt.preventDefault()
-                }, evt.wheelDeltaY);
+                UpdateInputs({ code: "mousewheel" }, evt.wheelDeltaY);
+                evt.preventDefault();
             })
 
             internal.time.interval = StartInterval();
@@ -536,7 +534,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function UpdateInputs(evt, press){
             internal.inputs[evt.code] = press;
             if(evt.code != "F11")
-                evt.preventDefault();
+                if(evt.preventDefault != undefined)
+                    evt.preventDefault();
         }
 
         function UpdatePhysics(){
