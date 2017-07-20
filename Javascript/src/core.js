@@ -91,6 +91,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     right: false
                 }
             },
+            camera: {
+                zoom: 0
+            },
             inputs: {},
             layers: [],
             phycs: [],
@@ -289,6 +292,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.mouse.obj = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
             internal.mouse.obj.setCollider(new $e.BoxCollider(0.1,0.1), true);
 
+            internal.camera.obj = new $e.BaseObject2D("MainCamera", new $e.Vector2(0,0));
+
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
             }, false);
@@ -321,6 +326,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     mouse: {
                         pos: internal.mouse.obj.getPos()
                     },
+                    camera: inernal.camera.obj,
                     objects: internal.layers
                 });
             } catch(e){
@@ -402,6 +408,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     mouse: {
                         pos: internal.mouse.obj.getPos()
                     },
+                    camera: inernal.camera.obj,
                     objects: internal.layers
                 });
             } catch(e){
@@ -939,6 +946,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawObjects(){
+            internal.ctx.setTransform(1,0,0,1,0,0);
+
             internal.size.x = internal.ctx.canvas.width = internal.canvas.clientWidth;
             internal.size.y = internal.ctx.canvas.height = internal.canvas.clientHeight;
             internal.ctx.globalAlpha = internal.globals.opacity;
@@ -953,6 +962,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     Draw(internal.layers[i][f]);
                 }
             }
+            internal.ctx.setTransform(1, 0, 0, 1, -internal.camera.obj.getPos().x, internal.camera.obj.getPos().y);
         }
 
         function Draw(obj){
