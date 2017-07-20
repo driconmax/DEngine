@@ -408,7 +408,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     mouse: {
                         pos: internal.mouse.obj.getPos()
                     },
-                    camera: inernal.camera.obj,
+                    camera: internal.camera.obj,
                     objects: internal.layers
                 });
             } catch(e){
