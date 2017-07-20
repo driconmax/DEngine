@@ -92,7 +92,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 }
             },
             camera: {
-                zoom: 0
+                zoom: 1
             },
             inputs: {},
             layers: [],
@@ -988,7 +988,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2(obj.getPos().x-internal.camera.obj.getPos().x, internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y);
+                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.mouse.zoom, (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.mouse.zoom);
                 tv.toFixed(0);
                 //internal.ctx.translate(tv.x, tv.y);
                 internal.ctx.setTransform(internal.camera.zoom,0,0,internal.camera.zoom,tv.x,tv.y);
@@ -999,14 +999,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     internal.ctx.shadowColor = "#3c84c1";
                 }
                 if(obj.texture != undefined){
-                    internal.ctx.drawImage(obj.texture.getTexture(), -obj.texture.size.x/2, -obj.texture.size.y/2, obj.texture.size.x, obj.texture.size.y);
+                    internal.ctx.drawImage(obj.texture.getTexture(), (-obj.texture.size.x/2) * internal.mouse.zoom, (-obj.texture.size.y/2)  * internal.mouse.zoom, (obj.texture.size.x) * internal.mouse.zoom, (obj.texture.size.y) * internal.mouse.zoom);
                 } else {
                     if(obj.collider.type == 1){
                         //internal.ctx.arc(0, 0, obj.collider.radius/4, 0, 2*Math.PI);
                         //internal.ctx.fill();
-                        internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                        internal.ctx.fillRect(- 10/2 * internal.mouse.zoom, - 10/2 * internal.mouse.zoom, 10 * internal.mouse.zoom, 10 * internal.mouse.zoom);
                     } else {
-                        internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
+                        internal.ctx.fillRect(- 10/2 * internal.mouse.zoom, - 10/2 * internal.mouse.zoom, 10 * internal.mouse.zoom, 10 * internal.mouse.zoom);
                     }
                 }
 
@@ -1022,9 +1022,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         if(obj.collider.type == 1){
                             internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
                         } else {
-                            internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x, obj.collider.vertexs[obj.collider.vertexs.length-1].y);
+                            internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x * internal.mouse.zoom, obj.collider.vertexs[obj.collider.vertexs.length-1].y * internal.mouse.zoom);
                             for(var i = 0; i < obj.collider.vertexs.length; i++){
-                                internal.ctx.lineTo(obj.collider.vertexs[i].x, obj.collider.vertexs[i].y);
+                                internal.ctx.lineTo(obj.collider.vertexs[i].x * internal.mouse.zoom, obj.collider.vertexs[i].y * internal.mouse.zoom);
                             }
                         }
                         //internal.ctx.strokeStyle = '#0F4';
@@ -1033,7 +1033,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         internal.ctx.stroke();
                         internal.ctx.fillStyle = "#FA0";
                         if(obj.collider.contactPoint != undefined){
-                            internal.ctx.fillRect(obj.collider.vertexs[obj.collider.contactPoint].x - 2, (obj.collider.vertexs[obj.collider.contactPoint].y) - 2, 4, 4);
+                            internal.ctx.fillRect((obj.collider.vertexs[obj.collider.contactPoint].x - 2) * internal.mouse.zoom, ((obj.collider.vertexs[obj.collider.contactPoint].y) - 2) * internal.mouse.zoom, 4 * internal.mouse.zoom, 4 * internal.mouse.zoom);
                         }
                     }
                 }
