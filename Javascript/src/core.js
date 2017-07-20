@@ -139,10 +139,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         this.setZoom = function(value){
             if($d.ValidateInput(arguments, ["number"])){
-                if(value < 0){
+                if(value > 0){
                     internal.camera.zoom = value;
                 } else {
-                    $d.LogError("The camera Zoom need to be greatter than 0");
+                    $d.LogError("The camera Zoom need to be less than 0");
                 }
             }
         }
