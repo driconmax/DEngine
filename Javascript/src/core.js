@@ -137,6 +137,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         };
 
+        this.setZoom = function(value){
+            if($d.ValidateInput(arguments, ["number"])){
+                if(value < 0){
+                    internal.camera.zoom = value;
+                } else {
+                    $d.LogError("The camera Zoom need to be greatter than 0");
+                }
+            }
+        }
+
         /**
         * Sets the maximum fps of the engine
         *
@@ -331,6 +341,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         pos: internal.mouse.obj.getPos()
                     },
                     camera: internal.camera.obj,
+                    zoom: internal.camera.zoom,
                     objects: internal.layers
                 });
             } catch(e){
@@ -413,6 +424,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         pos: internal.mouse.obj.getPos()
                     },
                     camera: internal.camera.obj,
+                    zoom: internal.camera.zoom,
                     objects: internal.layers
                 });
             } catch(e){
@@ -971,7 +983,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 internal.ctx.fillStyle = obj.color;
                 var tv = new $e.Vector2(obj.getPos().x-internal.camera.obj.getPos().x, internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y);
                 tv.toFixed(0);
-                internal.ctx.translate(tv.x, tv.y);
+                //internal.ctx.translate(tv.x, tv.y);
+                internal.ctx.setTransform(internal.camera.zoom,0,0,internal.camera.zoom,tv.x,tv.y);
                 var rot = obj.rotation * Math.PI / 180;
                 internal.ctx.rotate(-rot);
                 if(internal.mouse.over == obj){
