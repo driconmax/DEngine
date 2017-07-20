@@ -325,7 +325,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             });
 
             window.addEventListener("mousewheel", function(evt){
-                UpdateInputs({code: "mousewheel"}, evt.wheelDeltaY);
+                UpdateInputs({
+                    code: "mousewheel",
+                    preventDefault: evt.preventDefault();
+                }, evt.wheelDeltaY);
             })
 
             internal.time.interval = StartInterval();
