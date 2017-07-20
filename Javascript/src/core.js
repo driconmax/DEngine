@@ -946,8 +946,6 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawObjects(){
-            internal.ctx.setTransform(1,0,0,1,0,0);
-
             internal.size.x = internal.ctx.canvas.width = internal.canvas.clientWidth;
             internal.size.y = internal.ctx.canvas.height = internal.canvas.clientHeight;
             internal.ctx.globalAlpha = internal.globals.opacity;
@@ -962,13 +960,12 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     Draw(internal.layers[i][f]);
                 }
             }
-            internal.ctx.setTransform(1, 0, 0, 1, -internal.camera.obj.getPos().x, internal.camera.obj.getPos().y);
         }
 
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2(obj.getPos().x, internal.size.y - obj.getPos().y);
+                var tv = new $e.Vector2(obj.getPos().x-internal.camera.obj.getPos().x, internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y);
                 tv.toFixed(0);
                 internal.ctx.translate(tv.x, tv.y);
                 var rot = obj.rotation * Math.PI / 180;
