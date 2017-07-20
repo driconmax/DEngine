@@ -428,6 +428,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     zoom: internal.camera.zoom,
                     objects: internal.layers
                 });
+                internal.inputs["mousewheel"] = 0;
             } catch(e){
                 $d.LogError("Error in User Update function", e);
             }
@@ -532,7 +533,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function UpdateInputs(evt, press){
-            internal.inputs[evt.code] = press;
+            if(evt.code == "mousewheel"){
+                internal.inputs[evt.code] += press;
+            } else {
+                internal.inputs[evt.code] = press;
+            }
             if(evt.code != "F11")
                 if(evt.preventDefault != undefined)
                     evt.preventDefault();
