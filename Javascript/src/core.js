@@ -988,7 +988,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.mouse.zoom, (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.mouse.zoom);
+                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.camera.zoom, (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.camera.zoom);
                 tv.toFixed(0);
                 //internal.ctx.translate(tv.x, tv.y);
                 internal.ctx.setTransform(internal.camera.zoom,0,0,internal.camera.zoom,tv.x,tv.y);
@@ -999,14 +999,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     internal.ctx.shadowColor = "#3c84c1";
                 }
                 if(obj.texture != undefined){
-                    internal.ctx.drawImage(obj.texture.getTexture(), (-obj.texture.size.x/2) * internal.mouse.zoom, (-obj.texture.size.y/2)  * internal.mouse.zoom, (obj.texture.size.x) * internal.mouse.zoom, (obj.texture.size.y) * internal.mouse.zoom);
+                    internal.ctx.drawImage(obj.texture.getTexture(), (-obj.texture.size.x/2) * internal.camera.zoom, (-obj.texture.size.y/2)  * internal.camera.zoom, (obj.texture.size.x) * internal.camera.zoom, (obj.texture.size.y) * internal.camera.zoom);
                 } else {
                     if(obj.collider.type == 1){
                         //internal.ctx.arc(0, 0, obj.collider.radius/4, 0, 2*Math.PI);
                         //internal.ctx.fill();
-                        internal.ctx.fillRect(- 10/2 * internal.mouse.zoom, - 10/2 * internal.mouse.zoom, 10 * internal.mouse.zoom, 10 * internal.mouse.zoom);
+                        internal.ctx.fillRect(- 10/2 * internal.camera.zoom, - 10/2 * internal.camera.zoom, 10 * internal.camera.zoom, 10 * internal.camera.zoom);
                     } else {
-                        internal.ctx.fillRect(- 10/2 * internal.mouse.zoom, - 10/2 * internal.mouse.zoom, 10 * internal.mouse.zoom, 10 * internal.mouse.zoom);
+                        internal.ctx.fillRect(- 10/2 * internal.camera.zoom, - 10/2 * internal.camera.zoom, 10 * internal.camera.zoom, 10 * internal.camera.zoom);
                     }
                 }
 
@@ -1022,9 +1022,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         if(obj.collider.type == 1){
                             internal.ctx.arc(0, 0, obj.collider.radius, 0, 2*Math.PI);
                         } else {
-                            internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x * internal.mouse.zoom, obj.collider.vertexs[obj.collider.vertexs.length-1].y * internal.mouse.zoom);
+                            internal.ctx.moveTo(obj.collider.vertexs[obj.collider.vertexs.length-1].x * internal.camera.zoom, obj.collider.vertexs[obj.collider.vertexs.length-1].y * internal.camera.zoom);
                             for(var i = 0; i < obj.collider.vertexs.length; i++){
-                                internal.ctx.lineTo(obj.collider.vertexs[i].x * internal.mouse.zoom, obj.collider.vertexs[i].y * internal.mouse.zoom);
+                                internal.ctx.lineTo(obj.collider.vertexs[i].x * internal.camera.zoom, obj.collider.vertexs[i].y * internal.camera.zoom);
                             }
                         }
                         //internal.ctx.strokeStyle = '#0F4';
@@ -1033,7 +1033,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                         internal.ctx.stroke();
                         internal.ctx.fillStyle = "#FA0";
                         if(obj.collider.contactPoint != undefined){
-                            internal.ctx.fillRect((obj.collider.vertexs[obj.collider.contactPoint].x - 2) * internal.mouse.zoom, ((obj.collider.vertexs[obj.collider.contactPoint].y) - 2) * internal.mouse.zoom, 4 * internal.mouse.zoom, 4 * internal.mouse.zoom);
+                            internal.ctx.fillRect((obj.collider.vertexs[obj.collider.contactPoint].x - 2) * internal.camera.zoom, ((obj.collider.vertexs[obj.collider.contactPoint].y) - 2) * internal.camera.zoom, 4 * internal.camera.zoom, 4 * internal.camera.zoom);
                         }
                     }
                 }
