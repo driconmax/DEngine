@@ -995,7 +995,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.camera.zoom - (internal.size.x * 1/internal.camera.zoom / 2), (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.camera.zoom + (internal.size.y * 1/internal.camera.zoom / 2));
+                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.camera.zoom + (internal.size.x * 1/internal.camera.zoom / 2), (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.camera.zoom + (internal.size.y * 1/internal.camera.zoom / 2));
                 tv.toFixed(0);
                 //internal.ctx.translate(tv.x, tv.y);
                 internal.ctx.setTransform(internal.camera.zoom,0,0,internal.camera.zoom,tv.x,tv.y);
