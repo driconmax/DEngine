@@ -456,7 +456,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function DrawMousePosition(){
-            var msg = 'Mouse position: ' + internal.mouse.obj.getPos().x + ',' + internal.mouse.obj.getPos().y;
+            var msg = 'Mouse position: ' + internal.mouse.obj.getPos().toString(0);
             internal.ctx.font = '8pt Calibri';
             internal.ctx.fillStyle = internal.textcolor;
             internal.ctx.fillText(msg, 10, 25);
