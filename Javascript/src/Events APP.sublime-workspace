@@ -1,0 +1,681 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"obje",
+				"objectTree"
+			],
+			[
+				"pa",
+				"padding-left"
+			],
+			[
+				"par",
+				"parents"
+			],
+			[
+				"le",
+				"length\t(core.js)"
+			],
+			[
+				"Obj",
+				"Objects\t(core.js)"
+			],
+			[
+				"overflow",
+				"overflow-x"
+			],
+			[
+				"over",
+				"overflow-y"
+			],
+			[
+				"list-s",
+				"list-style-type"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"selec",
+				"selectable\t(core.js)"
+			],
+			[
+				"sele",
+				"selectable\t(core.js)"
+			],
+			[
+				"move",
+				"moveXPivot"
+			],
+			[
+				"spa",
+				"spawn\t(class.js)"
+			],
+			[
+				"add",
+				"add2DObject"
+			],
+			[
+				"for",
+				"for\tfor (…) {…}"
+			],
+			[
+				"Subs",
+				"Subspace\t(class.js)"
+			],
+			[
+				"typ",
+				"typedef\t@typedef"
+			],
+			[
+				"th",
+				"throw"
+			],
+			[
+				"prot",
+				"property\t@property"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"checl",
+				"checkLoggedIn"
+			],
+			[
+				"parse",
+				"parseInt\t( s: string, radix: int ): int Global"
+			],
+			[
+				"usua",
+				"usua_nombre\t(loginSrv.jss)"
+			],
+			[
+				"JSON",
+				"JSON_parse\t( json: string ): any JSON"
+			],
+			[
+				"Usua_",
+				"Usua_usuario\t(index.html)"
+			],
+			[
+				"pass",
+				"password"
+			],
+			[
+				"pr",
+				"prms"
+			],
+			[
+				"gu",
+				"gupr_father"
+			],
+			[
+				"gupr",
+				"gupr_name"
+			],
+			[
+				"gupr_",
+				"gupr_father\t(admin.js)"
+			],
+			[
+				"g",
+				"gustyprueba"
+			],
+			[
+				"url",
+				"urlparams"
+			],
+			[
+				"Usua",
+				"Usua_apellido\t(index.html)"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/D/Cybermapa/Nginx/html/Simulators/Server/eventsSrv.jss",
+			"settings":
+			{
+				"buffer_size": 8139,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Cybermapa/Nginx/html/Simulators/src/app/controllers/ProfileController.js",
+			"settings":
+			{
+				"buffer_size": 1745,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Cybermapa/Nginx/html/Simulators/src/app/views/profile.html",
+			"settings":
+			{
+				"buffer_size": 3262,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/PackageDev/Support/Convert to ....sublime-build",
+					""
+				],
+				[
+					"Packages/PackageDev/Support/Convert to ....sublime-build",
+					"JSON"
+				],
+				[
+					"Packages/PackageDev/Support/Convert to ....sublime-build",
+					"Property List"
+				],
+				[
+					"Packages/PackageDev/Support/Convert to ....sublime-build",
+					"YAML (Block Style)"
+				],
+				[
+					"Packages/PackageDev/Support/Convert to ....sublime-build",
+					"YAML (Default Style)"
+				]
+			],
+			[
+				"Packages/PackageDev/Support/Convert to ....sublime-build",
+				"YAML (Block Style)"
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 185.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"set syntax jav",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"pac",
+				"Package Control: List Packages"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"",
+				"A File Icon: Changelog"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"git add",
+				"Git: Add All"
+			],
+			[
+				"git commi",
+				"Git: Commit"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"gitignore",
+				"Gitignore: New gitignore"
+			],
+			[
+				"giti",
+				"Gitignore: New gitignore"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"javas",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"set sy",
+				"Set Syntax: YAML"
+			],
+			[
+				"Package Dev",
+				"PackageDev: New Syntax Definition"
+			],
+			[
+				"vue",
+				"Set Syntax: Vue Component"
+			],
+			[
+				"method",
+				"Snippet: Vue component methods"
+			],
+			[
+				"link",
+				"Snippet: HTML - Stylesheet link"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"vue ",
+				"Set Syntax: Vue Component"
+			],
+			[
+				"vue metho",
+				"Snippet: Vue component methods"
+			],
+			[
+				"prefe",
+				"Preferences: Settings"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"package controlremo",
+				"Package Control: Remove Channel"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"paca",
+				"Install Package Control"
+			]
+		],
+		"width": 514.0
+	},
+	"console":
+	{
+		"height": 128.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/Cybermapa/Nginx/html/Events",
+		"/D/Cybermapa/Nginx/html/Events/Server",
+		"/D/Cybermapa/Nginx/html/Events/Server/common",
+		"/D/Cybermapa/Nginx/html/Simulators",
+		"/D/Cybermapa/Nginx/html/Simulators/Server/common",
+		"/D/Cybermapa/Nginx/html/Simulators/src",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/components",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/components/directives",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/components/services",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/controllers",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/stylesheets",
+		"/D/Cybermapa/Nginx/html/Simulators/src/app/views"
+	],
+	"file_history":
+	[
+		"/D/Scarlett/Nerdfish/Boarding Game/DEngine Beta/Javascript/tools/editor/css/index.html",
+		"/D/Scarlett/Nerdfish/Boarding Game/DEngine Beta/Javascript/tools/editor/js/Modules/pivot.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/DEngine Beta/Javascript/src/core.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro/js/class.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/DEngine Beta/Javascript/tools/editor/js/editor.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro/js/main.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro - Copy/js/main.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro - Copy/js/class.js",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro - Copy/index.html",
+		"/D/Scarlett/Nerdfish/Boarding Game/Mauro/index.html",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/JSHint/README.md",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/User/JavascriptBeautify.sublime-settings",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/JavascriptBeautify.sublime-settings",
+		"/D/Scarlett/Driconmax/Navia/index.php",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Minifier/Minifier.sublime-settings",
+		"/C/Users/gustavo.gonzalez/Documents/Visual Studio 2017/Projects/ABM Wizard/ABM Wizard/bin/Debug/Frameworks/ngAdmin/Templates/Common/js/admin.js",
+		"/D/Cybermapa/Nginx/html/Wizard/js/admin.js",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/User/CYBZARD.YAML-tmLanguage",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Javascript Beautify/Default (Windows).sublime-keymap",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Alignment/Base File.sublime-settings",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/Alignment/Default (Windows).sublime-keymap",
+		"/D/Cybermapa/Nginx/html/streetx5/server/common/cybUserData.jss",
+		"/D/Cybermapa/Nginx/html/vue/server/main.jss",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/npm/theme/element-variables.css",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/npm/element-variables.css",
+		"/D/Cybermapa/Nginx/html/vue/css/themes/dark/main.css",
+		"/D/Cybermapa/Nginx/html/vue/css/themes/dark/index.css",
+		"/D/Cybermapa/Nginx/html/vue/css/themes/default/index.css",
+		"/D/Cybermapa/Nginx/html/vue/css/main.css",
+		"/D/Cybermapa/Nginx/html/Wizard/server/common/helper.jss",
+		"/D/Cybermapa/Nginx/html/Wizard/server/common/cybsrv.jss",
+		"/C/Users/gustavo.gonzalez/AppData/Roaming/Sublime Text 3/Packages/zzz A File Icon zzz/aliases/CoffeeScript (Gulpfile).sublime-syntax"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"devices",
+			"this.id",
+			"BaseObject2D",
+			"label",
+			"\">\n",
+			"phycs",
+			"0.00",
+			"null",
+			"mouse.over",
+			"1000",
+			"UpdateMouseAction",
+			"getPos",
+			"extends",
+			"this.Object2D",
+			"lookAt",
+			"id",
+			"DEngine",
+			"{int}",
+			"int",
+			".size",
+			" aV",
+			"aV",
+			"MTDa",
+			"MTDb",
+			"msg",
+			".pos",
+			".pos<",
+			".pos",
+			"') ",
+			"oURIEncodeDec",
+			"axios",
+			"session",
+			");\n",
+			"sl_usua_id",
+			");\n",
+			"getUserData",
+			"/>\n",
+			"8",
+			"8px",
+			"button",
+			"font",
+			"#dfe6ec",
+			"border-bottom",
+			"121416",
+			"#dfdfec",
+			"353",
+			"));\n",
+			"#bfcbd9",
+			"#d1dbe5.",
+			"#d1dbe5",
+			";\n",
+			"#eef1f6",
+			"#20a0ff",
+			"\"\";\n",
+			"INSERT",
+			"repcomercial",
+			"){\n",
+			"\");\n",
+			"Received",
+			"req",
+			");\n",
+			">\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			".getPos()",
+			"gustyprueba"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/D/Cybermapa/Nginx/html/Simulators/Server/eventsSrv.jss",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8139,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7002,
+								7002
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 720.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/D/Cybermapa/Nginx/html/Simulators/src/app/controllers/ProfileController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1745,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1121,
+								1121
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/Cybermapa/Nginx/html/Simulators/src/app/views/profile.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2717,
+								2717
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Monokai.tmTheme",
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 102.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 79.0
+	},
+	"output.package_dev":
+	{
+		"height": 102.0
+	},
+	"pinned_build_system": "",
+	"project": "Events APP.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\Users\\gustavo.gonzalez\\Documents\\Sublime Projects\\Navia Engine.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 344.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

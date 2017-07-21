@@ -1,9 +1,6 @@
 /*
-
 #DSV:0.5#
-
 Collision Response - http://elancev.name/oliver/2D%20polygon.htm
-
 */
 /**
  * @file DEngine - Physics Engine for Javascript
@@ -37,6 +34,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             started: false,
             canvas: "",
             ctx: "",
+            textcolor: 'black',
             size: 0,
             time: {
                 FPS: 1,
@@ -91,6 +89,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     right: false
                 }
             },
+            camera: {
+                zoom: 1
+            },
             inputs: {},
             layers: [],
             phycs: [],
@@ -134,6 +135,26 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         };
 
+        this.setTextColor = function(value){
+            if($d.ValidateInput(arguments, ["string"])){
+                internal.textcolor = value;
+            }
+        }
+
+        /**
+         * Sets the main camera zoom
+         * @param {number} value Zoom value
+         */
+        this.setZoom = function(value){
+            if($d.ValidateInput(arguments, ["number"])){
+                if(value > 0){
+                    internal.camera.zoom = value;
+                } else {
+                    $d.LogError("The camera Zoom need to be less than 0");
+                }
+            }
+        }
+
         /**
         * Sets the maximum fps of the engine
         *
@@ -159,8 +180,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         /**
         * Sets the speed of the engine (Default: 1)
         *
-        * @param  {type} value description
-        * @return {type}       description
+        * @param  {type} value Speed value
         */
         this.setSpeed = function(value){
             if($d.ValidateInput(arguments, ["number"])){
@@ -289,6 +309,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.mouse.obj = new $e.Object2D("Mouse", new $e.Vector2(0, 0), 1, 1, 1);
             internal.mouse.obj.setCollider(new $e.BoxCollider(0.1,0.1), true);
 
+            internal.camera.obj = new $e.BaseObject2D("MainCamera", new $e.Vector2(0,0));
+
             internal.canvas.addEventListener('mousemove', function(evt) {
                 UpdateMousePos(internal.canvas, evt);
             }, false);
@@ -309,6 +331,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 UpdateInputs(evt, false)
             });
 
+            window.addEventListener("mousewheel", function(evt){
+                UpdateInputs({ code: "mousewheel" }, evt.wheelDeltaY);
+                evt.preventDefault();
+            })
+
             internal.time.interval = StartInterval();
             try{
                 internal.user.start({
@@ -321,6 +348,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     mouse: {
                         pos: internal.mouse.obj.getPos()
                     },
+                    camera: internal.camera.obj,
+                    zoom: internal.camera.zoom,
                     objects: internal.layers
                 });
             } catch(e){
@@ -402,8 +431,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     mouse: {
                         pos: internal.mouse.obj.getPos()
                     },
+                    camera: internal.camera.obj,
+                    zoom: internal.camera.zoom,
                     objects: internal.layers
                 });
+                internal.inputs["mousewheel"] = 0;
             } catch(e){
                 $d.LogError("Error in User Update function", e);
             }
@@ -426,7 +458,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function DrawMousePosition(){
             var msg = 'Mouse position: ' + internal.mouse.obj.getPos().x + ',' + internal.mouse.obj.getPos().y;
             internal.ctx.font = '8pt Calibri';
-            internal.ctx.fillStyle = 'black';
+            internal.ctx.fillStyle = internal.textcolor;
             internal.ctx.fillText(msg, 10, 25);
         }
 
@@ -462,7 +494,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
-            internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left, internal.size.y - evt.clientY + rect.top));
+            internal.mouse.obj.setPos(new $e.Vector2(evt.clientX - rect.left + internal.camera.obj.getPos().x, internal.size.y - evt.clientY + rect.top - internal.camera.obj.getPos().y));
             internal.mouse.over = CheckCollision(internal.mouse.obj, true);
         }
 
@@ -508,9 +540,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function UpdateInputs(evt, press){
-            internal.inputs[evt.code] = press;
+            if(evt.code == "mousewheel"){
+                internal.inputs[evt.code] += press;
+            } else {
+                internal.inputs[evt.code] = press;
+            }
             if(evt.code != "F11")
-                evt.preventDefault();
+                if(evt.preventDefault != undefined)
+                    evt.preventDefault();
         }
 
         function UpdatePhysics(){
@@ -958,9 +995,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function Draw(obj){
             if(internal.debug){
                 internal.ctx.fillStyle = obj.color;
-                var tv = new $e.Vector2(obj.getPos().x, internal.size.y - obj.getPos().y);
+                var tv = new $e.Vector2((obj.getPos().x-internal.camera.obj.getPos().x) * internal.camera.zoom + (internal.size.x * internal.camera.zoom / 2), (internal.size.y - obj.getPos().y + internal.camera.obj.getPos().y) * internal.camera.zoom + (internal.size.y * internal.camera.zoom / 2));
                 tv.toFixed(0);
-                internal.ctx.translate(tv.x, tv.y);
+                //internal.ctx.translate(tv.x, tv.y);
+                internal.ctx.setTransform(internal.camera.zoom,0,0,internal.camera.zoom,tv.x,tv.y);
                 var rot = obj.rotation * Math.PI / 180;
                 internal.ctx.rotate(-rot);
                 if(internal.mouse.over == obj){
@@ -1008,7 +1046,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 }
                 internal.ctx.rotate(rot);
                 internal.ctx.font = '6pt Calibri';
-                internal.ctx.fillStyle = 'black';
+                internal.ctx.fillStyle = internal.textcolor;
                 internal.ctx.fillText(obj.name, 0, 0);
                 //internal.ctx.translate(-tv.x, -tv.y);
                 internal.ctx.setTransform(1,0,0,1,0,0);
