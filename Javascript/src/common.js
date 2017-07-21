@@ -55,7 +55,7 @@
          */
         this.Log = function(text){
             if(typeof text === 'object'){
-                this.LogObject(text);
+                console.log("["+this.Date().TimeStamp()+"] DEngine: ", text);
             } else {
                 stats.Logs++;
                 console.log("["+this.Date().TimeStamp()+"] DEngine: " + text);
@@ -71,6 +71,7 @@
         this.LogWarning = function(text){
             stats.Warnings++;
             if(typeof text === 'object'){
+                console.warn("["+this.Date().TimeStamp()+"] DEngine: error ", text);
                 this.LogObject(text);
             } else {
                 console.warn("["+this.Date().TimeStamp()+"] DEngine: " + text);
@@ -87,13 +88,15 @@
         this.LogError = function(text, error){
             stats.Errors++;
             if(typeof text === 'object'){
-                this.LogObject(text);
+                //this.LogObject(text);
+                console.error("["+this.Date().TimeStamp()+"] DEngine: error ", text);
             } else {
-                console.error("["+this.Date().TimeStamp()+"] DEngine: " + text);
-                Draw(text, 2);
                 if(error != undefined){
-                    this.LogObject(error);
+                    console.error("["+this.Date().TimeStamp()+"] DEngine: " + text, error);
+                } else {
+                    console.error("["+this.Date().TimeStamp()+"] DEngine: " + text);    
                 }
+                Draw(text, 2);
             }
         }
 
