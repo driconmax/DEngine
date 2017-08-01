@@ -1,6 +1,5 @@
 class NaviaEditorPivots extends NaviaBase 
-{
-	
+{	
 	//Navia Starts here
 	start() 
 	{
@@ -26,7 +25,14 @@ class NaviaEditorPivots extends NaviaBase
 		this.moveYPivot.collider.selectable = false;
 		$e.add2DObject(this.moveYPivot, -49);
 		
-        //this.rotationPivot = new $e.Object2D("rotationPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
+        this.rotationPivot = new $e.Object2D("rotationPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
+		texture = new $e.Texture("moveXPivotSprite", ["js/Modules/pivotRotation.png"], new $e.Vector2(50,50), 1, true);
+		this.rotationPivot.texture = texture;	
+		this.rotationPivot.setPivot(new $e.Vector2(texture.width / 2, texture.height / 2));
+		this.rotationPivot.setCollider(new $e.BoxCollider(50,50));
+		this.rotationPivot.collider.selectable = false;
+		//$e.add2DObject(this.rotationPivot, -49);	
+		
         //this.scaleXPivot = new $e.Object2D("scaleXPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
         //this.scaleYPivot = new $e.Object2D("scaleYPivot", new $e.Vector2(0,0), 0, 0, 0, 0, 0);
     }
@@ -74,6 +80,7 @@ class NaviaEditorPivots extends NaviaBase
 			var objPos = this.myObj[0].getPos();
 			this.moveXPivot.setPos(objPos.sum(new $e.Vector2(49 / 2, 0)));
 			this.moveYPivot.setPos(objPos.sum(new $e.Vector2(0, 49 / 2)));
+			this.rotationPivot.setPos(objPos.sum(new $e.Vector2(25, 25)));
 		}
 		
 		// Actualizo la vieja posicion del mouse
@@ -93,6 +100,11 @@ class NaviaEditorPivots extends NaviaBase
 				}
 		
 		return lala;
+	}
+	
+	movePivotsUpdate()
+	{
+		
 	}
 	
 	move(mouse, obj, axis, offset)

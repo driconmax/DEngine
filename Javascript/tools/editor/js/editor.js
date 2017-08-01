@@ -16,10 +16,10 @@ window.naviaEditor = new class NaviaEditor extends NaviaBase {
             this.modules[i].start();
         }
 		
-		this.lala = new $e.Object2D("Lala", new $e.Vector2(400,300), 0, 0, 0, 0, 0);
-		this.col = new $e.BoxCollider(10,10);
-		this.lala.setCollider(this.col);
-		this.lolo = $e.add2DObject(this.lala, -50/*, this.awa = [], 60*/);
+		this.lala = new $e.Object2D("Lala", new $e.Vector2(200,200), 0, 0, 0, 0, 0);
+		this.lala.texture = new $e.Texture("point", ["js/spr_point.png"], new $e.Vector2(50,50), 1, true);
+		this.lala.setCollider(new $e.BoxCollider(50,50));
+		$e.add2DObject(this.lala, -50);
     }
     
     //Called once per frame
