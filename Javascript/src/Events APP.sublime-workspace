@@ -143,7 +143,7 @@
 			"file": "/D/Cybermapa/Nginx/html/Simulators/Server/eventsSrv.jss",
 			"settings":
 			{
-				"buffer_size": 8139,
+				"buffer_size": 8278,
 				"line_ending": "Windows"
 			}
 		},
@@ -334,12 +334,9 @@
 		"/D/Cybermapa/Nginx/html/Events/Server",
 		"/D/Cybermapa/Nginx/html/Events/Server/common",
 		"/D/Cybermapa/Nginx/html/Simulators",
-		"/D/Cybermapa/Nginx/html/Simulators/Server/common",
 		"/D/Cybermapa/Nginx/html/Simulators/src",
 		"/D/Cybermapa/Nginx/html/Simulators/src/app",
 		"/D/Cybermapa/Nginx/html/Simulators/src/app/components",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/components/directives",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/components/services",
 		"/D/Cybermapa/Nginx/html/Simulators/src/app/controllers",
 		"/D/Cybermapa/Nginx/html/Simulators/src/app/stylesheets",
 		"/D/Cybermapa/Nginx/html/Simulators/src/app/views"
@@ -487,15 +484,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8139,
+						"buffer_size": 8278,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7002,
-								7002
+								0,
+								0
 							]
 						],
 						"settings":
@@ -651,7 +648,7 @@
 		[
 			[
 				"",
-				"C:\\Users\\gustavo.gonzalez\\Documents\\Sublime Projects\\Navia Engine.sublime-project"
+				"C:\\Users\\gustavo.gonzalez\\Documents\\Sublime Projects\\StreetX.sublime-project"
 			]
 		],
 		"width": 380.0
