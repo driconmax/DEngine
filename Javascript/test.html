@@ -5,7 +5,8 @@
             document.addEventListener("DOMContentLoaded", function(event) { 
                 $loader.addscripts([
                     new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
-                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js")
+                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
+                    new $loader.script("Extended", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/extended.js")
                 ]);
                 $loader.start();
                 $loader.onstart = function(r){
