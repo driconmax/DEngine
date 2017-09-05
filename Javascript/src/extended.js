@@ -1,5 +1,5 @@
 function Lerp(a,b,u) {
-    return (1-u) * a + u * b;
+    return a + (b - a) * u;
 };
 
 function Color(r,g,b){
