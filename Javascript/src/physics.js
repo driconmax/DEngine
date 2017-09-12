@@ -23,7 +23,7 @@ var fixedLoop = {
 onmessage = function(msg){
     if(msg.data != undefined && typeof(msg.data) == "object"){
         switch(msg.data.fn){
-            case 'start':
+            case 'Start':
                 phycs = msg.data.phycs;
                 Start();
                 break;
