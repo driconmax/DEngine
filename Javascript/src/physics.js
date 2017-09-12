@@ -58,8 +58,8 @@ function Start(){
             fixedLoop.changes = false;
         }
         if(!fixedLoop.running){
-            UpdatePhysics();
             fixedLoop.running = true;
+            UpdatePhysics();
         }
     }, 1000/20);
 }
