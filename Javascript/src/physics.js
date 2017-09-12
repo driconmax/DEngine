@@ -12,7 +12,7 @@ var time = {
 var world = {
     gravity: 9.81
 }
-var fixedLoop: {
+var fixedLoop = {
     inter: undefined,
     running: false,
     changes: false,
