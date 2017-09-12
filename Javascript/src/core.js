@@ -366,7 +366,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 $d.LogError("Error in User Start function", e);
             }
 
-            internal.threads.phx.obj = new Worker('physics.js');
+            internal.threads.phx.obj = new Worker('src/physics.js');
 
             internal.threads.phx.msgTail.push({
                 fn: 'SetGravity',
