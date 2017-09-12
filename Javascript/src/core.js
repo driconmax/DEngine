@@ -405,6 +405,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 }
                 thread.obj.postMessage(thread.msgTail[i].data);
             }
+
+            for (var i = 0; i < thread.msgTail.length; i++) {
+                delete thread.msgTail[i];
+            }
         }
 
         function ProcessThreadMessages(msg){
@@ -501,6 +505,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 $d.LogError("Error in User Update function", e);
             }
             //UpdatePhysics();
+            SendThreadMessages();
             DrawObjects();
             //DrawFPS();
             DrawMousePosition();
@@ -565,7 +570,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 extra: {
                     cb: function(msg){
                         internal.mouse.over = msg;
-                    }
+                    },
+                    expd: true
                 }
             });
         }

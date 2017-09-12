@@ -53,10 +53,10 @@ function Start(){
         clearInterval(fixedLoop.inter);
     }
     fixedLoop.inter = setInterval(function(){
-        if(fixedLoop.changes){
+        //if(fixedLoop.changes){
             postMessage(phycs);
             fixedLoop.changes = false;
-        }
+        //}
         if(!fixedLoop.running){
             fixedLoop.running = true;
             UpdatePhysics();
