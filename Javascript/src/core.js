@@ -395,7 +395,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                     thread.msgTail[i].id = internal.threads.msgId++;
                     internal.threads.cbTail[thread.msgTail[i].id] = thread.msgTail[i].cb;
                 }
-                thread.obj.postMessage(internal.threads.msgTail[i]);
+                thread.obj.postMessage(thread.msgTail[i]);
             }
         }
 
