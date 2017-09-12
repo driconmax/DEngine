@@ -382,6 +382,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.threads.phx.msgTail.push({
                 data: {
                     fn: 'Start',
+                    navia: $e,
                     phycs: internal.phycs,
                 },
                 extra: {

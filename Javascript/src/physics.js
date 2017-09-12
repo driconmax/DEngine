@@ -2,6 +2,7 @@
  * Physics Thread
  */
 
+var $e;
 var phycs;
 var time = {
     fixedTime: 0,
@@ -24,6 +25,7 @@ onmessage = function(msg){
     if(msg.data != undefined && typeof(msg.data) == "object"){
         switch(msg.data.fn){
             case 'Start':
+                $e = msg.data.navia;
                 phycs = msg.data.phycs;
                 Start();
                 break;
