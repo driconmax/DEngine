@@ -382,8 +382,8 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.threads.phx.msgTail.push({
                 data: {
                     fn: 'Start',
-                    navia: $e,
-                    phycs: internal.phycs,
+                        phycs: internal.phycs,
+                        dv2: new $e.Vector2(0,0)
                 },
                 extra: {
                     cb: function(){
@@ -1265,6 +1265,16 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         this.Vector2.prototype.clone = function(){
             return new $e.Vector2(this.x, this.y);
         };
+
+        /**
+         * Vector2.prototype.getNew - Returns a new Vector2
+         * @param  {number} x X Value
+         * @param  {number} y Y Value
+         * @return {Vector2}   The new Vector2
+         */
+        this.Vector2.prototype.getNew = function(x,y){
+            return new $e.Vector2(x, y);
+        }
 
 
         /**
