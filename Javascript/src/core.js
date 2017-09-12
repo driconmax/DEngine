@@ -392,7 +392,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function SendThreadMessages(thread){
             for (var i = 0; i < thread.msgTail.length; i++) {
                 if(thread.msgTail[i].cb != undefined){
-                    thread.msgTail[i].id = internal.threads.msgId++;
+                    thread.msgTail[i].id = "CBI" + internal.threads.msgId++;
                     internal.threads.cbTail[thread.msgTail[i].id] = thread.msgTail[i].cb;
                 }
                 thread.obj.postMessage(thread.msgTail[i]);
