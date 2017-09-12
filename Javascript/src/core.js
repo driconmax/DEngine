@@ -505,7 +505,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 $d.LogError("Error in User Update function", e);
             }
             //UpdatePhysics();
-            SendThreadMessages();
+            SendThreadMessages(internal.threads.phx);
             DrawObjects();
             //DrawFPS();
             DrawMousePosition();
