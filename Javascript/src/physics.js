@@ -34,6 +34,14 @@ onmessage = function(msg){
                 fixedLoop.break = fixedLoop.lnm;
                 phycs = msg.data.phycs;
                 break;
+            case 'CheckCollision':
+                postMessage({
+                    obj: CheckCollision(msg.data.obj,true),
+                    cb: msg.data.cb,
+                    id: msg.data.id,
+                    expd: msg.data.expd
+                });
+                break;
             default:
                 break;
         }

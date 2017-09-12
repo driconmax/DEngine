@@ -99,7 +99,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 phx: {
                     obj: undefined,
                     msgTail: []
-                }
+                },
+                msgId: 0,
+                cbTail: {} //id,cb
             },
             user: {}
         };
@@ -375,21 +377,35 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             internal.threads.phx.msgTail.push({
                 fn: 'Start',
-                phycs: internal.phycs
+                phycs: internal.phycs,
+                cb: function(){
+                    if(msg.data != undefined){
+                        internal.phycs = msg.data;
+                    }
+                }
             });
 
             internal.threads.phx.obj.onchange = SendThreadMessages(internal.threads.phx);
-            internal.threads.phx.obj.onmessage = function(msg){
-                if(msg.data != undefined){
-                    internal.phycs = msg.data;
-                }
-            };
+            internal.threads.phx.obj.onmessage = ProcessThreadMessages(msg);
         }
 
         function SendThreadMessages(thread){
             for (var i = 0; i < thread.msgTail.length; i++) {
+                if(thread.msgTail[i].cb != undefined){
+                    thread.msgTail[i].id = internal.threads.msgId++;
+                    thread.cbTail[thread.msgTail[i].id] = thread.msgTail[i].cb;
+                }
                 thread.obj.postMessage(thread.msgTail[i]);
             }
+        }
+
+        function ProcessThreadMessages(msg){
+            if(internal.threads.cbTail[msg.id] != undefined){
+                internal.threads.cbTail[msg.id]();
+                if(msg.expd){
+                    delete internal.threads.cbTail[msg.id];
+                }
+            }            
         }
 
         function StartInterval(){
@@ -530,7 +546,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function UpdateMousePos(canvas, evt) {
             var rect = canvas.getBoundingClientRect();
             internal.mouse.obj.setPos(new $e.Vector2((evt.clientX - rect.left + internal.camera.obj.getPos().x) * (1/internal.camera.zoom), (internal.size.y - evt.clientY + rect.top - internal.camera.obj.getPos().y) * (1/internal.camera.zoom)));
-            internal.mouse.over = CheckCollision(internal.mouse.obj, true);
+            
+            internal.threads.phx.msgTail.push({
+                fn: 'CheckCollision',
+                obj: internal.mouse.obj,
+                cb: function(msg){
+                    internal.mouse.over = msg;
+                }
+            });
         }
 
         function UpdateMouseAction(evt, active){
