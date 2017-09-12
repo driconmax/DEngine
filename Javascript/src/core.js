@@ -130,7 +130,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                             Start();
                             internal.started = true;
                         } catch (e) {
-                            $d.LogError("The element is not a canvas");
+                            $d.LogError("The element is not a canvas", e);
                         }
                     } else {
                         $d.LogError("Missing Start/Update functions");
@@ -205,8 +205,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             if($d.ValidateInput(arguments, ["number"])){
                 internal.world.gravity = value;
                 internal.threads.phx.msgTail.push({
-                    fn: 'SetGravity',
-                    value: internal.world.gravity
+                    data: {
+                        fn: 'SetGravity',
+                        value: internal.world.gravity
+                    }
                 });
             }
         };
@@ -371,13 +373,17 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.threads.phx.obj = new Worker('src/physics.js');
 
             internal.threads.phx.msgTail.push({
-                fn: 'SetGravity',
-                value: internal.world.gravity
+                data: {
+                    fn: 'SetGravity',
+                    value: internal.world.gravity
+                }
             });
 
             internal.threads.phx.msgTail.push({
-                fn: 'Start',
-                phycs: internal.phycs,
+                data: {
+                    fn: 'Start',
+                    phycs: internal.phycs,
+                },
                 extra: {
                     cb: function(){
                         if(msg.data != undefined){
@@ -394,10 +400,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         function SendThreadMessages(thread){
             for (var i = 0; i < thread.msgTail.length; i++) {
                 if(thread.msgTail[i].extra != undefined && thread.msgTail[i].extra.cb != undefined){
-                    thread.msgTail[i].id = "CBI" + internal.threads.msgId++;
-                    internal.threads.cbTail[thread.msgTail[i].id] = thread.msgTail[i].extra.cb;
+                    thread.msgTail[i].data.id = "CBI" + internal.threads.msgId++;
+                    internal.threads.cbTail[thread.msgTail[i].data.id] = thread.msgTail[i].extra.cb;
                 }
-                thread.obj.postMessage(thread.msgTail[i]);
+                thread.obj.postMessage(thread.msgTail[i].data);
             }
         }
 
@@ -550,10 +556,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.mouse.obj.setPos(new $e.Vector2((evt.clientX - rect.left + internal.camera.obj.getPos().x) * (1/internal.camera.zoom), (internal.size.y - evt.clientY + rect.top - internal.camera.obj.getPos().y) * (1/internal.camera.zoom)));
             
             internal.threads.phx.msgTail.push({
-                fn: 'CheckCollision',
-                obj: internal.mouse.obj,
-                cb: function(msg){
-                    internal.mouse.over = msg;
+                data: {
+                    fn: 'CheckCollision',
+                    obj: internal.mouse.obj,
+                },
+                extra: {
+                    cb: function(msg){
+                        internal.mouse.over = msg;
+                    }
                 }
             });
         }
@@ -960,8 +970,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 if(this.collider == undefined){
                     internal.phycs.push(this);
                     internal.threads.phx.msgTail.push({
-                        fn: 'updateList',
-                        phycs: internal.phycs
+                        data: {
+                            fn: 'updateList',
+                            phycs: internal.phycs
+                        }
                     });
                 }
             }
