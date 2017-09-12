@@ -408,12 +408,14 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
         }
 
         function ProcessThreadMessages(msg){
-            if(internal.threads.cbTail[msg.id] != undefined){
-                internal.threads.cbTail[msg.id]();
-                if(msg.expd){
-                    delete internal.threads.cbTail[msg.id];
-                }
-            }            
+            if(msg != undefined){
+                if(internal.threads.cbTail[msg.id] != undefined){
+                    internal.threads.cbTail[msg.id]();
+                    if(msg.expd){
+                        delete internal.threads.cbTail[msg.id];
+                    }
+                }            
+            }
         }
 
         function StartInterval(){
