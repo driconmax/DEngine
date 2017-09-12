@@ -206,7 +206,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 internal.world.gravity = value;
                 internal.threads.phx.msgTail.push({
                     data: {
-                        fn: 'SetGravity',
+                        fn: 'setGravity',
                         value: internal.world.gravity
                     }
                 });
@@ -374,7 +374,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
             internal.threads.phx.msgTail.push({
                 data: {
-                    fn: 'SetGravity',
+                    fn: 'setGravity',
                     value: internal.world.gravity
                 }
             });
