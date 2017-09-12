@@ -394,7 +394,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             });
 
             internal.threads.phx.obj.onchange = SendThreadMessages(internal.threads.phx);
-            internal.threads.phx.obj.onmessage = ProcessThreadMessages();
+            internal.threads.phx.obj.onmessage = function(e){ProcessThreadMessages(e)};
         }
 
         function SendThreadMessages(thread){
