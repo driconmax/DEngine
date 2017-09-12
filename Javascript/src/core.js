@@ -378,9 +378,11 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             internal.threads.phx.msgTail.push({
                 fn: 'Start',
                 phycs: internal.phycs,
-                cb: function(){
-                    if(msg.data != undefined){
-                        internal.phycs = msg.data;
+                extra: {
+                    cb: function(){
+                        if(msg.data != undefined){
+                            internal.phycs = msg.data;
+                        }
                     }
                 }
             });
@@ -391,9 +393,9 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         function SendThreadMessages(thread){
             for (var i = 0; i < thread.msgTail.length; i++) {
-                if(thread.msgTail[i].cb != undefined){
+                if(thread.msgTail[i].extra != undefined && thread.msgTail[i].extra.cb != undefined){
                     thread.msgTail[i].id = "CBI" + internal.threads.msgId++;
-                    internal.threads.cbTail[thread.msgTail[i].id] = thread.msgTail[i].cb;
+                    internal.threads.cbTail[thread.msgTail[i].id] = thread.msgTail[i].extra.cb;
                 }
                 thread.obj.postMessage(thread.msgTail[i]);
             }
