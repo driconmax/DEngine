@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <script src="src/common.js"></script>
+        <script src="src/core.js"></script>
+        <script src="src/extended.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function(event) { 
+                $d.Log("Load complete");
+
+                $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){})
+            });
+            function oneObject(){
+                var obj = new $e.Object2D("Object", new $e.Vector2(20, 60), 1, 1, 0.9, 0.7);
+                obj.addForce(new $e.Vector2(30,10));
+                obj.setCollider(new $e.BoxCollider(20,20));
+                obj.rotation = 45;
+                $e.add2DObject(obj, -50);
+                var obj2 = new $e.Object2D("Floor", new $e.Vector2(350, 10), 0, 0, 0.9, 0.7);
+                obj2.setCollider(new $e.BoxCollider(700,20));
+                obj2.rotation = 0;
+                $e.add2DObject(obj2, -50);
+                var obj5 = new $e.Object2D("Roof", new $e.Vector2(350, 140), 0, 0, 0.9, 0.7);
+                obj5.setCollider(new $e.BoxCollider(700,20));
+                obj5.rotation = 0;
+                $e.add2DObject(obj5, -50);
+                var obj3 = new $e.Object2D("WallL", new $e.Vector2(690, 75), 0, 0, 0.9, 0.7);
+                obj3.setCollider(new $e.BoxCollider(150,20));
+                obj3.rotation = 90;
+                $e.add2DObject(obj3, -50);
+                var obj4 = new $e.Object2D("WallR", new $e.Vector2(10, 75), 0, 0, 0.9, 0.7);
+                obj4.setCollider(new $e.BoxCollider(150,20));
+                obj4.rotation = 90;
+                $e.add2DObject(obj4, -50);
+                $e.addDebugObject("OBJ P", obj, ["pos"]);
+                $e.addDebugObject("OBJ V", obj, ["velocity"]);
+            }
+            function newtonian(){
+                $e.setGravity(0);
+                for(var i = 0; i < 10; i++){
+                    var obj = new $e.Object2D("Object", new $e.Vector2(Math.random()*800, Math.random()*800), Math.random()*1, 1, 0.9, 0.7);
+                    obj.addForce(new $e.Vector2(Math.random()*10-5,Math.random()*10-5));
+                    obj.setCollider(new $e.BoxCollider(20,20));
+                    obj.newtonian = true;
+                    $e.add2DObject(obj, -50);
+                }
+            }
+            function planets(){
+                $e.setGravity(0);
+                var planet = new $e.Object2D("Planet", new $e.Vector2(400, 400), 2000, 1, 0.9, 1);
+                planet.addForce(new $e.Vector2(0,0));
+                planet.setCollider(new $e.BoxCollider(20,20));
+                planet.newtonian = true;
+                $e.add2DObject(planet, -50);
+
+                var moon = new $e.Object2D("Moon", new $e.Vector2(490, 400), 200, 1, 0.9, 1);
+                moon.addForce(new $e.Vector2(0,4000));
+                moon.setCollider(new $e.BoxCollider(20,20));
+                moon.newtonian = true;
+                $e.add2DObject(moon, -50);
+
+            }
+            function fewobjects(){
+                $e.init(document.getElementById("mainCanvas"), function(){}, function(){})
+                var obj0;
+                for(var i = 0; i < 10; i++){
+                    obj0 = new $e.Object2D("Obj " + i, new $e.Vector2(20, 60), 1, 1, 0.9, 0.7);
+                    obj0.addForce(new $e.Vector2(30,10));
+                    obj0.setCollider(new $e.BoxCollider(20,20));
+                    obj0.rotation = 45;
+                    $e.add2DObject(obj0, -50);
+                }
+                var obj2 = new $e.Object2D("Floor", new $e.Vector2(350, 10), 0, 0, 0.9, 0.7);
+                obj2.setCollider(new $e.BoxCollider(700,20));
+                obj2.rotation = 0;
+                $e.add2DObject(obj2, -50);
+                var obj5 = new $e.Object2D("Roof", new $e.Vector2(350, 140), 0, 0, 0.9, 0.7);
+                obj5.setCollider(new $e.BoxCollider(700,20));
+                obj5.rotation = 0;
+                $e.add2DObject(obj5, -50);
+                var obj3 = new $e.Object2D("WallL", new $e.Vector2(690, 75), 0, 0, 0.9, 0.7);
+                obj3.setCollider(new $e.BoxCollider(150,20));
+                obj3.rotation = 90;
+                $e.add2DObject(obj3, -50);
+                var obj4 = new $e.Object2D("WallR", new $e.Vector2(10, 75), 0, 0, 0.9, 0.7);
+                obj4.setCollider(new $e.BoxCollider(150,20));
+                obj4.rotation = 90;
+                $e.add2DObject(obj4, -50);
+            }
+        </script>
+    </head>
+
+    <body>
+        <canvas id="mainCanvas" width="800" height="800"></canvas>
+    </body>
+</html>

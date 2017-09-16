@@ -2,6 +2,8 @@
  * Physics Thread
  */
 
+ importScripts('core.js');
+
 var phycs;
 var dv2;
 var time = {
