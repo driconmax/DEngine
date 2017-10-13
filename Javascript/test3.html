@@ -1,15 +1,29 @@
 <html>
     <head>
-        <script src="src/common.js"></script>
-        <script src="src/core.js"></script>
-        <script src="src/class.js"></script>
-        <script src="src/extended.js"></script>
+        <script src="src/loader.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function(event) { 
-                $d.Log("Load complete");
+                $loader.addscripts([
+                    new $loader.script("Common", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/common.js"),
+                    new $loader.script("Core", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/core.js"),
+                    new $loader.script("Extended", "http://cdn.driconmax.com.ar/DEngine/master/Javascript/src/extended.js")
+                ]);
+                $loader.start();
+                $loader.onstart = function(r){
+                    console.log("Downloading " + r.totalbytes + " bytes");
+                }
+                $loader.onprogresschange = function(p){
+                    console.log("["+p.current.fileindex+"/"+p.totalfiles+"] Loading " + p.current.name + " v" + ((p.current.version)?p.current.version:"") +"\t - \t" + p.progress + "%");
+                };
+                $loader.onload = function(){
+                    //If the download went correctly, we should be able to use the common library ($d).
+                    $d.Log("Load complete");
 
-                oneObject();
-                $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){})
+                    $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){})
+                    //oneObject();
+                    //newtonian();
+
+                }
             });
             function oneObject(){
                 var obj = new $e.Object2D("Object", new $e.Vector2(20, 60), 1, 1, 0.9, 0.7);
