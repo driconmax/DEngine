@@ -191,7 +191,7 @@ function initClass() {
     };
 
     Object2D.prototype.copyValues = function(otherObj){
-        this.id = otherObj.;
+        this.id = otherObj.id;
         this.name = otherObj.name;
         //this.pos = pos.clone();
         //this.posOrigin = this.pos.clone();
