@@ -151,7 +151,7 @@
 			"file": "/D/Cybermapa/Nginx/html/Simulators/src/app/controllers/ProfileController.js",
 			"settings":
 			{
-				"buffer_size": 1745,
+				"buffer_size": 1922,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -328,19 +328,6 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/D/Cybermapa/Nginx/html/Events",
-		"/D/Cybermapa/Nginx/html/Events/Server",
-		"/D/Cybermapa/Nginx/html/Events/Server/common",
-		"/D/Cybermapa/Nginx/html/Simulators",
-		"/D/Cybermapa/Nginx/html/Simulators/src",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/components",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/controllers",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/stylesheets",
-		"/D/Cybermapa/Nginx/html/Simulators/src/app/views"
-	],
 	"file_history":
 	[
 		"/D/Scarlett/Nerdfish/Boarding Game/DEngine Beta/Javascript/tools/editor/css/index.html",
@@ -380,7 +367,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -516,15 +503,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1745,
+						"buffer_size": 1922,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1121,
-								1121
+								0,
+								0
 							]
 						],
 						"settings":
@@ -648,7 +635,7 @@
 		[
 			[
 				"",
-				"C:\\Users\\gustavo.gonzalez\\Documents\\Sublime Projects\\StreetX.sublime-project"
+				"C:\\Users\\gustavo.gonzalez\\Documents\\Sublime Projects\\Simulator.sublime-project"
 			]
 		],
 		"width": 380.0

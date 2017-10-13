@@ -2,11 +2,13 @@
     <head>
         <script src="src/common.js"></script>
         <script src="src/core.js"></script>
+        <script src="src/class.js"></script>
         <script src="src/extended.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function(event) { 
                 $d.Log("Load complete");
 
+                oneObject();
                 $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){})
             });
             function oneObject(){

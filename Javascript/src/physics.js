@@ -2,7 +2,7 @@
  * Physics Thread
  */
 
- importScripts('core.js');
+importScripts('class.js');
 
 var phycs;
 var dv2;
