@@ -31,7 +31,7 @@ onmessage = function(msg){
         switch(msg.data.fn){
             case 'Start':
                 phycs = msg.data.phycs;
-                dv2 = msg.data.dv2;
+                //dv2 = msg.data.dv2;
                 Start();
                 break;
             case 'setGravity':
@@ -126,8 +126,8 @@ function UpdatePhysics(){
 function CheckCollision(obj, retObj){
     var objA = obj;
     var objB;
-    //var v3 = new $e.Vector2(0,0);
-    var v3 = dv2.getNew(0,0);
+    var v3 = new $e.Vector2(0,0);
+    //var v3 = dv2.getNew(0,0);
     objA.collisions = 0;
     for(var i = 0; i < phycs.length; i++){
         objB = phycs[i];
@@ -197,8 +197,8 @@ function CheckCollision(obj, retObj){
                             Na.rotate(objB.rotation);
 
                             //POLYGON
-                            //MTDb = new $e.Vector2(0,0);
-                            MTDb = dv2.getNew(0,0);
+                            MTDb = new $e.Vector2(0,0);
+                            //MTDb = dv2.getNew(0,0);
                             Nb = objA.getPos().substract(objB.getPos()).normalized();
                         }
                     } else if(objB.collider.type == 1 && (objA.collider.type == 0 || objA.collider.type == 2)){
@@ -242,8 +242,8 @@ function CheckCollision(obj, retObj){
                             Na.rotate(objA.rotation);
 
                             //POLYGON
-                            //MTDb = new $e.Vector2(0,0);
-                            MTDb = dv2.getNew(0,0);
+                            MTDb = new $e.Vector2(0,0);
+                            //MTDb = dv2.getNew(0,0);
                             Nb = objB.getPos().substract(objA.getPos()).normalized();
                         }
                     } else {
@@ -257,8 +257,8 @@ function CheckCollision(obj, retObj){
 
                             //A objA
                             var b = FindAxisLeastPenetration(objB, obj);
-                            //MTDa = new $e.Vector2(0,0);
-                            MTDa = dv2.getNew(0,0);
+                            MTDa = new $e.Vector2(0,0);
+                            //MTDa = dv2.getNew(0,0);
 
                             Na = objB.collider.normals[b.vertexIndex].clone();
                             Na.rotate(objB.rotation);
@@ -266,8 +266,8 @@ function CheckCollision(obj, retObj){
 
                             //B objB
                             var a = FindAxisLeastPenetration(obj, objB);
-                            //MTDb = new $e.Vector2(0,0);
-                            MTDb = dv2.getNew(0,0);
+                            MTDb = new $e.Vector2(0,0);
+                            //MTDb = dv2.getNew(0,0);
 
                             Nb = objA.collider.normals[a.vertexIndex].clone();
                             Nb.rotate(objA.rotation);
@@ -355,8 +355,8 @@ function pnt2line(pnt, start, end){
 
 function GetSupport(obj, dir){
     var bestProjection = -vbn;
-    //var bestVertex = new $e.Vector2(0,0);
-    var bestVertex = dv2.getNew(0,0);
+    var bestVertex = new $e.Vector2(0,0);
+    //var bestVertex = dv2.getNew(0,0);
 
     for(var i = 0; i < obj.collider.vertexs.length; i++)
     {
@@ -390,15 +390,15 @@ function FindAxisLeastPenetration(A, B){
 
         // Retrieve vertex on face from A, transform into
         // B's model space
-        //var vr = new $e.Vector2(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
-        var vr = dv2.getNew(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
+        var vr = new $e.Vector2(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
+        //var vr = dv2.getNew(A.collider.vertexs[i].x, A.collider.vertexs[i].y);
         vr.rotate(A.rotation);
-        //var v = new $e.Vector2(vr.x + A.getPos().x, vr.y + A.getPos().y);
-        var v = dv2.getNew(vr.x + A.getPos().x, vr.y + A.getPos().y);
+        var v = new $e.Vector2(vr.x + A.getPos().x, vr.y + A.getPos().y);
+        //var v = dv2.getNew(vr.x + A.getPos().x, vr.y + A.getPos().y);
 
         // Compute penetration distance (in B's model space)
-        //var sv = new $e.Vector2(s.x-v.x, s.y - v.y);
-        var sv = dv2.getNew(s.x-v.x, s.y - v.y);
+        var sv = new $e.Vector2(s.x-v.x, s.y - v.y);
+        //var sv = dv2.getNew(s.x-v.x, s.y - v.y);
         var d = n.dot(sv);
 
         // Store greatest distance
@@ -425,8 +425,8 @@ function Intersect(A, B){
     for(var I = 0; I < A.collider.vertexs.length; I++)
     {
         var E = (A.collider.vertexs[I].rrotate(A.rotation).sum(A.getPos())).substract(A.collider.vertexs[J].rrotate(A.rotation).sum(A.getPos()));
-        //var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
-        var N = Axis[iNumAxis++] = dv2.getNew(-E.y, E.x);
+        var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
+        //var N = Axis[iNumAxis++] = dv2.getNew(-E.y, E.x);
 
         if (AxisSeparatePolygons(N, A, B))
             return false;
@@ -437,8 +437,8 @@ function Intersect(A, B){
     for(var I = 0; I < B.collider.vertexs.length; I++)
     {
         var E = (B.collider.vertexs[I].sum(B.getPos()).rrotate(B.rotation)).substract(B.collider.vertexs[J].rrotate(B.rotation).sum(B.getPos()));
-        //var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
-        var N = Axis[iNumAxis++] = dv2.getNew(-E.y, E.x);
+        var N = Axis[iNumAxis++] = new $e.Vector2(-E.y, E.x);
+        //var N = Axis[iNumAxis++] = dv2.getNew(-E.y, E.x);
 
         if (AxisSeparatePolygons (N, A, B))
             return false;
