@@ -8,9 +8,9 @@
             document.addEventListener("DOMContentLoaded", function(event) { 
                 $d.Log("Load complete");
 
+                initClass();
                 oneObject();
                 $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){});
-                initClass();
 
                 function oneObject(){
                     var obj = new $e.Object2D("Object", new $e.Vector2(20, 60), 1, 1, 0.9, 0.7);
