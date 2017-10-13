@@ -4,6 +4,9 @@
 
 importScripts('class.js');
 
+var $e = {};
+initClass();
+
 var phycs;
 var dv2;
 var time = {
