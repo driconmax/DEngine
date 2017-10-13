@@ -28,6 +28,7 @@ var fixedLoop = {
 
 onmessage = function(msg){
     if(msg.data != undefined && typeof(msg.data) == "object"){
+        var obj = new Object2D();
         switch(msg.data.fn){
             case 'Start':
                 phycs = msg.data.phycs;
@@ -43,7 +44,10 @@ onmessage = function(msg){
                 break;
             case 'CheckCollision':
                 postMessage({
-                    obj: CheckCollision(msg.data.obj,true),
+                    obj: CheckCollision(
+                        obj.copyValues(msg.data.obj),
+                        true
+                    ),
                     cb: msg.data.cb,
                     id: msg.data.id,
                     expd: msg.data.expd
