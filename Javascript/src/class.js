@@ -11,7 +11,7 @@ function initClass() {
      * @param {number}      time The duration of the animation
      * @param {bool}        loop Set to make a loo
      */
-    this.Texture = function(name, srcs, size, time, loop){
+    $e.Texture = function(name, srcs, size, time, loop){
         this.name = name;
         this.loop = loop;
         this.time = time;
@@ -32,7 +32,7 @@ function initClass() {
      * Texture.getTexture - Returns the current Texture.
      * @return {image} The image element
      */
-    this.Texture.prototype.getTexture = function(){
+    $e.Texture.prototype.getTexture = function(){
         if(this.img.length == 1){
             return this.img[0];
         }
@@ -64,7 +64,7 @@ function initClass() {
     * @property     {BaseObject2D}  parent              Parent Object. If set, the position is relative to the parent
     * @property     {BaseObject2D[]}  childs              Childs Objects
     */
-    this.BaseObject2D = function(name, pos){
+    $e.BaseObject2D = function(name, pos){
         this.id = -1;
         this.name = name;
         //this.pos = pos.clone();
@@ -117,7 +117,7 @@ function initClass() {
     * @property     {number}    layer               Layer
     * @property     {Object2D}  parent              Parent Object. If set, the position is relative to the parent
     */
-    class Object2D extends this.BaseObject2D {
+    class Object2D extends $e.BaseObject2D {
         constructor(name, pos, mass, drag, angularDrag, bounce, newtonian){
             super(name, pos);
             this.kinematic = (mass == 0);
@@ -138,7 +138,7 @@ function initClass() {
      * BaseObject2D.prototype.getPos - Returns the object position
      * @return {Vector2} A Vector2 Representing the Object position
      */
-    this.BaseObject2D.prototype.getPos = function(){
+    $e.BaseObject2D.prototype.getPos = function(){
         if(this.parent != null){
             return this.posOrigin.sum(this.parent.getPos());    
         } else {
@@ -150,7 +150,7 @@ function initClass() {
      * BaseObject2D.prototype.setPos - Sets the position of the BaseObject2D
      * @param {Vector2} v2 The new position
      */
-    this.BaseObject2D.prototype.setPos = function(v2) {
+    $e.BaseObject2D.prototype.setPos = function(v2) {
         var f;
         if(arguments.length == 1){
             f = v2;
@@ -171,7 +171,7 @@ function initClass() {
      * BaseObject2D.prototype.setParent - Sets the object's parent
      * @param {BaseObject2D} parent The BaseObject2D parent
      */
-    this.BaseObject2D.prototype.setParent = function (parent) {
+    $e.BaseObject2D.prototype.setParent = function (parent) {
         if(this.parent != null){
             this.parent.childs.splice(this.parent.childs.indexOf(this), 1);
         }
@@ -224,7 +224,7 @@ function initClass() {
      *
      * @param  {Vector2} value The Pivot
      */
-    this.BaseObject2D.prototype.setPivot = function(position){
+    $e.BaseObject2D.prototype.setPivot = function(position){
         this.setPos(this.posOrigin);
         this.pivot = position;
         this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
@@ -298,14 +298,14 @@ function initClass() {
     *
     * @param  {BaseObject2D} Obj2 The target
     */
-    this.BaseObject2D.prototype.lookAt = function(Obj2){
+    $e.BaseObject2D.prototype.lookAt = function(Obj2){
         this.setPos(this.posOrigin);
         var target = Obj2.getPos().substract(this.getPos());
         this.rotation = (target.angle()*(180/Math.PI) - 180) + this.lookAtOffset;
         this.setPos(this.getPos().sum(this.pivot.rrotate(this.rotation)));
     };
 
-    this.Object2D = Object2D;
+    $e.Object2D = Object2D;
 
     /* ONLY PHYSICS */
 
