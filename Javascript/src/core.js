@@ -710,7 +710,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
 
         //DEngine Objects start
 
-        initClass();
+        //initClass();
 
         /**
          * Texture - Creates a Texture object with optional animations

@@ -9,8 +9,9 @@
                 $d.Log("Load complete");
 
                 oneObject();
-                $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){})
-                
+                $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){});
+                initClass();
+
                 function oneObject(){
                     var obj = new $e.Object2D("Object", new $e.Vector2(20, 60), 1, 1, 0.9, 0.7);
                     obj.addForce(new $e.Vector2(30,10));
