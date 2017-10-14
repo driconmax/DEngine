@@ -663,7 +663,7 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
                 if(obj.texture != undefined){
                     internal.ctx.drawImage(obj.texture.getTexture(), -obj.texture.size.x/2, -obj.texture.size.y/2, obj.texture.size.x, obj.texture.size.y);
                 } else {
-                    if(obj.collider.type == 1){
+                    if(obj.collider != undefined && obj.collider.type == 1){
                         //internal.ctx.arc(0, 0, obj.collider.radius/4, 0, 2*Math.PI);
                         //internal.ctx.fill();
                         internal.ctx.fillRect(- 10/2, - 10/2, 10, 10);
