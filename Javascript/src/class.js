@@ -216,6 +216,7 @@ function initClass(internal) {
         this.velocity = new $e.Vector2(otherObj.velocity.x, otherObj.velocity.y);
         this.force = new $e.Vector2(otherObj.force.x, otherObj.force.y);
         this.collisions = otherObj.collisions;
+        this.collider = otherObj.collider;
     }
 
     Object2D.prototype.duplicate = function(otherObj){
