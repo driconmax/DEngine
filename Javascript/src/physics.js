@@ -28,7 +28,7 @@ var fixedLoop = {
 
 onmessage = function(msg){
     if(msg.data != undefined && typeof(msg.data) == "object"){
-        var obj = new Object2D();
+        var obj = new $e.Object2D();
         switch(msg.data.fn){
             case 'Start':
                 phycs = msg.data.phycs;
