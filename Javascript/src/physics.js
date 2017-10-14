@@ -7,6 +7,9 @@ importScripts('class.js');
 var $e = {};
 initClass();
 
+const vbn = 1000000;
+const vln = 1/vbn;
+
 var phycs;
 var dv2;
 var baseObject2D = new $e.Object2D("Base OBJ", new $e.Vector2(0, 0), 1, 1, 1, 1);
