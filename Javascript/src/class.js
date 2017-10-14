@@ -217,6 +217,12 @@ function initClass(internal) {
         this.force = new $e.Vector2(otherObj.force.x, otherObj.force.y);
         this.collisions = otherObj.collisions;
         this.collider = otherObj.collider;
+        for (var i = this.collider.vertexs.length - 1; i >= 0; i--) {
+            this.collider.vertexs[i] = new $e.Vector2(this.collider.vertexs[i].x, this.collider.vertexs[i].y);
+        }
+        for (var i = this.collider.normals.length - 1; i >= 0; i--) {
+            this.collider.normals[i] = new $e.Vector2(this.collider.normals[i].x, this.collider.normals[i].y);
+        }
     }
 
     Object2D.prototype.duplicate = function(otherObj){
