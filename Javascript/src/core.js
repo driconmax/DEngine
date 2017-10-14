@@ -140,6 +140,10 @@ Collision Response - http://elancev.name/oliver/2D%20polygon.htm
             }
         };
 
+        this.getInternal = function(){
+            return internal;
+        }
+
         this.setTextColor = function(value){
             if($d.ValidateInput(arguments, ["string"])){
                 internal.textcolor = value;

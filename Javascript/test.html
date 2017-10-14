@@ -8,7 +8,7 @@
             document.addEventListener("DOMContentLoaded", function(event) { 
                 $d.Log("Load complete");
 
-                initClass();
+                initClass($e.getInternal);
                 oneObject();
                 $e.init(document.getElementById("mainCanvas"), function(){}, function(obj){});
 

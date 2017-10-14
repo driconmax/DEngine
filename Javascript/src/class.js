@@ -1,4 +1,4 @@
-function initClass() {
+function initClass(internal) {
 
 
     /**
