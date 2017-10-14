@@ -51,7 +51,7 @@ onmessage = function(msg){
             case 'CheckCollision':
                 postMessage({
                     obj: CheckCollision(
-                        baseObject2D.copyValues(msg.data.obj),
+                        baseObject2D.duplicate(msg.data.obj),
                         true
                     ),
                     cb: msg.data.cb,
