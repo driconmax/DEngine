@@ -195,7 +195,7 @@ function initClass(internal) {
         this.name = otherObj.name;
         //this.pos = pos.clone();
         //this.posOrigin = this.pos.clone();
-        this.posOrigin = otherObj.posOrigin;
+        this.posOrigin = new $e.Vector2(otherObj.posOrigin.x, otherObj.posOrigin.y);
         this.scale = new $e.Vector2(otherObj.scale.x, otherObj.scale.y);
         this.rotation = otherObj.rotation;
         this.pivot = new $e.Vector2(otherObj.pivot.x, otherObj.pivot.y);
@@ -212,7 +212,7 @@ function initClass(internal) {
         this.angularDrag = otherObj.angularDrag;
         this.bounce = otherObj.bounce;
         this.setInertia(otherObj.inertia);
-        this.angularVelocity = otherObj.angularVelocity;
+        this.angularVelocity = new $e.Vector2(otherObj.angularVelocity.x, otherObj.angularVelocity.y);
         this.velocity = new $e.Vector2(otherObj.velocity.x, otherObj.velocity.y);
         this.force = new $e.Vector2(otherObj.force.x, otherObj.force.y);
         this.collisions = otherObj.collisions;
