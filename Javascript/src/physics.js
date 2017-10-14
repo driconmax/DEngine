@@ -33,6 +33,7 @@ onmessage = function(msg){
         switch(msg.data.fn){
             case 'Start':
                 phycs = msg.data.phycs;
+                ApplyObject2D();
                 //dv2 = msg.data.dv2;
                 Start();
                 break;
@@ -42,6 +43,7 @@ onmessage = function(msg){
             case 'updateList':
                 fixedLoop.break = fixedLoop.lnm;
                 phycs = msg.data.phycs;
+                ApplyObject2D();
                 break;
             case 'CheckCollision':
                 postMessage({
@@ -56,6 +58,14 @@ onmessage = function(msg){
                 break;
             default:
                 break;
+        }
+    }
+}
+
+function ApplyObject2D(){
+    for(var i = 0; i < phycs.length; i++){
+        if(phycs[i] != undefined && phycs[i].addForce == undefined){
+            phycs[i] = baseObject2D.duplicate(phycs[i]);
         }
     }
 }

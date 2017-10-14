@@ -218,6 +218,12 @@ function initClass(internal) {
         this.collisions = otherObj.collisions;
     }
 
+    Object2D.prototype.duplicate = function(otherObj){
+        var ret = new $e.Object2D("Base OBJ", new $e.Vector2(0, 0), 1, 1, 1, 1);
+        ret.copyValues(otherObj);
+        return ret;
+    }
+
 
     /**
      * BaseObject2D.prototype.setPivot - Sets the pivot to the Object2D
