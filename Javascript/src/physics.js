@@ -9,6 +9,7 @@ initClass();
 
 var phycs;
 var dv2;
+var baseObject2D = new $e.Object2D("Base OBJ", new $e.Vector2(0, 0), 1, 1, 1, 1);
 var time = {
     fixedTime: 0,
     elapsedTime: 0,
@@ -28,7 +29,7 @@ var fixedLoop = {
 
 onmessage = function(msg){
     if(msg.data != undefined && typeof(msg.data) == "object"){
-        var obj = new $e.Object2D();
+        
         switch(msg.data.fn){
             case 'Start':
                 phycs = msg.data.phycs;
@@ -45,7 +46,7 @@ onmessage = function(msg){
             case 'CheckCollision':
                 postMessage({
                     obj: CheckCollision(
-                        obj.copyValues(msg.data.obj),
+                        baseObject2D.copyValues(msg.data.obj),
                         true
                     ),
                     cb: msg.data.cb,
