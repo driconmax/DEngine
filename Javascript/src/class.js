@@ -203,7 +203,7 @@ function initClass(internal) {
         this.lookAtOffset = otherObj.lookAtOffset;
         this.color = otherObj.color; 
         this.layer = otherObj.layer;
-        this.parent = parent;
+        this.parent = otherObj.parent;
         this.childs = otherObj.childs;
         this.kinematic = otherObj.kinematic;
         this.mass = otherObj.mass;
